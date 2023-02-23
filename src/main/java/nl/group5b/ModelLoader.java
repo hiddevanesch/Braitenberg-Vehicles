@@ -4,6 +4,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +13,12 @@ public class ModelLoader {
     private List<Integer> vaos = new ArrayList<>();
     private List<Integer> vbos = new ArrayList<>();
 
-    public Model loadToVAO(float[] positions) {
+    public Model loadToVAO(float[] positions, int[] indices) {
         int vaoID = createVAO();
-        storeDataInAttributeList(Model.POSITION_ATTR, positions);
+        bindIndicesBuffer(indices);
+        storePositionsInAttributeList(positions);
         unbindVAO();
-        return new Model(vaoID, positions.length / 3);
+        return new Model(vaoID, indices.length);
     }
 
     // Create VAO and return ID
@@ -31,7 +33,6 @@ public class ModelLoader {
     private int createVBO() {
         int vboID = GL46.glGenBuffers();
         vbos.add(vboID);
-        GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, vboID);
         return vboID;
     }
 
@@ -45,8 +46,10 @@ public class ModelLoader {
         GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, 0);
     }
 
-    private void storeDataInAttributeList(int attributeNumber, float[] data) {
+    private void storePositionsInAttributeList(float[] data) {
         int vboID = createVBO();
+
+        GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, vboID);
 
         // Store data in a buffer
         FloatBuffer buffer = storeFloatArrayInFloatBuffer(data);
@@ -55,15 +58,42 @@ public class ModelLoader {
         GL46.glBufferData(GL46.GL_ARRAY_BUFFER, buffer, GL46.GL_STATIC_DRAW);
 
         // Put the VBO into the VAO
-        GL46.glVertexAttribPointer(attributeNumber, 3, GL46.GL_FLOAT, false, 0, 0);
+        GL46.glVertexAttribPointer(Model.POSITION_ATTR,3, GL46.GL_FLOAT, false, 0, 0);
 
         unbindVBO();
+    }
+
+    private void bindIndicesBuffer(int[] indices) {
+        int vboID = createVBO();
+
+        GL46.glBindBuffer(GL46.GL_ELEMENT_ARRAY_BUFFER, vboID);
+
+        // Store data in a buffer
+        IntBuffer buffer = storeIntArrayInIntBuffer(indices);
+
+        // Put the data into the VBO
+        GL46.glBufferData(GL46.GL_ELEMENT_ARRAY_BUFFER, buffer, GL46.GL_STATIC_DRAW);
+
+        // We don't need to unbind the VBO here, because a VAO has a special slot for the index buffer
     }
 
     // Stores array of floats into a new FloatBuffer object
     private FloatBuffer storeFloatArrayInFloatBuffer(float[] data) {
         // Create a new FloatBuffer
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+
+        // Put the data into the buffer
+        buffer.put(data);
+
+        // Flip the buffer so it can be read
+        buffer.flip();
+
+        return buffer;
+    }
+
+    private IntBuffer storeIntArrayInIntBuffer(int[] data) {
+        // Create a new IntBuffer
+        IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 
         // Put the data into the buffer
         buffer.put(data);

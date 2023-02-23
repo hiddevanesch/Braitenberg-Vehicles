@@ -25,7 +25,7 @@ public class Renderer {
         GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
 
         // Draw the triangles
-        GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, model.getVertexCount());
+        GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
 
         // Unbind the VAO
         GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);

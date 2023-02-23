@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="BraitenbergVehicles" />
+        <module name="2IMV20-Visual-Computing-Project" />
       </profile>
     </annotationProcessing>
   </component>

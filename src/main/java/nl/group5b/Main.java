@@ -8,8 +8,6 @@ import org.lwjgl.glfw.Callbacks;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
         // Initialize the window
         DisplayBuilder.init();
 
@@ -28,12 +26,15 @@ public class Main {
             -0.5f, 0.5f, 0f,
             -0.5f, -0.5f, 0f,
             0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
             0.5f, 0.5f, 0f,
-            -0.5f, 0.5f, 0f
         };
 
-        Model model = modelLoader.loadToVAO(vertices);
+        int[] indices = {
+            0, 1, 3,
+            3, 1, 2
+        };
+
+        Model model = modelLoader.loadToVAO(vertices, indices);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
