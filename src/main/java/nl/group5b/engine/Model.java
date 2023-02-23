@@ -1,4 +1,4 @@
-package nl.group5b;
+package nl.group5b.engine;
 
 public class Model {
 

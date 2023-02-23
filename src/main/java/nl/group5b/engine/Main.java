@@ -1,6 +1,6 @@
-package nl.group5b;
+package nl.group5b.engine;
 
-import org.lwjgl.Version;
+import nl.group5b.shaders.StaticShader;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 
@@ -20,6 +20,9 @@ public class Main {
         // Create Rendered instance and initialize it
         Renderer renderer = new Renderer();
         renderer.init();
+
+        // Create a shader
+        StaticShader shader = new StaticShader();
 
         // Make a model TODO make actual models you fool
         float[] vertices = {
@@ -42,12 +45,21 @@ public class Main {
             // Prepare next frame
             renderer.prepare();
 
+            // Start shader
+            shader.start();
+
             // Render next frame
             renderer.render(model);
+
+            // Stop shader
+            shader.stop();
 
             // Finalize next frame
             renderer.complete(window);
         }
+
+        // Clean up the shader
+        shader.cleanUp();
 
         // Remove all VAOs and VBOs
         modelLoader.cleanUp();
