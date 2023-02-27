@@ -1,5 +1,7 @@
 package nl.group5b.shaders;
 
+import nl.group5b.models.Model;
+
 public class StaticShader extends ShaderProgram {
 
     private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/vertex_shader.glsl";
@@ -11,6 +13,6 @@ public class StaticShader extends ShaderProgram {
 
     @Override
     protected void bindAttributes() {
-        super.bindAttribute(0, "position");
+        super.bindAttribute(Model.POSITION_ATTR, "position");
     }
 }

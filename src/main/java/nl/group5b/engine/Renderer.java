@@ -1,5 +1,6 @@
 package nl.group5b.engine;
 
+import nl.group5b.models.Model;
 import org.lwjgl.opengl.GL;
 
 import org.lwjgl.glfw.GLFW;

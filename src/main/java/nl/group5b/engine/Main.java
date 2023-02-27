@@ -1,5 +1,7 @@
 package nl.group5b.engine;
 
+import nl.group5b.models.Model;
+import nl.group5b.models.ModelLoader;
 import nl.group5b.shaders.StaticShader;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;

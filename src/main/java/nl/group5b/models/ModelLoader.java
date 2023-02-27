@@ -1,5 +1,6 @@
-package nl.group5b.engine;
+package nl.group5b.models;
 
+import nl.group5b.models.Model;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
 
