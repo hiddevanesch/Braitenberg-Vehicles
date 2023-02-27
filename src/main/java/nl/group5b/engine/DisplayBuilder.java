@@ -18,7 +18,7 @@ public class DisplayBuilder {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
     private static final String TITLE = "Group 5B - Braitenberg Vehicles";
-    private static final int REFRESH_RATE = 1;
+    private static final int REFRESH_RATE = 60;
 
     // The window handle
     public static long window;
@@ -36,7 +36,7 @@ public class DisplayBuilder {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_REFRESH_RATE, REFRESH_RATE); // Set the refresh rate to REFRESG_RATE
+        glfwWindowHint(GLFW_REFRESH_RATE, REFRESH_RATE); // Set the refresh rate to REFRESH_RATE
 
         // Create the window
         window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
@@ -77,7 +77,11 @@ public class DisplayBuilder {
         glfwShowWindow(window);
     }
 
+    public static int getWidth() {
+        return WIDTH;
+    }
 
-
-
+    public static int getHeight() {
+        return HEIGHT;
+    }
 }
