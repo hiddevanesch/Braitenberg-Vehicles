@@ -1,5 +1,6 @@
 package nl.group5b.engine;
 
+import nl.group5b.models.Arena;
 import nl.group5b.models.Model;
 import nl.group5b.models.ModelLoader;
 import nl.group5b.models.OBJLoader;
@@ -35,9 +36,8 @@ public class Main {
         // Create Rendered instance and initialize it
         Renderer renderer = new Renderer(shader);
 
-        Model model = OBJLoader.loadOBJ("dragon", modelLoader);
-
-        Entity entity = new Entity(model, new Vector3f(0, 0, -1.0f), 0, 0, 0, 1);
+        // Load Arena entity
+        Arena arena = new Arena(modelLoader);
 
         Light light = new Light(new Vector3f(0, 2, 0), new Vector3f(1, 1, 1));
 
@@ -64,7 +64,7 @@ public class Main {
             shader.loadViewMatrix(camera);
 
             // Render next frame
-            renderer.render(entity, shader);
+            renderer.render(arena, shader);
 
             // Stop shader
             shader.stop();

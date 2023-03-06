@@ -1,5 +1,6 @@
 package nl.group5b.engine;
 
+import nl.group5b.models.Body;
 import nl.group5b.models.Model;
 import nl.group5b.shaders.StaticShader;
 import nl.group5b.util.Algebra;
@@ -34,9 +35,15 @@ public class Renderer {
 
         // Clear the framebuffer
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
+
+        // Enable depth testing
+        GL46.glEnable(GL46.GL_DEPTH_TEST);
     }
 
-    public void render(Entity entity, StaticShader shader) {
+    public void render(Body body, StaticShader shader) {
+        // Get the entity
+        Entity entity = body.getEntity();
+
         // Get the model
         Model model = entity.getModel();
 
@@ -50,6 +57,9 @@ public class Renderer {
 
         // Load transformation matrix into shader
         shader.loadTransformationMatrix(transformationMatrix);
+
+        // Load shine variables into shader
+        shader.loadShine(body.getDamping(), body.getShininess());
 
         // Draw the triangles
         GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);

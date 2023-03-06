@@ -35,15 +35,15 @@ public class OBJLoader {
         try {
             while (true) {
                 line = bufferedReader.readLine();
-                String[] currentLine = line.split(" ");
+                String[] splitLine = line.split(" ");
                 if (line.startsWith("v ")) {
-                    Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
-                            Float.parseFloat(currentLine[3]));
+                    Vector3f vertex = new Vector3f(Float.parseFloat(splitLine[1]), Float.parseFloat(splitLine[2]),
+                            Float.parseFloat(splitLine[3]));
                     vertices.add(vertex);
                 }
                 else if (line.startsWith("vn ")) {
-                    Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
-                            Float.parseFloat(currentLine[3]));
+                    Vector3f normal = new Vector3f(Float.parseFloat(splitLine[1]), Float.parseFloat(splitLine[2]),
+                            Float.parseFloat(splitLine[3]));
                     normals.add(normal);
                 }
                 else if (line.startsWith("f ")) {
@@ -57,10 +57,10 @@ public class OBJLoader {
                     line = bufferedReader.readLine();
                     continue;
                 }
-                String[] currentLine = line.split(" ");
-                String[] vertex1 = currentLine[1].split("/");
-                String[] vertex2 = currentLine[2].split("/");
-                String[] vertex3 = currentLine[3].split("/");
+                String[] splitLine = line.split(" ");
+                String[] vertex1 = splitLine[1].split("/");
+                String[] vertex2 = splitLine[2].split("/");
+                String[] vertex3 = splitLine[3].split("/");
                 processVertex(vertex1, indices, normals, normalsArray);
                 processVertex(vertex2, indices, normals, normalsArray);
                 processVertex(vertex3, indices, normals, normalsArray);
