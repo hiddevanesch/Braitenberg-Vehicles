@@ -35,7 +35,7 @@ public class Main {
         // Create Rendered instance and initialize it
         Renderer renderer = new Renderer(shader);
 
-        Model model = OBJLoader.loadOBJ("arena", modelLoader);
+        Model model = OBJLoader.loadOBJ("dragon", modelLoader);
 
         Entity entity = new Entity(model, new Vector3f(0, 0, -1.0f), 0, 0, 0, 1);
 
