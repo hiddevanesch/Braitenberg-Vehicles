@@ -30,7 +30,7 @@ public class Renderer {
 
     public void prepare() {
         // Set the clear color
-        GL46.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        GL46.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         // Clear the framebuffer
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
@@ -43,6 +43,7 @@ public class Renderer {
         // Bind the VAO
         GL46.glBindVertexArray(model.getVaoID());
         GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
+        GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
 
         // Create transformation matrix
         Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale());
@@ -55,6 +56,7 @@ public class Renderer {
 
         // Unbind the VAO
         GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
+        GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
         GL46.glBindVertexArray(0);
     }
 

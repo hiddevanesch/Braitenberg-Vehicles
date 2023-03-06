@@ -10,9 +10,13 @@ import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
 public class Camera {
 
+    public Camera(Vector3f position) {
+        this.position = position;
+    }
+
     private static final float SPEED = 0.05f;
 
-    private Vector3f position = new Vector3f(0, 0, 0);
+    private Vector3f position;
     private float pitch;
     private float yaw;
     private float roll;

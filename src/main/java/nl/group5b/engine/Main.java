@@ -2,10 +2,13 @@ package nl.group5b.engine;
 
 import nl.group5b.models.Model;
 import nl.group5b.models.ModelLoader;
+import nl.group5b.models.OBJLoader;
 import nl.group5b.shaders.StaticShader;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.io.FileNotFoundException;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
@@ -13,7 +16,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // Initialize the window
         DisplayBuilder.init();
 
@@ -32,64 +35,18 @@ public class Main {
         // Create Rendered instance and initialize it
         Renderer renderer = new Renderer(shader);
 
-        // Make a model TODO make actual models you fool
-        float[] vertices = {
-            -0.5f,0.5f,-0.5f,
-            -0.5f,-0.5f,-0.5f,
-            0.5f,-0.5f,-0.5f,
-            0.5f,0.5f,-0.5f,
-
-            -0.5f,0.5f,0.5f,
-            -0.5f,-0.5f,0.5f,
-            0.5f,-0.5f,0.5f,
-            0.5f,0.5f,0.5f,
-
-            0.5f,0.5f,-0.5f,
-            0.5f,-0.5f,-0.5f,
-            0.5f,-0.5f,0.5f,
-            0.5f,0.5f,0.5f,
-
-            -0.5f,0.5f,-0.5f,
-            -0.5f,-0.5f,-0.5f,
-            -0.5f,-0.5f,0.5f,
-            -0.5f,0.5f,0.5f,
-
-            -0.5f,0.5f,0.5f,
-            -0.5f,0.5f,-0.5f,
-            0.5f,0.5f,-0.5f,
-            0.5f,0.5f,0.5f,
-
-            -0.5f,-0.5f,0.5f,
-            -0.5f,-0.5f,-0.5f,
-            0.5f,-0.5f,-0.5f,
-            0.5f,-0.5f,0.5f
-        };
-
-        int[] indices = {
-            0,1,3,
-            3,1,2,
-            4,5,7,
-            7,5,6,
-            8,9,11,
-            11,9,10,
-            12,13,15,
-            15,13,14,
-            16,17,19,
-            19,17,18,
-            20,21,23,
-            23,21,22
-        };
-
-        Model model = modelLoader.loadToVAO(vertices, indices);
+        Model model = OBJLoader.loadOBJ("arena", modelLoader);
 
         Entity entity = new Entity(model, new Vector3f(0, 0, -1.0f), 0, 0, 0, 1);
 
-        Camera camera = new Camera();
+        Light light = new Light(new Vector3f(0, 2, 0), new Vector3f(1, 1, 1));
+
+        Camera camera = new Camera(new Vector3f(0, 1, 0));
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !GLFW.glfwWindowShouldClose(window) ) {
-            entity.rotate(0.5f, 1, 0.25f);
+            //entity.rotate(0.5f, 1, 0.25f);
 
             // Poll for window events and move camera accordingly
             camera.move(window);
@@ -99,6 +56,9 @@ public class Main {
 
             // Start shader
             shader.start();
+
+            // Load light
+            shader.loadLight(light);
 
             // Load view matrix
             shader.loadViewMatrix(camera);

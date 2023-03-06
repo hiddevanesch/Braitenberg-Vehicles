@@ -1,6 +1,7 @@
 package nl.group5b.shaders;
 
 import nl.group5b.engine.Camera;
+import nl.group5b.engine.Light;
 import nl.group5b.models.Model;
 import nl.group5b.util.Algebra;
 import org.lwjgl.util.vector.Matrix4f;
@@ -14,6 +15,8 @@ public class StaticShader extends ShaderProgram {
     private int transformationMatrixLocation;
     private int projectionMatrixLocation;
     private int viewMatrixLocation;
+    private int lightPositionLocation;
+    private int lightColourLocation;
 
     public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -22,6 +25,7 @@ public class StaticShader extends ShaderProgram {
     @Override
     protected void bindAttributes() {
         super.bindAttribute(Model.POSITION_ATTR, "position");
+        super.bindAttribute(Model.NORMAL_ATTR, "normal");
     }
 
     @Override
@@ -29,6 +33,8 @@ public class StaticShader extends ShaderProgram {
         transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
         projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
         viewMatrixLocation = super.getUniformLocation("viewMatrix");
+        lightPositionLocation = super.getUniformLocation("lightPosition");
+        lightColourLocation = super.getUniformLocation("lightColour");
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
@@ -42,6 +48,11 @@ public class StaticShader extends ShaderProgram {
 
     public void loadProjectionMatrix(Matrix4f matrix) {
         super.loadMatrix(projectionMatrixLocation, matrix);
+    }
+
+    public void loadLight(Light light) {
+        super.loadVector(lightPositionLocation, light.getPosition());
+        super.loadVector(lightColourLocation, light.getColour());
     }
 
 }

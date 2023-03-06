@@ -1,6 +1,5 @@
 package nl.group5b.models;
 
-import nl.group5b.models.Model;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
 
@@ -14,10 +13,11 @@ public class ModelLoader {
     private List<Integer> vaos = new ArrayList<>();
     private List<Integer> vbos = new ArrayList<>();
 
-    public Model loadToVAO(float[] positions, int[] indices) {
+    public Model loadToVAO(float[] positions, float[] normals, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
-        storePositionsInAttributeList(positions);
+        storeDataInAttributeList(Model.POSITION_ATTR, 3, positions);
+        storeDataInAttributeList(Model.NORMAL_ATTR, 3, normals);
         unbindVAO();
         return new Model(vaoID, indices.length);
     }
@@ -47,7 +47,7 @@ public class ModelLoader {
         GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, 0);
     }
 
-    private void storePositionsInAttributeList(float[] data) {
+    private void storeDataInAttributeList(int attributeIndex, int length, float[] data) {
         int vboID = createVBO();
 
         GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, vboID);
@@ -59,7 +59,7 @@ public class ModelLoader {
         GL46.glBufferData(GL46.GL_ARRAY_BUFFER, buffer, GL46.GL_STATIC_DRAW);
 
         // Put the VBO into the VAO
-        GL46.glVertexAttribPointer(Model.POSITION_ATTR,3, GL46.GL_FLOAT, false, 0, 0);
+        GL46.glVertexAttribPointer(attributeIndex, length, GL46.GL_FLOAT, false, 0, 0);
 
         unbindVBO();
     }
