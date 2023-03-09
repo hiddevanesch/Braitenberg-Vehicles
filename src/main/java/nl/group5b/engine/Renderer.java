@@ -1,7 +1,8 @@
 package nl.group5b.engine;
 
-import nl.group5b.models.Body;
-import nl.group5b.models.Model;
+import nl.group5b.model.Body;
+import nl.group5b.model.BodyElement;
+import nl.group5b.model.Model;
 import nl.group5b.shaders.StaticShader;
 import nl.group5b.util.Algebra;
 import org.lwjgl.opengl.GL;
@@ -45,11 +46,8 @@ public class Renderer {
     }
 
     public void render(Body body, StaticShader shader) {
-        // Get the entities
-        Entity[] entities = body.getEntities();
-
-        for (int i = 0; i < entities.length; i++) {
-            Entity entity = entities[i];
+        for (BodyElement bodyElement : body.getBodyElements()) {
+            Entity entity = bodyElement.getEntity();
 
             // Get the model
             Model model = entity.getModel();
@@ -67,7 +65,7 @@ public class Renderer {
             shader.loadTransformationMatrix(transformationMatrix);
 
             // Load shine variables into shader
-            shader.loadMaterial(body.getMaterials()[i]);
+            shader.loadMaterial(bodyElement.getMaterial());
 
             // Draw the triangles
             GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);

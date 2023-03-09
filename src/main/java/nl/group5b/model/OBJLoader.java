@@ -1,4 +1,4 @@
-package nl.group5b.models;
+package nl.group5b.model;
 
 import org.lwjgl.util.vector.Vector3f;
 

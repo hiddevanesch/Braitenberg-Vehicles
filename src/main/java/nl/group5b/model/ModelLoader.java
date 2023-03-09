@@ -1,4 +1,4 @@
-package nl.group5b.models;
+package nl.group5b.model;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;

@@ -1,15 +1,13 @@
 package nl.group5b.engine;
 
-import nl.group5b.models.*;
+import nl.group5b.model.*;
+import nl.group5b.model.models.Dragon;
 import nl.group5b.shaders.StaticShader;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
 
 public class Main {

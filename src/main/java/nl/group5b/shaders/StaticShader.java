@@ -2,11 +2,10 @@ package nl.group5b.shaders;
 
 import nl.group5b.engine.Camera;
 import nl.group5b.engine.Light;
-import nl.group5b.models.Material;
-import nl.group5b.models.Model;
+import nl.group5b.model.Material;
+import nl.group5b.model.Model;
 import nl.group5b.util.Algebra;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 
 public class StaticShader extends ShaderProgram {
