@@ -1,10 +1,12 @@
 package nl.group5b.engine;
 
 import nl.group5b.model.*;
+import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Dragon;
 import nl.group5b.shaders.StaticShader;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
@@ -22,18 +24,15 @@ public class Main {
         // Create ModelLoader instance
         ModelLoader modelLoader = new ModelLoader();
 
-        // Initialize the renderer using GL.createCapabilities()
-        Renderer.init();
+        // Initialize
+        GL.createCapabilities();
 
-        // Create a shader
-        StaticShader shader = new StaticShader();
-
-        // Create Rendered instance and initialize it
-        Renderer renderer = new Renderer(shader);
+        // Create MasterRenderer instance
+        MasterRenderer renderer = new MasterRenderer();
 
         // Load Arena entity
-        //Arena arena = new Arena(modelLoader);
-        Dragon arena = new Dragon(modelLoader);
+        Arena arena = new Arena(modelLoader);
+        Dragon dragon = new Dragon(modelLoader);
 
         Light light = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
 
@@ -43,34 +42,18 @@ public class Main {
         // the window or has pressed the ESCAPE key.
         while ( !GLFW.glfwWindowShouldClose(window) ) {
             //entity.rotate(0.5f, 1, 0.25f);
-
             // Poll for window events and move camera accordingly
             camera.move(window);
 
-            // Prepare next frame
-            renderer.prepare();
+            renderer.processBody(arena);
+            renderer.processBody(dragon);
 
-            // Start shader
-            shader.start();
+            renderer.render(light, camera, window);
 
-            // Load light
-            shader.loadLight(light);
-
-            // Load view matrix
-            shader.loadViewMatrix(camera);
-
-            // Render next frame
-            renderer.render(arena, shader);
-
-            // Stop shader
-            shader.stop();
-
-            // Finalize next frame
-            renderer.complete(window);
         }
 
-        // Clean up the shader
-        shader.cleanUp();
+        // Clean up
+        renderer.cleanUp();
 
         // Remove all VAOs and VBOs
         modelLoader.cleanUp();

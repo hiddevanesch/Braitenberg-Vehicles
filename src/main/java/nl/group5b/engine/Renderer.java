@@ -11,6 +11,9 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
 
+import java.util.List;
+import java.util.Map;
+
 public class Renderer {
 
     private static final float FOV = 90;
@@ -18,16 +21,14 @@ public class Renderer {
     private static final float FAR_PLANE = 1000;
 
     private Matrix4f projectionMatrix;
+    private StaticShader shader;
 
     public Renderer(StaticShader shader) {
+        this.shader = shader;
         createProjectionMatrix();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
-    }
-
-    public static void init() {
-        GL.createCapabilities();
     }
 
     public void prepare() {
@@ -45,36 +46,51 @@ public class Renderer {
         GL46.glCullFace(GL46.GL_BACK);
     }
 
-    public void render(Body body, StaticShader shader) {
-        for (BodyElement bodyElement : body.getBodyElements()) {
-            Entity entity = bodyElement.getEntity();
+    public void render(Map<Model, List<BodyElement>> renderMap) {
+        // Iterate over all the different models
+        for (Model model : renderMap.keySet()) {
+            prepareModel(model);
 
-            // Get the model
-            Model model = entity.getModel();
+            // Get all the BodyElements that use this model
+            List<BodyElement> bodyElements = renderMap.get(model);
 
-            // Bind the VAO
-            GL46.glBindVertexArray(model.getVaoID());
-            GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
-            GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
+            // Iterate over all the BodyElements
+            for (BodyElement bodyElement : bodyElements) {
+                prepareInstance(bodyElement);
 
-            // Create transformation matrix
-            Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRx(),
-                    entity.getRy(), entity.getRz(), entity.getScale());
-
-            // Load transformation matrix into shader
-            shader.loadTransformationMatrix(transformationMatrix);
-
-            // Load shine variables into shader
-            shader.loadMaterial(bodyElement.getMaterial());
-
-            // Draw the triangles
-            GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
-
-            // Unbind the VAO
-            GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
-            GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
-            GL46.glBindVertexArray(0);
+                // Render the BodyElement by drawing the triangles
+                GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
+            }
+            unbindModel();
         }
+    }
+
+    private void prepareModel (Model model) {
+        // Bind the VAO
+        GL46.glBindVertexArray(model.getVaoID());
+        GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
+        GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
+    }
+
+    private void unbindModel () {
+        // Unbind the VAO
+        GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
+        GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
+        GL46.glBindVertexArray(0);
+    }
+
+    private void prepareInstance (BodyElement bodyElement) {
+        Entity entity = bodyElement.getEntity();
+
+        // Create transformation matrix
+        Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRx(),
+                entity.getRy(), entity.getRz(), entity.getScale());
+
+        // Load transformation matrix into shader
+        shader.loadTransformationMatrix(transformationMatrix);
+
+        // Load shine variables into shader
+        shader.loadMaterial(bodyElement.getMaterial());
     }
 
     public void complete(long window) {
