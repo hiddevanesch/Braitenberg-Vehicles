@@ -38,37 +38,45 @@ public class Renderer {
 
         // Enable depth testing
         GL46.glEnable(GL46.GL_DEPTH_TEST);
+
+        // Enable backface culling
+        GL46.glEnable(GL46.GL_CULL_FACE);
+        GL46.glCullFace(GL46.GL_BACK);
     }
 
     public void render(Body body, StaticShader shader) {
-        // Get the entity
-        Entity entity = body.getEntity();
+        // Get the entities
+        Entity[] entities = body.getEntities();
 
-        // Get the model
-        Model model = entity.getModel();
+        for (int i = 0; i < entities.length; i++) {
+            Entity entity = entities[i];
 
-        // Bind the VAO
-        GL46.glBindVertexArray(model.getVaoID());
-        GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
-        GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
+            // Get the model
+            Model model = entity.getModel();
 
-        // Create transformation matrix
-        Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRx(),
-                entity.getRy(), entity.getRz(), entity.getScale());
+            // Bind the VAO
+            GL46.glBindVertexArray(model.getVaoID());
+            GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
+            GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
 
-        // Load transformation matrix into shader
-        shader.loadTransformationMatrix(transformationMatrix);
+            // Create transformation matrix
+            Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRx(),
+                    entity.getRy(), entity.getRz(), entity.getScale());
 
-        // Load shine variables into shader
-        shader.loadMaterial(body.getMaterial());
+            // Load transformation matrix into shader
+            shader.loadTransformationMatrix(transformationMatrix);
 
-        // Draw the triangles
-        GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
+            // Load shine variables into shader
+            shader.loadMaterial(body.getMaterials()[i]);
 
-        // Unbind the VAO
-        GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
-        GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
-        GL46.glBindVertexArray(0);
+            // Draw the triangles
+            GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
+
+            // Unbind the VAO
+            GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
+            GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
+            GL46.glBindVertexArray(0);
+        }
     }
 
     public void complete(long window) {

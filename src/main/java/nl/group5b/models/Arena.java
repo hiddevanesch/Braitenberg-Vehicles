@@ -7,7 +7,18 @@ import java.io.FileNotFoundException;
 
 public class Arena extends Body {
     public Arena(ModelLoader modelLoader) throws FileNotFoundException {
-        super("arena", modelLoader);
-        super.setMaterial(new Material(0.1f, 0.2f, 0.7f, 10, 0.5f));
+        super();
+        Model arena = OBJLoader.loadOBJ("arena", modelLoader);
+
+        Material blueMaterial = new Material(0.1f, 0.2f, 0.7f, 10, 0.5f);
+
+        Vector3f nullPosition = new Vector3f(0, 0, 0);
+
+        Model[] loadedModels = {arena};
+        Material[] materialSets = {blueMaterial};
+        Vector3f[] startingPositions = {nullPosition};
+        float[] scales = {1};
+
+        super.setBody(loadedModels, materialSets, startingPositions, scales);
     }
 }

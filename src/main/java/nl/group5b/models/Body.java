@@ -6,23 +6,31 @@ import org.lwjgl.util.vector.Vector3f;
 import java.io.FileNotFoundException;
 
 public abstract class Body {
-    private Entity entity;
-    private Material material;
+    private Entity[] entities;
+    private Material[] materials;
 
-    public Body(String modelName, ModelLoader modelLoader) throws FileNotFoundException {
-        Model model = OBJLoader.loadOBJ(modelName, modelLoader);
-        this.entity = new Entity(model, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+    public Entity[] getEntities() {
+        return entities;
     }
 
-    public Entity getEntity() {
-        return entity;
+    public Material[] getMaterials() {
+        return materials;
     }
 
-    public Material getMaterial() {
-        return material;
-    }
+    public void setBody(Model[] loadedModels, Material[] materialSets,
+                        Vector3f[] startingPositions, float[] scales) throws FileNotFoundException {
+        int length = loadedModels.length;
 
-    public void setMaterial(Material material) {
-        this.material = material;
+        // Check if the arrays are the same length
+        if (length != materialSets.length || length != startingPositions.length || length != scales.length) {
+            throw new FileNotFoundException("The length of the arrays are not equal");
+        }
+        
+        this.entities = new Entity[length];
+        this.materials = new Material[length];
+        for (int i = 0; i < length; i++) {
+            this.entities[i] = new Entity(loadedModels[i], startingPositions[i], 0, 0, 0, scales[i]);
+            this.materials[i] = materialSets[i];
+        }
     }
 }
