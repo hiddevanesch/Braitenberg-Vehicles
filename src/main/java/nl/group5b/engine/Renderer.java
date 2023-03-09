@@ -60,7 +60,7 @@ public class Renderer {
         shader.loadTransformationMatrix(transformationMatrix);
 
         // Load shine variables into shader
-        shader.loadShine(body.getDamping(), body.getShininess());
+        shader.loadMaterial(body.getMaterial());
 
         // Draw the triangles
         GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);

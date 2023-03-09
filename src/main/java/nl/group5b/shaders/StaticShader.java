@@ -2,9 +2,11 @@ package nl.group5b.shaders;
 
 import nl.group5b.engine.Camera;
 import nl.group5b.engine.Light;
+import nl.group5b.models.Material;
 import nl.group5b.models.Model;
 import nl.group5b.util.Algebra;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 
 public class StaticShader extends ShaderProgram {
@@ -17,6 +19,7 @@ public class StaticShader extends ShaderProgram {
     private int viewMatrixLocation;
     private int lightPositionLocation;
     private int lightColourLocation;
+    private int colourLocation;
     private int dampingLocation;
     private int shininessLocation;
 
@@ -37,6 +40,7 @@ public class StaticShader extends ShaderProgram {
         viewMatrixLocation = super.getUniformLocation("viewMatrix");
         lightPositionLocation = super.getUniformLocation("lightPosition");
         lightColourLocation = super.getUniformLocation("lightColour");
+        colourLocation = super.getUniformLocation("colour");
         dampingLocation = super.getUniformLocation("damping");
         shininessLocation = super.getUniformLocation("shininess");
     }
@@ -59,9 +63,10 @@ public class StaticShader extends ShaderProgram {
         super.loadVector(lightColourLocation, light.getColour());
     }
 
-    public void loadShine(float damping, float shininess) {
-        super.loadFloat(dampingLocation, damping);
-        super.loadFloat(shininessLocation, shininess);
+    public void loadMaterial(Material material) {
+        super.loadVector(colourLocation, material.getColour());
+        super.loadFloat(dampingLocation, material.getDamping());
+        super.loadFloat(shininessLocation, material.getShininess());
     }
 
 }

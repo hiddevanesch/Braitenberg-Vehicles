@@ -18,12 +18,8 @@ public abstract class Body {
         return entity;
     }
 
-    public float getDamping() {
-        return material.getDamping();
-    }
-
-    public float getShininess() {
-        return material.getShininess();
+    public Material getMaterial() {
+        return material;
     }
 
     public void setMaterial(Material material) {

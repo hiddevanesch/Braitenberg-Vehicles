@@ -7,6 +7,7 @@ in vec3 toCamera;
 out vec4 outColour;
 
 uniform vec3 lightColour;
+uniform vec3 colour;
 uniform float damping;
 uniform float shininess;
 
@@ -18,8 +19,8 @@ void main(void) {
 
     // Calculate the diffuse component
     float prod = dot(unitNormal, unitLight);
-    float brightness = clamp(prod, 0.0, 1.0);
-    vec3 diffuse = vec3(0.1, 0.05, 0.7) * lightColour * brightness;
+    float brightness = clamp(prod, 0.2, 1.0);
+    vec3 diffuse = colour * lightColour * brightness;
 
     // Calculate the specular component
     vec3 lightDirection = -unitLight;

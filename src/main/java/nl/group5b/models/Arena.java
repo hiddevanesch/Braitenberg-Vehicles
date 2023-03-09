@@ -8,6 +8,6 @@ import java.io.FileNotFoundException;
 public class Arena extends Body {
     public Arena(ModelLoader modelLoader) throws FileNotFoundException {
         super("arena", modelLoader);
-        super.setMaterial(new Material(new Vector3f(0.1f, 0.1f, 0.1f), new Vector3f(0.5f, 0.5f, 0.5f), 10, 0.5f));
+        super.setMaterial(new Material(0.1f, 0.2f, 0.7f, 10, 0.5f));
     }
 }
