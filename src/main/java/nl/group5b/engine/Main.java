@@ -1,9 +1,6 @@
 package nl.group5b.engine;
 
-import nl.group5b.models.Arena;
-import nl.group5b.models.Model;
-import nl.group5b.models.ModelLoader;
-import nl.group5b.models.OBJLoader;
+import nl.group5b.models.*;
 import nl.group5b.shaders.StaticShader;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
@@ -37,9 +34,10 @@ public class Main {
         Renderer renderer = new Renderer(shader);
 
         // Load Arena entity
-        Arena arena = new Arena(modelLoader);
+        //Arena arena = new Arena(modelLoader);
+        Dragon arena = new Dragon(modelLoader);
 
-        Light light = new Light(new Vector3f(0, 2, 0), new Vector3f(1, 1, 1));
+        Light light = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
 
         Camera camera = new Camera(new Vector3f(0, 1, 0));
 
