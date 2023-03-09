@@ -11,6 +11,7 @@ import java.util.Map;
 public class MasterRenderer {
 
     private StaticShader shader = new StaticShader();
+
     private Renderer renderer = new Renderer(shader);
 
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
@@ -34,6 +35,10 @@ public class MasterRenderer {
 
     public void cleanUp() {
         shader.cleanUp();
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
     }
 
     public void processBody(Body body) {

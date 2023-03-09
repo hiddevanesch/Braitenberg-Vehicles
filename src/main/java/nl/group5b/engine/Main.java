@@ -3,7 +3,7 @@ package nl.group5b.engine;
 import nl.group5b.model.*;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Dragon;
-import nl.group5b.shaders.StaticShader;
+import nl.group5b.model.models.Multipart;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.opengl.GL;
@@ -40,10 +40,10 @@ public class Main {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( !GLFW.glfwWindowShouldClose(window) ) {
-            //entity.rotate(0.5f, 1, 0.25f);
+        while (!GLFW.glfwWindowShouldClose(window)) {
             // Poll for window events and move camera accordingly
             camera.move(window);
+            dragon.move(window, renderer.getRenderer());
 
             renderer.processBody(arena);
             renderer.processBody(dragon);

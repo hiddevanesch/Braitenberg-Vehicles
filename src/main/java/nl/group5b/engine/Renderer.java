@@ -1,11 +1,9 @@
 package nl.group5b.engine;
 
-import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
 import nl.group5b.shaders.StaticShader;
 import nl.group5b.util.Algebra;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Matrix4f;
 
 import org.lwjgl.glfw.GLFW;
@@ -19,6 +17,9 @@ public class Renderer {
     private static final float FOV = 90;
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 1000;
+
+    private static long lastFrameTime;
+    private static float delta;
 
     private Matrix4f projectionMatrix;
     private StaticShader shader;
@@ -94,11 +95,24 @@ public class Renderer {
     }
 
     public void complete(long window) {
-        GLFW.glfwSwapBuffers(window); // swap the color buffers
+        // Swap the color buffers
+        GLFW.glfwSwapBuffers(window);
 
         // Poll for window events. The key callback above will only be
         // invoked during this call.
         GLFW.glfwPollEvents();
+
+        long currentFrameTime = getCurrentTime();
+        delta = (currentFrameTime - lastFrameTime) / 1000f;
+        lastFrameTime = currentFrameTime;
+    }
+
+    public long getCurrentTime() {
+        return System.nanoTime() / 1000000;
+    }
+
+    public float getFrameTimeSeconds() {
+        return delta;
     }
 
     private void createProjectionMatrix() {

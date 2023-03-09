@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 
 public class Arena extends Body {
     public Arena(ModelLoader modelLoader) throws FileNotFoundException {
-        super();
         Model arena = OBJLoader.loadOBJ("arena", modelLoader);
 
         Material blueMaterial = new Material(0.1f, 0.2f, 0.7f, 10, 0.5f);
