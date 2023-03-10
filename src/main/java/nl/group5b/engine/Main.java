@@ -10,6 +10,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 
 public class Main {
 
@@ -35,7 +37,11 @@ public class Main {
 
         Light light = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
 
-        Camera camera = new Camera(new Vector3f(-15, 7, 15), new Vector3f(30, 45, 0));
+        BodyCamera camera = new BodyCamera(dragon, 0.5f);
+        //camera.setPosition(new Vector3f(-15, 7, 15));
+        //camera.setRotation(new Vector3f(30, 45, 0));
+        camera.enableZoom(window);
+        camera.enableMouseTracking(window);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -44,11 +50,12 @@ public class Main {
             //camera.move(window);
             dragon.move(window, renderer.getRenderer());
 
+            camera.move(window);
+
             renderer.processBody(arena);
             renderer.processBody(dragon);
 
             renderer.render(light, camera, window);
-
         }
 
         // Clean up

@@ -32,8 +32,9 @@ public abstract class Body {
         }
     }
 
-    // Code for setting the position and orientation of the body
-    public abstract void setPosition(Vector3f position, Vector3f rotation);
+    public abstract void setPosition(Vector3f position);
+
+    public abstract void setRotation(Vector3f rotation);
 
     public abstract Vector3f getPosition();
 

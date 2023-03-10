@@ -71,8 +71,12 @@ public class Dragon extends Body implements MoveHandler {
     }
 
     @Override
-    public void setPosition(Vector3f position, Vector3f rotation) {
+    public void setPosition(Vector3f position) {
         super.getBodyElements()[0].getEntity().setPosition(position);
+    }
+
+    @Override
+    public void setRotation(Vector3f rotation) {
         super.getBodyElements()[0].getEntity().setRotation(rotation);
     }
 
