@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Dragon extends Body {
-    private static final float SPEED = 3;
+    private static final float SPEED = 5;
     private static final float ROTATION_SPEED = 180;
 
     private float currentSpeed = 0;
@@ -33,7 +33,7 @@ public class Dragon extends Body {
     }
 
     public void move(long window, Renderer renderer) {
-        checkInput(window);
+        checkInput(window, renderer);
         Entity entity = super.getBodyElements()[0].getEntity();
         entity.rotate(0, currentRotationSpeed * renderer.getFrameTimeSeconds(), 0);
         float distance = currentSpeed * renderer.getFrameTimeSeconds();
@@ -42,7 +42,7 @@ public class Dragon extends Body {
         entity.move(dx, 0, dz);
     }
 
-    private void checkInput(long window) {
+    private void checkInput(long window, Renderer renderer) {
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW.GLFW_PRESS) {
             // Move forward
             currentSpeed = -SPEED;
@@ -54,7 +54,8 @@ public class Dragon extends Body {
             if (currentSpeed < 0.1f && currentSpeed > -0.1f)
                 currentSpeed = 0;
             else {
-                currentSpeed *= 0.9f;
+                // Slow down based on frame time
+                currentSpeed *= 1 - (renderer.getFrameTimeSeconds() * 10);
             }
         }
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {

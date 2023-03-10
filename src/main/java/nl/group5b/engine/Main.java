@@ -36,13 +36,13 @@ public class Main {
 
         Light light = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
 
-        Camera camera = new Camera(new Vector3f(0, 1, 0));
+        Camera camera = new Camera(new Vector3f(-15, 7, 15), 30, 45, 0);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
             // Poll for window events and move camera accordingly
-            camera.move(window);
+            //camera.move(window);
             dragon.move(window, renderer.getRenderer());
 
             renderer.processBody(arena);

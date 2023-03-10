@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Renderer {
 
-    private static final float FOV = 90;
+    private static final float FOV = 75;
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 1000;
 
