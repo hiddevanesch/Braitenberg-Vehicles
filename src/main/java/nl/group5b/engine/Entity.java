@@ -8,15 +8,13 @@ public class Entity {
 
     private Model model;
     private Vector3f position;
-    private float rx, ry, rz;
+    private Vector3f rotation;
     private float scale;
 
-    public Entity(Model model, Vector3f position, float rx, float ry, float rz, float scale) {
+    public Entity(Model model, Vector3f position, Vector3f rotation, float scale) {
         this.model = model;
         this.position = position;
-        this.rx = rx;
-        this.ry = ry;
-        this.rz = rz;
+        this.rotation = rotation;
         this.scale = scale;
     }
 
@@ -27,9 +25,9 @@ public class Entity {
     }
 
     public void rotate(float dx, float dy, float dz) {
-        this.rx += dx;
-        this.ry += dy;
-        this.rz += dz;
+        this.rotation.x += dx;
+        this.rotation.y += dy;
+        this.rotation.z += dz;
     }
 
     public Model getModel() {
@@ -48,28 +46,12 @@ public class Entity {
         this.position = position;
     }
 
-    public float getRx() {
-        return rx;
+    public Vector3f getRotation() {
+        return rotation;
     }
 
-    public void setRx(float rx) {
-        this.rx = rx;
-    }
-
-    public float getRy() {
-        return ry;
-    }
-
-    public void setRy(float ry) {
-        this.ry = ry;
-    }
-
-    public float getRz() {
-        return rz;
-    }
-
-    public void setRz(float rz) {
-        this.rz = rz;
+    public void setRotation(Vector3f rotation) {
+        this.rotation = rotation;
     }
 
     public float getScale() {

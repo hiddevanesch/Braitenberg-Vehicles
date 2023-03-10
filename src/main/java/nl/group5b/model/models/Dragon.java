@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Dragon extends Body {
+public class Dragon extends Body implements MoveHandler {
     private static final float SPEED = 5;
     private static final float ROTATION_SPEED = 180;
 
@@ -37,8 +37,8 @@ public class Dragon extends Body {
         Entity entity = super.getBodyElements()[0].getEntity();
         entity.rotate(0, currentRotationSpeed * renderer.getFrameTimeSeconds(), 0);
         float distance = currentSpeed * renderer.getFrameTimeSeconds();
-        float dx = (float) (distance * Math.sin(Math.toRadians(entity.getRy())));
-        float dz = (float) (distance * Math.cos(Math.toRadians(entity.getRy())));
+        float dx = (float) (distance * Math.sin(Math.toRadians(entity.getRotation().getY())));
+        float dz = (float) (distance * Math.cos(Math.toRadians(entity.getRotation().getY())));
         entity.move(dx, 0, dz);
     }
 
@@ -70,4 +70,19 @@ public class Dragon extends Body {
         }
     }
 
+    @Override
+    public void setPosition(Vector3f position, Vector3f rotation) {
+        super.getBodyElements()[0].getEntity().setPosition(position);
+        super.getBodyElements()[0].getEntity().setRotation(rotation);
+    }
+
+    @Override
+    public Vector3f getPosition() {
+        return super.getBodyElements()[0].getEntity().getPosition();
+    }
+
+    @Override
+    public Vector3f getRotation() {
+        return super.getBodyElements()[0].getEntity().getRotation();
+    }
 }

@@ -3,7 +3,6 @@ package nl.group5b.engine;
 import nl.group5b.model.*;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Dragon;
-import nl.group5b.model.models.Multipart;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.opengl.GL;

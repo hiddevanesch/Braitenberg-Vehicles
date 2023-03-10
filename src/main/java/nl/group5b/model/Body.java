@@ -1,6 +1,7 @@
 package nl.group5b.model;
 
 import nl.group5b.engine.Entity;
+import nl.group5b.engine.Renderer;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
@@ -25,9 +26,16 @@ public abstract class Body {
         this.bodyElements = new BodyElement[length];
         for (int i = 0; i < length; i++) {
             this.bodyElements[i] = new BodyElement(
-                    new Entity(loadedModels[i], startingPositions[i], 0, 0, 0, scales[i]),
+                    new Entity(loadedModels[i], startingPositions[i], new Vector3f(0, 0, 0), scales[i]),
                     materialSets[i]
             );
         }
     }
+
+    // Code for setting the position and orientation of the body
+    public abstract void setPosition(Vector3f position, Vector3f rotation);
+
+    public abstract Vector3f getPosition();
+
+    public abstract Vector3f getRotation();
 }

@@ -84,8 +84,7 @@ public class Renderer {
         Entity entity = bodyElement.getEntity();
 
         // Create transformation matrix
-        Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRx(),
-                entity.getRy(), entity.getRz(), entity.getScale());
+        Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 
         // Load transformation matrix into shader
         shader.loadTransformationMatrix(transformationMatrix);

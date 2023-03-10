@@ -1,5 +1,6 @@
 package nl.group5b.model.models;
 
+import nl.group5b.engine.Renderer;
 import nl.group5b.model.*;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -19,5 +20,21 @@ public class Arena extends Body {
         float[] scales = {1};
 
         super.setBody(loadedModels, materialSets, startingPositions, scales);
+    }
+
+    @Override
+    public void setPosition(Vector3f position, Vector3f rotation) {
+        super.getBodyElements()[0].getEntity().setPosition(position);
+        super.getBodyElements()[0].getEntity().setRotation(rotation);
+    }
+
+    @Override
+    public Vector3f getPosition() {
+        return super.getBodyElements()[0].getEntity().getPosition();
+    }
+
+    @Override
+    public Vector3f getRotation() {
+        return super.getBodyElements()[0].getEntity().getRotation();
     }
 }
