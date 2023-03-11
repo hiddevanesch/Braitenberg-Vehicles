@@ -39,6 +39,10 @@ public abstract class ShaderProgram {
         return GL46.glGetUniformLocation(programID, uniformName);
     }
 
+    public int getLightCount() {
+        return lightCount;
+    }
+
     public void start() {
         GL46.glUseProgram(programID);
     }
@@ -85,15 +89,19 @@ public abstract class ShaderProgram {
         GL46.glUniformMatrix4fv(location, false, matrixBuffer);
     }
 
-    private static int loadShader(String file, int type) {
+    private int loadShader(String file, int type) {
         StringBuilder shaderSource = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
                 // This allows us to compile the shader with a "dynamic" amount of lights
+                // If for some reason this line fails, the default shaders have 1 as value,
+                // so only the light with index 0 will be used
                 if (line.startsWith("#define LIGHT_COUNT")) {
-                    line += " 4";
+                    String[] split = line.split(" ");
+                    split[2] = String.valueOf(lightCount);
+                    line = String.join(" ", split);
                 }
                 shaderSource.append(line).append("\n");
             }

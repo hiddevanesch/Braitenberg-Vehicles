@@ -21,10 +21,10 @@ public class MasterRenderer {
         this.renderer = new Renderer(shader);
     }
 
-    public void render(Light sun, Camera camera, long window) {
+    public void render(Light[] lights, Camera camera, long window) {
         renderer.prepare();
         shader.start();
-        shader.loadLight(sun);
+        shader.loadLights(lights);
         shader.loadViewMatrix(camera);
 
         // Render all BodyElements in the map

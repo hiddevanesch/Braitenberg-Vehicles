@@ -31,7 +31,8 @@ public class Main {
         Dragon dragon = new Dragon(modelLoader);
 
         // Create lights
-        Light light = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
+        Light[] lights = {new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1)),
+                new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f))};
 
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(4);
@@ -54,7 +55,7 @@ public class Main {
             renderer.processBody(arena);
             renderer.processBody(dragon);
 
-            renderer.render(light, camera, window);
+            renderer.render(lights, camera, window);
         }
 
         // Clean up

@@ -16,11 +16,12 @@ public class StaticShader extends ShaderProgram {
     private int transformationMatrixLocation;
     private int projectionMatrixLocation;
     private int viewMatrixLocation;
-    private int lightPositionLocation;
-    private int lightColourLocation;
     private int colourLocation;
     private int dampingLocation;
     private int shininessLocation;
+
+    private int lightPositionLocations[];
+    private int lightColourLocations[];
 
     public StaticShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
@@ -37,11 +38,19 @@ public class StaticShader extends ShaderProgram {
         transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
         projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
         viewMatrixLocation = super.getUniformLocation("viewMatrix");
-        lightPositionLocation = super.getUniformLocation("lightPosition");
-        lightColourLocation = super.getUniformLocation("lightColour");
         colourLocation = super.getUniformLocation("colour");
         dampingLocation = super.getUniformLocation("damping");
         shininessLocation = super.getUniformLocation("shininess");
+
+        int lightCount = super.getLightCount();
+
+        lightPositionLocations = new int[lightCount];
+        lightColourLocations = new int[lightCount];
+
+        for (int i = 0; i < lightCount; i++) {
+            lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
+            lightColourLocations[i] = super.getUniformLocation("lightColour[" + i + "]");
+        }
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
@@ -57,9 +66,11 @@ public class StaticShader extends ShaderProgram {
         super.loadMatrix(projectionMatrixLocation, matrix);
     }
 
-    public void loadLight(Light light) {
-        super.loadVector(lightPositionLocation, light.getPosition());
-        super.loadVector(lightColourLocation, light.getColour());
+    public void loadLights(Light[] lights) {
+        for (int i = 0; i < lights.length; i++) {
+            super.loadVector(lightPositionLocations[i], lights[i].getPosition());
+            super.loadVector(lightColourLocations[i], lights[i].getColour());
+        }
     }
 
     public void loadMaterial(Material material) {

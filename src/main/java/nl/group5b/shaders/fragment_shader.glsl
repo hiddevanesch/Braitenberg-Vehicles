@@ -1,12 +1,14 @@
 # version 460
 
+#define LIGHT_COUNT 1
+
 in vec3 surfaceNormal;
-in vec3 toLight;
+in vec3 toLight[LIGHT_COUNT];
 in vec3 toCamera;
 
 out vec4 outColour;
 
-uniform vec3 lightColour;
+uniform vec3 lightColour[LIGHT_COUNT];
 uniform vec3 colour;
 uniform float damping;
 uniform float shininess;
@@ -14,22 +16,31 @@ uniform float shininess;
 void main(void) {
     // Normalise the vectors
     vec3 unitNormal = normalize(surfaceNormal);
-    vec3 unitLight = normalize(toLight);
     vec3 unitCamera = normalize(toCamera);
 
-    // Calculate the diffuse component
-    float prod = dot(unitNormal, unitLight);
-    float brightness = clamp(prod, 0.2, 1.0);
-    vec3 diffuse = colour * lightColour * brightness;
+    vec3 totalDiffuse = vec3(0.0, 0.0, 0.0);
+    vec3 totalSpecular = vec3(0.0, 0.0, 0.0);
 
-    // Calculate the specular component
-    vec3 lightDirection = -unitLight;
-    vec3 reflectedDirection = reflect(lightDirection, unitNormal);
-    float specularFactor = dot(unitCamera, reflectedDirection);
-    specularFactor = clamp(specularFactor, 0.0, 1.0);
-    float dampedFactor = pow(specularFactor, damping);
-    vec3 specular = dampedFactor * shininess * lightColour;
+    for (int i = 0; i < LIGHT_COUNT; i++) {
+        vec3 unitLight = normalize(toLight[i]);
+
+        // Calculate the diffuse component
+        float prod = dot(unitNormal, unitLight);
+        float brightness = clamp(prod, 0.0, 1.0);
+        totalDiffuse += colour * lightColour[i] * brightness;
+
+        // Calculate the specular component
+        vec3 lightDirection = -unitLight;
+        vec3 reflectedDirection = reflect(lightDirection, unitNormal);
+        float specularFactor = dot(unitCamera, reflectedDirection);
+        specularFactor = clamp(specularFactor, 0.0, 1.0);
+        float dampedFactor = pow(specularFactor, damping);
+        totalSpecular += dampedFactor * shininess * lightColour[i];
+    }
+
+    // Add ambient light
+    totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
 
     // Compute out colour
-    outColour = vec4(diffuse, 1.0) + vec4(specular, 1.0);
+    outColour = vec4(totalDiffuse, 1.0) + vec4(totalSpecular, 1.0);
 }
