@@ -1,7 +1,6 @@
 package nl.group5b.model;
 
 import nl.group5b.engine.Entity;
-import nl.group5b.engine.Renderer;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
@@ -31,12 +30,4 @@ public abstract class Body {
             );
         }
     }
-
-    public abstract void setPosition(Vector3f position);
-
-    public abstract void setRotation(Vector3f rotation);
-
-    public abstract Vector3f getPosition();
-
-    public abstract Vector3f getRotation();
 }

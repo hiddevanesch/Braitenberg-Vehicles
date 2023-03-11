@@ -2,11 +2,12 @@ package nl.group5b.model.models;
 
 import nl.group5b.engine.Light;
 import nl.group5b.model.*;
+import nl.group5b.model.interfaces.MoveHandler;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 
-public class Lamp extends Body {
+public class Lamp extends Body implements MoveHandler {
 
     private Light light;
 
@@ -25,6 +26,11 @@ public class Lamp extends Body {
         this.light = new Light(defaultPosition, new Vector3f(1, 1, 1));
 
         super.setBody(loadedModels, materialSets, startingPositions, scales);
+    }
+
+    public Lamp(ModelLoader modelLoader, Vector3f position) throws FileNotFoundException {
+        this(modelLoader);
+        this.setPosition(position);
     }
 
     @Override

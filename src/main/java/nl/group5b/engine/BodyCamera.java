@@ -1,17 +1,16 @@
 package nl.group5b.engine;
 
-import nl.group5b.model.Body;
+import nl.group5b.model.interfaces.MoveHandler;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
-import org.lwjgl.util.vector.Vector3f;
 
 
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 
 
 public class BodyCamera extends Camera {
-    private Body body;
+    private MoveHandler body;
 
     private static final float SENSITIVITY = 0.2f;
 
@@ -26,12 +25,13 @@ public class BodyCamera extends Camera {
     private float mouseDX;
     private float mouseDY;
 
-    public BodyCamera(Body body, float heightOffset) {
+    // require Body that implements MoveHandler
+    public BodyCamera(MoveHandler body, float heightOffset) {
         this.body = body;
         this.heightOffset = heightOffset; // TODO change to body height / 2
     }
 
-    public void changeBody(Body body) {
+    public void changeBody(MoveHandler body) {
         this.body = body;
     }
 

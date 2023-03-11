@@ -4,6 +4,7 @@ import nl.group5b.engine.Entity;
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
+import nl.group5b.model.interfaces.MoveHandler;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -11,7 +12,7 @@ import java.io.FileNotFoundException;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Dragon extends Body implements ControlHandler {
+public class Dragon extends Body implements ControlHandler, MoveHandler {
     private static final float SPEED = 5;
     private static final float ROTATION_SPEED = 180;
 
