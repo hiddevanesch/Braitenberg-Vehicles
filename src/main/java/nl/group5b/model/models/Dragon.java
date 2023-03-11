@@ -45,10 +45,10 @@ public class Dragon extends Body implements MoveHandler {
     private void checkInput(long window, Renderer renderer) {
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW.GLFW_PRESS) {
             // Move forward
-            currentSpeed = -SPEED;
+            currentSpeed = SPEED;
         } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW.GLFW_PRESS) {
             // Move backward
-            currentSpeed = SPEED;
+            currentSpeed = -SPEED;
         } else {
             // Slow down
             if (currentSpeed < 0.1f && currentSpeed > -0.1f)

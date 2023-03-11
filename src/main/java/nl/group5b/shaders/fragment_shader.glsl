@@ -39,7 +39,7 @@ void main(void) {
     }
 
     // Add ambient light
-    totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
+    totalDiffuse = max(totalDiffuse, 0.15 * colour);
 
     // Compute out colour
     outColour = vec4(totalDiffuse, 1.0) + vec4(totalSpecular, 1.0);
