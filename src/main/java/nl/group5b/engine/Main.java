@@ -35,7 +35,7 @@ public class Main {
                 new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f))};
 
         // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(4);
+        MasterRenderer renderer = new MasterRenderer(lights.length);
 
         BodyCamera camera = new BodyCamera(dragon, 0.5f);
         //camera.setPosition(new Vector3f(-15, 7, 15));
