@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Dragon extends Body implements MoveHandler {
+public class Dragon extends Body implements ControlHandler {
     private static final float SPEED = 5;
     private static final float ROTATION_SPEED = 180;
 
