@@ -82,7 +82,7 @@ public class BodyCamera extends Camera {
         GLFW.glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long win, double dx, double dy) {
-                float zoomLevel = (float) dy * SENSITIVITY;
+                float zoomLevel = (float) dy * distance * SENSITIVITY;
                 distance -= zoomLevel;
             }
         });

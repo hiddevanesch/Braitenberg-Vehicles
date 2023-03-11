@@ -28,9 +28,10 @@ public class Lamp extends Body implements MoveHandler {
         super.setBody(loadedModels, materialSets, startingPositions, scales);
     }
 
-    public Lamp(ModelLoader modelLoader, Vector3f position) throws FileNotFoundException {
+    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation) throws FileNotFoundException {
         this(modelLoader);
         this.setPosition(position);
+        this.setRotation(rotation);
     }
 
     @Override

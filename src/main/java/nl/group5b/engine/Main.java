@@ -31,9 +31,7 @@ public class Main {
         // Create Bodies
         Arena arena = new Arena(modelLoader);
         Dragon dragon = new Dragon(modelLoader);
-        Lamp lamp = new Lamp(modelLoader);
-
-        lamp.setPosition(new Vector3f(0, 5, 0));
+        Lamp lamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
 
         // Load bodies into array
         List<Body> bodies = List.of(arena, dragon, lamp);

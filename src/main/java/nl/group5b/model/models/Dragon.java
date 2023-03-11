@@ -34,6 +34,11 @@ public class Dragon extends Body implements ControlHandler, MoveHandler {
         super.setBody(loadedModels, materialSets, startingPositions, scales);
     }
 
+    public Dragon(ModelLoader modelLoader, Vector3f position) throws FileNotFoundException {
+        this(modelLoader);
+        this.setPosition(position);
+    }
+
     public void move(long window, Renderer renderer) {
         checkInput(window, renderer);
         Entity entity = super.getBodyElements()[0].getEntity();
