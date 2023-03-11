@@ -1,4 +1,6 @@
-# version 460
+#version 460
+
+#define LIGHT_COUNT
 
 in vec3 position;
 in vec3 normal;

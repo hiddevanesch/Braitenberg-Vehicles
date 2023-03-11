@@ -16,9 +16,12 @@ public abstract class ShaderProgram {
     private int vertexShaderID;
     private int fragmentShaderID;
 
+    private final int lightCount;
+
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
-    public ShaderProgram(String vertexFile, String fragmentFile) {
+    public ShaderProgram(String vertexFile, String fragmentFile, int lightCount) {
+        this.lightCount = lightCount;
         vertexShaderID = loadShader(vertexFile, GL46.GL_VERTEX_SHADER);
         fragmentShaderID = loadShader(fragmentFile, GL46.GL_FRAGMENT_SHADER);
         programID = GL46.glCreateProgram();
@@ -88,6 +91,10 @@ public abstract class ShaderProgram {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
+                // This allows us to compile the shader with a "dynamic" amount of lights
+                if (line.startsWith("#define LIGHT_COUNT")) {
+                    line += " 4";
+                }
                 shaderSource.append(line).append("\n");
             }
             reader.close();

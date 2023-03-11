@@ -17,7 +17,7 @@ public class BodyCamera extends Camera {
 
     private float heightOffset;
 
-    private float distance = 1;
+    private float distance = 2;
     private float bodyPitch;
     private float angle;
 
@@ -44,7 +44,7 @@ public class BodyCamera extends Camera {
     }
 
     private void computePitch(long window) {
-        if (glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+        if (glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS) {
             float pitchChange = mouseDY * SENSITIVITY;
             bodyPitch += pitchChange;
             mouseDY = 0;
@@ -52,7 +52,7 @@ public class BodyCamera extends Camera {
     }
 
     private void computeAngle(long window) {
-        if (glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+        if (glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS) {
             float angleChange = mouseDX * SENSITIVITY;
             angle -= angleChange;
             mouseDX = 0;

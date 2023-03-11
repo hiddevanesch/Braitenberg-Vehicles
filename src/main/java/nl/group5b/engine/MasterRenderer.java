@@ -10,11 +10,16 @@ import java.util.Map;
 
 public class MasterRenderer {
 
-    private StaticShader shader = new StaticShader();
+    private StaticShader shader;
 
-    private Renderer renderer = new Renderer(shader);
+    private Renderer renderer;
 
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
+
+    public MasterRenderer(int lightCount) {
+        this.shader = new StaticShader(lightCount);
+        this.renderer = new Renderer(shader);
+    }
 
     public void render(Light sun, Camera camera, long window) {
         renderer.prepare();

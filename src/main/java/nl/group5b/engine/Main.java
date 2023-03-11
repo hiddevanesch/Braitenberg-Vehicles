@@ -10,8 +10,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 
 public class Main {
 
@@ -28,14 +26,15 @@ public class Main {
         // Initialize
         GL.createCapabilities();
 
-        // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer();
-
-        // Load Arena entity
+        // Load Bodies
         Arena arena = new Arena(modelLoader);
         Dragon dragon = new Dragon(modelLoader);
 
+        // Create lights
         Light light = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
+
+        // Create MasterRenderer instance
+        MasterRenderer renderer = new MasterRenderer(4);
 
         BodyCamera camera = new BodyCamera(dragon, 0.5f);
         //camera.setPosition(new Vector3f(-15, 7, 15));

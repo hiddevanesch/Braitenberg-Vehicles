@@ -22,8 +22,8 @@ public class StaticShader extends ShaderProgram {
     private int dampingLocation;
     private int shininessLocation;
 
-    public StaticShader() {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+    public StaticShader(int lightCount) {
+        super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
     }
 
     @Override
