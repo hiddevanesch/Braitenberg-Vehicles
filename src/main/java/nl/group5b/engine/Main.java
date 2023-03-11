@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 
 public class Main {
@@ -26,13 +27,19 @@ public class Main {
         // Initialize
         GL.createCapabilities();
 
-        // Load Bodies
+        // Create Bodies
         Arena arena = new Arena(modelLoader);
         Dragon dragon = new Dragon(modelLoader);
 
+        // Load bodies into array
+        List<Body> bodies = List.of(arena, dragon);
+
         // Create lights
-        Light[] lights = {new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1)),
-                new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f))};
+        Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
+        Light colouredLight = new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f));
+
+        // Load lights into array (has to be an array with predefined length)
+        Light[] lights = {sun, colouredLight};
 
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights.length);
@@ -52,8 +59,7 @@ public class Main {
 
             camera.move(window);
 
-            renderer.processBody(arena);
-            renderer.processBody(dragon);
+            renderer.processBodies(bodies);
 
             renderer.render(lights, camera, window);
         }

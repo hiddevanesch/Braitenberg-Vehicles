@@ -67,7 +67,7 @@ public class StaticShader extends ShaderProgram {
     }
 
     public void loadLights(Light[] lights) {
-        for (int i = 0; i < lights.length; i++) {
+        for (int i = 0; i < super.getLightCount(); i++) {
             super.loadVector(lightPositionLocations[i], lights[i].getPosition());
             super.loadVector(lightColourLocations[i], lights[i].getColour());
         }

@@ -46,7 +46,13 @@ public class MasterRenderer {
         return renderer;
     }
 
-    public void processBody(Body body) {
+    public void processBodies(List<Body> bodies) {
+        for (Body body : bodies) {
+            processBody(body);
+        }
+    }
+
+    private void processBody(Body body) {
         for (BodyElement bodyElement : body.getBodyElements()) {
             processBodyElement(bodyElement);
         }
