@@ -3,6 +3,7 @@ package nl.group5b.engine;
 import nl.group5b.model.*;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Dragon;
+import nl.group5b.model.models.Lamp;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.opengl.GL;
@@ -30,16 +31,19 @@ public class Main {
         // Create Bodies
         Arena arena = new Arena(modelLoader);
         Dragon dragon = new Dragon(modelLoader);
+        Lamp lamp = new Lamp(modelLoader);
+
+        lamp.setPosition(new Vector3f(0, 5, 0));
 
         // Load bodies into array
-        List<Body> bodies = List.of(arena, dragon);
+        List<Body> bodies = List.of(arena, dragon, lamp);
 
         // Create lights
-        Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
-        Light colouredLight = new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f));
+        //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
+        //Light colouredLight = new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f));
 
         // Load lights into array (has to be an array with predefined length)
-        Light[] lights = {sun, colouredLight};
+        Light[] lights = {lamp.getLight()};
 
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights.length);

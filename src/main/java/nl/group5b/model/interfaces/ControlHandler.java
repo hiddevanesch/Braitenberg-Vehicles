@@ -1,4 +1,4 @@
-package nl.group5b.model;
+package nl.group5b.model.interfaces;
 
 import nl.group5b.engine.Renderer;
 

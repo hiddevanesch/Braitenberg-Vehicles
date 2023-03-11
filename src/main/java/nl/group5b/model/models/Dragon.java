@@ -3,6 +3,7 @@ package nl.group5b.model.models;
 import nl.group5b.engine.Entity;
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.*;
+import nl.group5b.model.interfaces.ControlHandler;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,11 +23,11 @@ public class Dragon extends Body implements ControlHandler {
 
         Material pinkMaterial = new Material(1, 0.5f, 0.5f, 10, 0.5f);
 
-        Vector3f nullPosition = new Vector3f(0, 0, 0);
+        Vector3f defaultPosition = new Vector3f(0, 0, 0);
 
         Model[] loadedModels = {dragon};
         Material[] materialSets = {pinkMaterial};
-        Vector3f[] startingPositions = {nullPosition};
+        Vector3f[] startingPositions = {defaultPosition};
         float[] scales = {0.1f};
 
         super.setBody(loadedModels, materialSets, startingPositions, scales);
