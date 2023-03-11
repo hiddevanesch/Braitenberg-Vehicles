@@ -22,6 +22,7 @@ public class StaticShader extends ShaderProgram {
 
     private int lightPositionLocations[];
     private int lightColourLocations[];
+    private int lightAttenuationLocations[];
 
     public StaticShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
@@ -46,10 +47,12 @@ public class StaticShader extends ShaderProgram {
 
         lightPositionLocations = new int[lightCount];
         lightColourLocations = new int[lightCount];
+        lightAttenuationLocations = new int[lightCount];
 
         for (int i = 0; i < lightCount; i++) {
             lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
             lightColourLocations[i] = super.getUniformLocation("lightColour[" + i + "]");
+            lightAttenuationLocations[i] = super.getUniformLocation("lightAttenuation[" + i + "]");
         }
     }
 
@@ -70,6 +73,7 @@ public class StaticShader extends ShaderProgram {
         for (int i = 0; i < super.getLightCount(); i++) {
             super.loadVector(lightPositionLocations[i], lights[i].getPosition());
             super.loadVector(lightColourLocations[i], lights[i].getColour());
+            super.loadVector(lightAttenuationLocations[i], lights[i].getAttenuation());
         }
     }
 

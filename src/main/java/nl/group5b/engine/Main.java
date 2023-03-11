@@ -31,17 +31,19 @@ public class Main {
         // Create Bodies
         Arena arena = new Arena(modelLoader);
         Dragon dragon = new Dragon(modelLoader);
-        Lamp lamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
+        Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
+        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
+                new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
-        List<Body> bodies = List.of(arena, dragon, lamp);
+        List<Body> bodies = List.of(arena, dragon, mainLamp, colouredLamp);
 
         // Create lights
         //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
         //Light colouredLight = new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f));
 
         // Load lights into array (has to be an array with predefined length)
-        Light[] lights = {lamp.getLight()};
+        Light[] lights = {mainLamp.getLight(), colouredLamp.getLight()};
 
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights.length);

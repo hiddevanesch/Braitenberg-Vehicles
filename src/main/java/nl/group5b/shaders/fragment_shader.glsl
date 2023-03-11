@@ -9,6 +9,7 @@ in vec3 toCamera;
 out vec4 outColour;
 
 uniform vec3 lightColour[LIGHT_COUNT];
+uniform vec3 lightAttenuation[LIGHT_COUNT];
 uniform vec3 colour;
 uniform float damping;
 uniform float shininess;
@@ -22,12 +23,16 @@ void main(void) {
     vec3 totalSpecular = vec3(0.0, 0.0, 0.0);
 
     for (int i = 0; i < LIGHT_COUNT; i++) {
+        float distanceToLight = length(toLight[i]);
+        float attenuationFactor = lightAttenuation[i].x + lightAttenuation[i].y * distanceToLight
+            + lightAttenuation[i].z * distanceToLight * distanceToLight;
+
         vec3 unitLight = normalize(toLight[i]);
 
         // Calculate the diffuse component
         float prod = dot(unitNormal, unitLight);
         float brightness = clamp(prod, 0.0, 1.0);
-        totalDiffuse += colour * lightColour[i] * brightness;
+        totalDiffuse += (colour * lightColour[i] * brightness) / attenuationFactor;
 
         // Calculate the specular component
         vec3 lightDirection = -unitLight;
@@ -35,7 +40,7 @@ void main(void) {
         float specularFactor = dot(unitCamera, reflectedDirection);
         specularFactor = clamp(specularFactor, 0.0, 1.0);
         float dampedFactor = pow(specularFactor, damping);
-        totalSpecular += dampedFactor * shininess * lightColour[i];
+        totalSpecular += (dampedFactor * shininess * lightColour[i]) / attenuationFactor;
     }
 
     // Add ambient light

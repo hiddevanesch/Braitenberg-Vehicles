@@ -34,6 +34,13 @@ public class Lamp extends Body implements MoveHandler {
         this.setRotation(rotation);
     }
 
+    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation,
+                Vector3f colour, Vector3f attenuation) throws FileNotFoundException {
+        this(modelLoader, position, rotation);
+        this.light.setColour(colour);
+        this.light.setAttenuation(attenuation);
+    }
+
     @Override
     public void setPosition(Vector3f position) {
         super.getBodyElements()[0].getEntity().setPosition(position);
