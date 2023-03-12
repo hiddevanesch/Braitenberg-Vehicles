@@ -4,6 +4,8 @@ import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import nl.group5b.gui.GUI;
+import nl.group5b.gui.elements.Element;
+import nl.group5b.gui.elements.Test;
 import nl.group5b.model.*;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Dragon;
@@ -27,14 +29,14 @@ public class Main {
         // Store the window handle
         long window = DisplayBuilder.window;
 
-        // Initialize
-        GL.createCapabilities();
+        // Create GUI Elements
+        Test test = new Test();
+
+        // Load GUI Elements into array
+        Element[] elements = {test};
 
         // Create GUI
-        GUI gui = new GUI();
-
-        // Initialize GUI
-        gui.init(window);
+        GUI gui = new GUI(window, elements);
 
         // Create ModelLoader instance
         ModelLoader modelLoader = new ModelLoader();

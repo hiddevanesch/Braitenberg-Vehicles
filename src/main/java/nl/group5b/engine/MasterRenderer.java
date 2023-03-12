@@ -27,7 +27,7 @@ public class MasterRenderer {
         shader.start();
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
-        
+
         // Render all BodyElements in the map
         renderer.render(renderMap);
 

@@ -2,6 +2,7 @@ package nl.group5b.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
@@ -72,6 +73,8 @@ public class DisplayBuilder {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        GL.createCapabilities();
     }
 
     public static int getWidth() {
