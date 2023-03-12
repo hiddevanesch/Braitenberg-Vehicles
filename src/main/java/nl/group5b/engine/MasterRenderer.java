@@ -1,5 +1,6 @@
 package nl.group5b.engine;
 
+import nl.group5b.gui.GUI;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
@@ -21,16 +22,19 @@ public class MasterRenderer {
         this.renderer = new Renderer(shader);
     }
 
-    public void render(Light[] lights, Camera camera, long window) {
+    public void render(Light[] lights, Camera camera, long window, GUI gui) {
         renderer.prepare();
         shader.start();
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
-
+        
         // Render all BodyElements in the map
         renderer.render(renderMap);
 
         shader.stop();
+
+        // Render the GUI
+        gui.render();
 
         renderer.complete(window);
 

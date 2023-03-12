@@ -1,5 +1,9 @@
 package nl.group5b.engine;
 
+import imgui.ImGui;
+import imgui.gl3.ImGuiImplGl3;
+import imgui.glfw.ImGuiImplGlfw;
+import nl.group5b.gui.GUI;
 import nl.group5b.model.*;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Dragon;
@@ -16,17 +20,24 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
+
         // Initialize the window
         DisplayBuilder.init();
 
         // Store the window handle
         long window = DisplayBuilder.window;
 
-        // Create ModelLoader instance
-        ModelLoader modelLoader = new ModelLoader();
-
         // Initialize
         GL.createCapabilities();
+
+        // Create GUI
+        GUI gui = new GUI();
+
+        // Initialize GUI
+        gui.init(window);
+
+        // Create ModelLoader instance
+        ModelLoader modelLoader = new ModelLoader();
 
         // Create Bodies
         Arena arena = new Arena(modelLoader);
@@ -65,11 +76,15 @@ public class Main {
 
             renderer.processBodies(bodies);
 
-            renderer.render(lights, camera, window);
+            renderer.render(lights, camera, window, gui);
+
         }
 
-        // Clean up
+        // Clean up renderer
         renderer.cleanUp();
+
+        // Clean up GUI
+        gui.cleanUp();
 
         // Remove all VAOs and VBOs
         modelLoader.cleanUp();
