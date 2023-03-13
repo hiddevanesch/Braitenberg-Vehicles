@@ -14,7 +14,6 @@ public class GUI {
 
     public GUI(long window, Element[] elements) {
         ImGui.createContext();
-        //ImGui.setCurrentContext(ImGui.getCurrentContext());
         glfwGui.init(window, true);
         gl3Gui.init("#version 460");
         this.elements = elements;

@@ -1,18 +1,12 @@
 package nl.group5b.engine;
 
-import imgui.ImGui;
-import imgui.gl3.ImGuiImplGl3;
-import imgui.glfw.ImGuiImplGlfw;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.Element;
 import nl.group5b.gui.elements.Test;
 import nl.group5b.model.*;
-import nl.group5b.model.models.Arena;
-import nl.group5b.model.models.Dragon;
-import nl.group5b.model.models.Lamp;
+import nl.group5b.model.models.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
@@ -44,12 +38,15 @@ public class Main {
         // Create Bodies
         Arena arena = new Arena(modelLoader);
         Dragon dragon = new Dragon(modelLoader);
+        Controllable braitenbergVehicle = new Controllable(modelLoader);
+        braitenbergVehicle.setPosition(new Vector3f(0, 0, 5));
+        braitenbergVehicle.setRotation(new Vector3f(0, 90, 0));
         Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
-        List<Body> bodies = List.of(arena, dragon, mainLamp, colouredLamp);
+        List<Body> bodies = List.of(arena, dragon, braitenbergVehicle, mainLamp, colouredLamp);
 
         // Create lights
         //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
