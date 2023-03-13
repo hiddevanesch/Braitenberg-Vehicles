@@ -29,4 +29,20 @@ public class Algebra {
         Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
         return viewMatrix;
     }
+
+    public static Vector3f rotatePointAroundPivot(Vector3f point, Vector3f pivot, float angle) {
+        float s = (float) Math.sin(Math.toRadians(-angle));
+        float c = (float) Math.cos(Math.toRadians(-angle));
+
+        // Rotate point
+        float newX = point.x * c - point.z * s;
+        float newZ = point.x * s + point.z * c;
+
+        // Get result
+        Vector3f result = new Vector3f();
+        result.x = newX + pivot.x;
+        result.y = pivot.y;
+        result.z = newZ + pivot.z;
+        return result;
+    }
 }

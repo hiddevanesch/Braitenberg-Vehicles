@@ -4,6 +4,7 @@ import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.Element;
 import nl.group5b.gui.elements.Test;
 import nl.group5b.model.*;
+import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.models.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
@@ -37,16 +38,17 @@ public class Main {
 
         // Create Bodies
         Arena arena = new Arena(modelLoader);
-        Dragon dragon = new Dragon(modelLoader);
-        Controllable braitenbergVehicle = new Controllable(modelLoader);
-        braitenbergVehicle.setPosition(new Vector3f(0, 0, 5));
-        braitenbergVehicle.setRotation(new Vector3f(0, 90, 0));
+        //Dragon dragon = new Dragon(modelLoader);
+        Controllable braitenbergVehicle = new Controllable(modelLoader,
+                new Vector3f(0, 0, 5), new Vector3f(0, 45, 0));
+        Controllable tegenhanger = new Controllable(modelLoader,
+                new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
         Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
-        List<Body> bodies = List.of(arena, dragon, braitenbergVehicle, mainLamp, colouredLamp);
+        List<Body> bodies = List.of(arena, braitenbergVehicle, tegenhanger, mainLamp, colouredLamp);
 
         // Create lights
         //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
@@ -58,7 +60,7 @@ public class Main {
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights.length);
 
-        BodyCamera camera = new BodyCamera(dragon, 0.5f);
+        BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
         //camera.setPosition(new Vector3f(-15, 7, 15));
         //camera.setRotation(new Vector3f(30, 45, 0));
         camera.enableZoom(window);
@@ -69,7 +71,12 @@ public class Main {
         while (!GLFW.glfwWindowShouldClose(window)) {
             // Poll for window events and move camera accordingly
             //camera.move(window);
-            dragon.move(window, renderer.getRenderer());
+
+            for (Body body : bodies) {
+                if (body instanceof ControlHandler) {
+                    ((ControlHandler) body).move(window, renderer.getRenderer());
+                }
+            }
 
             camera.move(window);
 

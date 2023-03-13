@@ -12,8 +12,8 @@ public abstract class Body {
         return bodyElements;
     }
 
-    public void setBody(Model[] loadedModels, Material[] materialSets,
-                        Vector3f[] startingPositions, float[] scales) throws FileNotFoundException {
+    public void setBody(Model[] loadedModels, Material[] materialSets, Vector3f[] startingPositions,
+                        Vector3f[] startingRotations, float[] scales) throws FileNotFoundException {
         int length = loadedModels.length;
 
         // Check if the arrays are the same length
@@ -25,7 +25,7 @@ public abstract class Body {
         this.bodyElements = new BodyElement[length];
         for (int i = 0; i < length; i++) {
             this.bodyElements[i] = new BodyElement(
-                    new Entity(loadedModels[i], startingPositions[i], new Vector3f(0, 0, 0), scales[i]),
+                    new Entity(loadedModels[i], startingPositions[i], startingRotations[i], scales[i]),
                     materialSets[i]
             );
         }

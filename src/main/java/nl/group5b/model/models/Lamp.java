@@ -2,36 +2,29 @@ package nl.group5b.model.models;
 
 import nl.group5b.engine.Light;
 import nl.group5b.model.*;
-import nl.group5b.model.interfaces.MoveHandler;
+import nl.group5b.model.interfaces.PositionHandler;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 
-public class Lamp extends Body implements MoveHandler {
+public class Lamp extends Body implements PositionHandler {
 
     private Light light;
 
-    public Lamp(ModelLoader modelLoader) throws FileNotFoundException {
+    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation) throws FileNotFoundException {
         Model lamp = OBJLoader.loadOBJ("lamp", modelLoader);
 
         Material yellowMaterial = new Material(0.75f, 0.75f, 0, 10, 0.5f);
 
-        Vector3f defaultPosition = new Vector3f(0, 0, 0);
-
         Model[] loadedModels = {lamp};
         Material[] materialSets = {yellowMaterial};
-        Vector3f[] startingPositions = {defaultPosition};
+        Vector3f[] startingPositions = {position};
+        Vector3f[] startingRotations = {rotation};
         float[] scales = {1};
 
-        this.light = new Light(defaultPosition, new Vector3f(1, 1, 1));
+        this.light = new Light(position, new Vector3f(1, 1, 1));
 
-        super.setBody(loadedModels, materialSets, startingPositions, scales);
-    }
-
-    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation) throws FileNotFoundException {
-        this(modelLoader);
-        this.setPosition(position);
-        this.setRotation(rotation);
+        super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
     }
 
     public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation,
@@ -50,6 +43,16 @@ public class Lamp extends Body implements MoveHandler {
     @Override
     public void setRotation(Vector3f rotation) {
         super.getBodyElements()[0].getEntity().setRotation(rotation);
+    }
+
+    @Override
+    public void movePosition(Vector3f position) {
+        // TODO implement
+    }
+
+    @Override
+    public void moveRotation(Vector3f rotation) {
+        // TODO implement
     }
 
     @Override

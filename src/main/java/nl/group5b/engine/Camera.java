@@ -6,8 +6,8 @@ public class Camera {
 
     // These are preset values, such that setPosition and setRotation do not HAVE to be called per se
     // Though, when not using a BodyCamera, these functions should be called
-    private Vector3f position = new Vector3f(0, 0, 0);
-    private Vector3f rotation = new Vector3f(0, 0, 0);
+    protected Vector3f position = new Vector3f(0, 0, 0);
+    protected Vector3f rotation = new Vector3f(0, 0, 0);
 
     public Vector3f getPosition() {
         return position;

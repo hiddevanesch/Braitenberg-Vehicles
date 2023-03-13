@@ -1,22 +1,23 @@
 package nl.group5b.engine;
 
-import nl.group5b.model.interfaces.MoveHandler;
+import nl.group5b.model.interfaces.PositionHandler;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.util.vector.Vector3f;
 
 
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 
 
 public class BodyCamera extends Camera {
-    private MoveHandler body;
+    private PositionHandler body;
 
     private static final float SENSITIVITY = 0.2f;
 
     private float heightOffset;
 
-    private float distance = 2;
+    private float distance = 4;
     private float bodyPitch;
     private float angle;
 
@@ -26,12 +27,12 @@ public class BodyCamera extends Camera {
     private float mouseDY;
 
     // require Body that implements MoveHandler
-    public BodyCamera(MoveHandler body, float heightOffset) {
+    public BodyCamera(PositionHandler body, float heightOffset) {
         this.body = body;
         this.heightOffset = heightOffset; // TODO change to body height / 2
     }
 
-    public void changeBody(MoveHandler body) {
+    public void changeBody(PositionHandler body) {
         this.body = body;
     }
 
@@ -60,14 +61,16 @@ public class BodyCamera extends Camera {
     }
 
     private void computeCameraPosition(float horizontalDistance, float verticalDistance) {
-        float theta = body.getRotation().getY() + angle;
+        Vector3f bodyPosition = body.getPosition();
+        Vector3f bodyRotation = body.getRotation();
+        float theta = bodyRotation.y + angle;
         float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
-        getPosition().x = body.getPosition().x - offsetX;
-        getPosition().y = body.getPosition().y + heightOffset + verticalDistance;
-        getPosition().z = body.getPosition().z - offsetZ;
-        getRotation().x = bodyPitch;
-        getRotation().y = 180 - (body.getRotation().y + angle);
+        position.x = bodyPosition.x - offsetX;
+        position.y = bodyPosition.y + heightOffset + verticalDistance;
+        position.z = bodyPosition.z - offsetZ;
+        rotation.x = bodyPitch;
+        rotation.y = 180 - (bodyRotation.y + angle);
     }
 
     private float computeHorizontalDistance() {
