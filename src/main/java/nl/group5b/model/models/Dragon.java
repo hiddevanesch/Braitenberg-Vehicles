@@ -6,7 +6,6 @@ import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.interfaces.PositionHandler;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 

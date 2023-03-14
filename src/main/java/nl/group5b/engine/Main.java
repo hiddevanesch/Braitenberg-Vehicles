@@ -6,9 +6,9 @@ import nl.group5b.gui.elements.Demo;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.models.*;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package nl.group5b.model.interfaces;
 
-import org.lwjgl.util.vector.Vector3f;
+
+import org.joml.Vector3f;
 
 public interface PositionHandler {
     public void setPosition(Vector3f position);

@@ -3,7 +3,7 @@ package nl.group5b.model.models;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
 
@@ -64,13 +64,9 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     @Override
     public void setPosition(Vector3f position) {
-        Vector3f bodyPosition = new Vector3f();
-        Vector3f leftWheelPosition = new Vector3f();
-        Vector3f rightWheelPosition = new Vector3f();
-
-        Vector3f.add(position, carBodyRelativePosition, bodyPosition);
-        Vector3f.add(position, carLeftWheelRelativePosition, leftWheelPosition);
-        Vector3f.add(position, carRightWheelRelativePosition, rightWheelPosition);
+        Vector3f bodyPosition = new Vector3f(position).add(carBodyRelativePosition);
+        Vector3f leftWheelPosition = new Vector3f(position).add(carLeftWheelRelativePosition);
+        Vector3f rightWheelPosition = new Vector3f(position).add(carRightWheelRelativePosition);
 
         super.getBodyElements()[0].getEntity().setPosition(bodyPosition);
         super.getBodyElements()[1].getEntity().setPosition(leftWheelPosition);
@@ -97,13 +93,9 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     @Override
     public void movePosition(Vector3f position) {
-        Vector3f bodyPosition = new Vector3f();
-        Vector3f leftWheelPosition = new Vector3f();
-        Vector3f rightWheelPosition = new Vector3f();
-
-        Vector3f.add(position, super.getBodyElements()[0].getEntity().getPosition(), bodyPosition);
-        Vector3f.add(position, super.getBodyElements()[1].getEntity().getPosition(), leftWheelPosition);
-        Vector3f.add(position, super.getBodyElements()[2].getEntity().getPosition(), rightWheelPosition);
+        Vector3f bodyPosition = new Vector3f(super.getBodyElements()[0].getEntity().getPosition()).add(position);
+        Vector3f leftWheelPosition = new Vector3f(super.getBodyElements()[1].getEntity().getPosition()).add(position);
+        Vector3f rightWheelPosition = new Vector3f(super.getBodyElements()[2].getEntity().getPosition()).add(position);
 
         super.getBodyElements()[0].getEntity().setPosition(bodyPosition);
         super.getBodyElements()[1].getEntity().setPosition(leftWheelPosition);
@@ -112,9 +104,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     @Override
     public void moveRotation(Vector3f rotation) {
-        Vector3f bodyRotation = new Vector3f();
-
-        Vector3f.add(rotation, super.getBodyElements()[0].getEntity().getRotation(), bodyRotation);
+        Vector3f bodyRotation = new Vector3f(super.getBodyElements()[0].getEntity().getRotation()).add(rotation);
 
         setRotation(bodyRotation);
     }

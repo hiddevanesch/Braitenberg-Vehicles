@@ -1,10 +1,10 @@
 package nl.group5b.engine;
 
 import nl.group5b.model.interfaces.PositionHandler;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
-import org.lwjgl.util.vector.Vector3f;
 
 
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;

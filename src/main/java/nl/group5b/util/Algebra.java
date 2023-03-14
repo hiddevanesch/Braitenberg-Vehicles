@@ -1,33 +1,31 @@
 package nl.group5b.util;
 
-
 import nl.group5b.engine.Camera;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import java.nio.FloatBuffer;
 
 public class Algebra {
 
     public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f rotation, float scale) {
-        Matrix4f matrix = new Matrix4f();
-        matrix.setIdentity();
-        Matrix4f.translate(translation, matrix, matrix);
-        Matrix4f.rotate((float) Math.toRadians(rotation.getX()), new Vector3f(1, 0, 0), matrix, matrix);
-        Matrix4f.rotate((float) Math.toRadians(rotation.getY()), new Vector3f(0, 1, 0), matrix, matrix);
-        Matrix4f.rotate((float) Math.toRadians(rotation.getZ()), new Vector3f(0, 0, 1), matrix, matrix);
-        Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
+        Matrix4f matrix = new Matrix4f().identity();
+        matrix.translate(translation);
+        matrix.rotate((float) Math.toRadians(rotation.x()), new Vector3f(1, 0, 0));
+        matrix.rotate((float) Math.toRadians(rotation.y()), new Vector3f(0, 1, 0));
+        matrix.rotate((float) Math.toRadians(rotation.z()), new Vector3f(0, 0, 1));
+        matrix.scale(new Vector3f(scale, scale, scale));
         return matrix;
     }
 
     public static Matrix4f createViewMatrix(Camera camera) {
-        Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.setIdentity();
-        Matrix4f.rotate((float) Math.toRadians(camera.getRotation().getX()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-        Matrix4f.rotate((float) Math.toRadians(camera.getRotation().getY()), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-        Matrix4f.rotate((float) Math.toRadians(camera.getRotation().getZ()), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
+        Matrix4f viewMatrix = new Matrix4f().identity();
+        viewMatrix.rotate((float) Math.toRadians(camera.getRotation().x()), new Vector3f(1, 0, 0));
+        viewMatrix.rotate((float) Math.toRadians(camera.getRotation().y()), new Vector3f(0, 1, 0));
+        viewMatrix.rotate((float) Math.toRadians(camera.getRotation().z()), new Vector3f(0, 0, 1));
         Vector3f cameraPos = camera.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-        Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+        viewMatrix.translate(negativeCameraPos);
         return viewMatrix;
     }
 
@@ -47,6 +45,26 @@ public class Algebra {
         return result;
     }
 
+    public static void matrixToBuffer(Matrix4f matrix, FloatBuffer dest)
+    {
+        dest.put(0, matrix.m00());
+        dest.put(1, matrix.m01());
+        dest.put(2, matrix.m02());
+        dest.put(3, matrix.m03());
+        dest.put(4, matrix.m10());
+        dest.put(5, matrix.m11());
+        dest.put(6, matrix.m12());
+        dest.put(7, matrix.m13());
+        dest.put(8, matrix.m20());
+        dest.put(9, matrix.m21());
+        dest.put(10, matrix.m22());
+        dest.put(11, matrix.m23());
+        dest.put(12, matrix.m30());
+        dest.put(13, matrix.m31());
+        dest.put(14, matrix.m32());
+        dest.put(15, matrix.m33());
+    }
+
     public static Vector3f rotateObjectGivenCurrentAngle(float angle, float amount) {
         // Create a rotation matrix for the wheel
         Matrix4f wheelRotation = new Matrix4f();
@@ -58,14 +76,13 @@ public class Algebra {
 
         // Combine the two rotations by multiplying them together
         Matrix4f combinedRotation = new Matrix4f();
-        Matrix4f.mul(wheelRotation, forwardRotation, combinedRotation);
+        combinedRotation.mul(wheelRotation).mul(forwardRotation);
 
-        // Extract the rotation angles from the combined rotation matrix using Euler angles we "data-mined" from JOML
-        float xRotation = (float) Math.atan2(-combinedRotation.m21, combinedRotation.m22);
-        float yRotation = (float) Math.atan2(combinedRotation.m20, Math.sqrt(1.0F - combinedRotation.m20 * combinedRotation.m20));
-        float zRotation = (float) Math.atan2(-combinedRotation.m10, combinedRotation.m00);
+        // Get the euler angles from the combined rotation
+        Vector3f result = new Vector3f();
+        combinedRotation.getEulerAnglesXYZ(result);
 
         // Convert the result to degrees
-        return new Vector3f((float) Math.toDegrees(xRotation), (float) Math.toDegrees(yRotation), (float) Math.toDegrees(zRotation));
+        return new Vector3f((float) Math.toDegrees(result.x), (float) Math.toDegrees(result.y), (float) Math.toDegrees(result.z));
     }
 }

@@ -4,8 +4,8 @@ import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
 import nl.group5b.shaders.StaticShader;
 import nl.group5b.util.Algebra;
-import org.lwjgl.util.vector.Matrix4f;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
 
@@ -121,11 +121,11 @@ public class Renderer {
         float frustum_length = FAR_PLANE - NEAR_PLANE;
 
         projectionMatrix = new Matrix4f();
-        projectionMatrix.m00 = x_scale;
-        projectionMatrix.m11 = y_scale;
-        projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-        projectionMatrix.m33 = 0;
+        projectionMatrix.m00(x_scale);
+        projectionMatrix.m11(y_scale);
+        projectionMatrix.m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
+        projectionMatrix.m23(-1);
+        projectionMatrix.m32(-((2 * NEAR_PLANE * FAR_PLANE) / frustum_length));
+        projectionMatrix.m33(0);
     }
 }

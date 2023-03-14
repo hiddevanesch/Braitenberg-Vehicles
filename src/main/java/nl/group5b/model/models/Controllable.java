@@ -3,8 +3,8 @@ package nl.group5b.model.models;
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
 

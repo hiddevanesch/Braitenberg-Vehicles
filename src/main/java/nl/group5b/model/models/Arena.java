@@ -1,8 +1,7 @@
 package nl.group5b.model.models;
 
 import nl.group5b.model.*;
-import org.lwjgl.util.vector.Vector;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
 

@@ -1,7 +1,7 @@
 package nl.group5b.engine;
 
 import nl.group5b.model.Model;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 
 public class Entity {

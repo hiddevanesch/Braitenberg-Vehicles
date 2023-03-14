@@ -5,7 +5,7 @@ import nl.group5b.engine.Light;
 import nl.group5b.model.Material;
 import nl.group5b.model.Model;
 import nl.group5b.util.Algebra;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 
 
 public class StaticShader extends ShaderProgram {

@@ -2,13 +2,16 @@ package nl.group5b.shaders;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+
+import org.joml.Vector3f;
+import org.joml.Matrix4f;
+
+import nl.group5b.util.Algebra;
 
 public abstract class ShaderProgram {
 
@@ -84,8 +87,7 @@ public abstract class ShaderProgram {
     }
 
     protected void loadMatrix(int location, Matrix4f matrix) {
-        matrix.store(matrixBuffer);
-        matrixBuffer.flip();
+        Algebra.matrixToBuffer(matrix, matrixBuffer);
         GL46.glUniformMatrix4fv(location, false, matrixBuffer);
     }
 
@@ -121,5 +123,4 @@ public abstract class ShaderProgram {
         }
         return shaderID;
     }
-
 }
