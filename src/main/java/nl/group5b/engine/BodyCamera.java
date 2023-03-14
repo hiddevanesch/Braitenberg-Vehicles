@@ -18,7 +18,7 @@ public class BodyCamera extends Camera {
     private float heightOffset;
 
     private float distance = 4;
-    private float bodyPitch;
+    private float bodyPitch = 15;
     private float angle;
 
     private float previousMouseX;

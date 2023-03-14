@@ -2,6 +2,7 @@ package nl.group5b.util;
 
 
 import nl.group5b.engine.Camera;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -44,5 +45,27 @@ public class Algebra {
         result.y = pivot.y;
         result.z = newZ + pivot.z;
         return result;
+    }
+
+    public static Vector3f rotateObjectGivenCurrentAngle(float angle, float amount) {
+        // Create a rotation matrix for the wheel
+        Matrix4f wheelRotation = new Matrix4f();
+        wheelRotation.rotate((float) Math.toRadians(angle), new Vector3f(0, 1, 0));
+
+        // Create a rotation matrix for the amount to rotate forward
+        Matrix4f forwardRotation = new Matrix4f();
+        forwardRotation.rotate((float) Math.toRadians(amount), new Vector3f(1, 0, 0));
+
+        // Combine the two rotations by multiplying them together
+        Matrix4f combinedRotation = new Matrix4f();
+        Matrix4f.mul(wheelRotation, forwardRotation, combinedRotation);
+
+        // Extract the rotation angles from the combined rotation matrix using Euler angles we "data-mined" from JOML
+        float xRotation = (float) Math.atan2(-combinedRotation.m21, combinedRotation.m22);
+        float yRotation = (float) Math.atan2(combinedRotation.m20, Math.sqrt(1.0F - combinedRotation.m20 * combinedRotation.m20));
+        float zRotation = (float) Math.atan2(-combinedRotation.m10, combinedRotation.m00);
+
+        // Convert the result to degrees
+        return new Vector3f((float) Math.toDegrees(xRotation), (float) Math.toDegrees(yRotation), (float) Math.toDegrees(zRotation));
     }
 }

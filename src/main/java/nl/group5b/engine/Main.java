@@ -2,7 +2,7 @@ package nl.group5b.engine;
 
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.Element;
-import nl.group5b.gui.elements.Test;
+import nl.group5b.gui.elements.Demo;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.models.*;
@@ -11,6 +11,7 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,10 +26,10 @@ public class Main {
         long window = DisplayBuilder.window;
 
         // Create GUI Elements
-        Test test = new Test();
+        Demo demo = new Demo();
 
         // Load GUI Elements into array
-        Element[] elements = {test};
+        Element[] elements = {demo};
 
         // Create GUI
         GUI gui = new GUI(window, elements);
@@ -40,7 +41,7 @@ public class Main {
         Arena arena = new Arena(modelLoader);
         //Dragon dragon = new Dragon(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
-                new Vector3f(0, 0, 5), new Vector3f(0, 45, 0));
+                new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable tegenhanger = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
         Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
@@ -48,7 +49,7 @@ public class Main {
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
-        List<Body> bodies = List.of(arena, braitenbergVehicle, tegenhanger, mainLamp, colouredLamp);
+        List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, mainLamp, colouredLamp));
 
         // Create lights
         //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
@@ -71,6 +72,15 @@ public class Main {
         while (!GLFW.glfwWindowShouldClose(window)) {
             // Poll for window events and move camera accordingly
             //camera.move(window);
+
+            // TODO remove demo code
+            if (demo.getSpawnSecondCar().get()) {
+                if (!bodies.contains(tegenhanger)) {
+                    bodies.add(tegenhanger);
+                }
+            } else {
+                bodies.remove(tegenhanger);
+            }
 
             for (Body body : bodies) {
                 if (body instanceof ControlHandler) {

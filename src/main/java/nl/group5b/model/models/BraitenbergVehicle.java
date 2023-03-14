@@ -9,11 +9,15 @@ import java.io.FileNotFoundException;
 
 public abstract class BraitenbergVehicle extends Body implements PositionHandler {
 
-    protected static final float SPEED = 2.5f;
+    protected static final float SPEED = 1.5f;
+    protected static final float WHEEL_ROTATION_SPEED = 150;
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);
     static final Vector3f carRightWheelRelativePosition = new Vector3f(-0.72f, 0.3f, 0);
+
+    protected float leftWheelRotation = 0;
+    protected float rightWheelRotation = 0;
 
     protected float leftWheelSpeed = 0;
     protected float rightWheelSpeed = 0;
@@ -42,6 +46,20 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         this(modelLoader);
         this.setPosition(position);
         this.setRotation(rotation);
+    }
+
+    protected void rotateWheels(float frameTime) {
+        leftWheelRotation += leftWheelSpeed * WHEEL_ROTATION_SPEED * frameTime;
+        rightWheelRotation += rightWheelSpeed * WHEEL_ROTATION_SPEED * frameTime;
+
+        // Get y-axis rotation
+        float yRotation = getRotation().y;
+
+        // Rotate the wheels in the axis direction of yDirection
+        Vector3f newLeftWheelRotation = Algebra.rotateObjectGivenCurrentAngle(yRotation, leftWheelRotation);
+        Vector3f newRightWheelRotation = Algebra.rotateObjectGivenCurrentAngle(yRotation, rightWheelRotation);
+        super.getBodyElements()[1].getEntity().setRotation(newLeftWheelRotation);
+        super.getBodyElements()[2].getEntity().setRotation(newRightWheelRotation);
     }
 
     @Override

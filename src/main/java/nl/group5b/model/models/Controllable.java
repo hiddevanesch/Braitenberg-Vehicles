@@ -25,16 +25,22 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
     public void move(long window, Renderer renderer) {
         checkInput(window, renderer);
 
+        float frameTime = renderer.getFrameTimeSeconds();
+
         // Compute rotation angle based on wheel speeds
-        float rotationAngle = (leftWheelSpeed - rightWheelSpeed) * renderer.getFrameTimeSeconds() * 180;
+        float rotationAngle = (rightWheelSpeed - leftWheelSpeed) * frameTime * 180;
         Vector3f deltaRotation = new Vector3f(0, rotationAngle, 0);
         moveRotation(deltaRotation);
 
-        float distance = (leftWheelSpeed + rightWheelSpeed) * renderer.getFrameTimeSeconds();
+        // Compute position based on wheel speeds
+        float distance = (leftWheelSpeed + rightWheelSpeed) * frameTime;
         float dx = (float) (distance * Math.sin(Math.toRadians(getRotation().y)));
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
         movePosition(deltaPosition);
+
+        // Rotate the wheels
+        rotateWheels(frameTime);
     }
 
     private void checkInput(long window, Renderer renderer) {
@@ -59,11 +65,11 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
             }
         }
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
-            // Decrease left wheel speed
-            leftWheelSpeed *= 0.5f;
-        } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
             // Decrease right wheel speed
             rightWheelSpeed *= 0.5f;
+        } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
+            // Decrease left wheel speed
+            leftWheelSpeed *= 0.5f;
         }
     }
 }
