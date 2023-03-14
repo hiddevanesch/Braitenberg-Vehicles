@@ -56,8 +56,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         float yRotation = getRotation().y;
 
         // Rotate the wheels in the axis direction of yDirection
-        Vector3f newLeftWheelRotation = Algebra.rotateObjectGivenCurrentAngle(yRotation, leftWheelRotation);
-        Vector3f newRightWheelRotation = Algebra.rotateObjectGivenCurrentAngle(yRotation, rightWheelRotation);
+        Vector3f newLeftWheelRotation = Algebra.rotateWheelGivenCurrentAngle(yRotation, leftWheelRotation);
+        Vector3f newRightWheelRotation = Algebra.rotateWheelGivenCurrentAngle(yRotation, rightWheelRotation);
         super.getBodyElements()[1].getEntity().setRotation(newLeftWheelRotation);
         super.getBodyElements()[2].getEntity().setRotation(newRightWheelRotation);
     }

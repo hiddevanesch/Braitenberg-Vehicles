@@ -65,7 +65,7 @@ public class Algebra {
         dest.put(15, matrix.m33());
     }
 
-    public static Vector3f rotateObjectGivenCurrentAngle(float angle, float amount) {
+    public static Vector3f rotateWheelGivenCurrentAngle(float angle, float amount) {
         // Create a rotation matrix for the wheel
         Matrix4f wheelRotation = new Matrix4f();
         wheelRotation.rotate((float) Math.toRadians(angle), new Vector3f(0, 1, 0));
