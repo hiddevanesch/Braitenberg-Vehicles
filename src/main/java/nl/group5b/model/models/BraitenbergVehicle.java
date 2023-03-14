@@ -93,13 +93,9 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     @Override
     public void movePosition(Vector3f position) {
-        Vector3f bodyPosition = new Vector3f(super.getBodyElements()[0].getEntity().getPosition()).add(position);
-        Vector3f leftWheelPosition = new Vector3f(super.getBodyElements()[1].getEntity().getPosition()).add(position);
-        Vector3f rightWheelPosition = new Vector3f(super.getBodyElements()[2].getEntity().getPosition()).add(position);
-
-        super.getBodyElements()[0].getEntity().setPosition(bodyPosition);
-        super.getBodyElements()[1].getEntity().setPosition(leftWheelPosition);
-        super.getBodyElements()[2].getEntity().setPosition(rightWheelPosition);
+        super.getBodyElements()[0].getEntity().getPosition().add(position);
+        super.getBodyElements()[1].getEntity().getPosition().add(position);
+        super.getBodyElements()[2].getEntity().getPosition().add(position);
     }
 
     @Override
