@@ -92,11 +92,11 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
     }
 
     private void accelerateLeftWheel(float frameTime) {
-        leftWheelSpeed += frameTime / (leftWheelSpeed + ACCERLATION);
+        leftWheelSpeed += frameTime / (leftWheelSpeed + ACCELERATION);
     }
 
     private void accelerateRightWheel(float frameTime) {
-        rightWheelSpeed += frameTime / (rightWheelSpeed + ACCERLATION);
+        rightWheelSpeed += frameTime / (rightWheelSpeed + ACCELERATION);
     }
 
     private void decelerateLeftWheel(float frameTime) {
