@@ -44,32 +44,66 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
     }
 
     private void checkInput(long window, Renderer renderer) {
+        float frameTime = renderer.getFrameTimeSeconds();
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW.GLFW_PRESS) {
-            // Move forward
-            // TODO acceleration?
-            leftWheelSpeed = SPEED;
-            rightWheelSpeed = SPEED;
+            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
+                // Decrease right wheel speed
+                if (rightWheelSpeed > SPEED / STEERING) {
+                    decelerateRightWheel(frameTime);
+                } else {
+                    accelerateRightWheel(frameTime);
+                }
+                accelerateLeftWheel(frameTime);
+            } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
+                // Decrease left wheel speed
+                if (leftWheelSpeed > SPEED / STEERING) {
+                    decelerateLeftWheel(frameTime);
+                } else {
+                    accelerateLeftWheel(frameTime);
+                }
+                accelerateRightWheel(frameTime);
+            } else {
+                // Accelerate both wheels
+                accelerateLeftWheel(frameTime);
+                accelerateRightWheel(frameTime);
+            }
+            // Bound the wheel speeds
+            if (leftWheelSpeed > SPEED) {
+                leftWheelSpeed = SPEED;
+            }
+            if (rightWheelSpeed > SPEED) {
+                rightWheelSpeed = SPEED;
+            }
         } else {
             // Slow down
-            if (leftWheelSpeed < 0.1f)
+            if (leftWheelSpeed < CLAMP) {
                 leftWheelSpeed = 0;
-            else {
-                // Slow down based on frame time
-                leftWheelSpeed *= 1 - (renderer.getFrameTimeSeconds() * 10);
             }
-            if (rightWheelSpeed < 0.1f)
+            else {
+                decelerateLeftWheel(frameTime);
+            }
+            if (rightWheelSpeed < CLAMP) {
                 rightWheelSpeed = 0;
+            }
             else {
-                // Slow down based on frame time
-                rightWheelSpeed *= 1 - (renderer.getFrameTimeSeconds() * 10);
+                decelerateRightWheel(frameTime);
             }
         }
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
-            // Decrease right wheel speed
-            rightWheelSpeed *= 0.5f;
-        } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
-            // Decrease left wheel speed
-            leftWheelSpeed *= 0.5f;
-        }
+    }
+
+    private void accelerateLeftWheel(float frameTime) {
+        leftWheelSpeed += frameTime / (leftWheelSpeed + ACCERLATION);
+    }
+
+    private void accelerateRightWheel(float frameTime) {
+        rightWheelSpeed += frameTime / (rightWheelSpeed + ACCERLATION);
+    }
+
+    private void decelerateLeftWheel(float frameTime) {
+        leftWheelSpeed *= 1 - (frameTime * DECELERATION);
+    }
+
+    private void decelerateRightWheel(float frameTime) {
+        rightWheelSpeed *= 1 - (frameTime * DECELERATION);
     }
 }

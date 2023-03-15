@@ -82,6 +82,9 @@ public class Main {
                 bodies.remove(tegenhanger);
             }
 
+            // TODO remove demo code
+            demo.addVehicleSpeed(braitenbergVehicle.getSpeedLeft(), braitenbergVehicle.getSpeedRight());
+
             for (Body body : bodies) {
                 if (body instanceof ControlHandler) {
                     ((ControlHandler) body).move(window, renderer.getRenderer());

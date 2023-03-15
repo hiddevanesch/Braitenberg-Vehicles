@@ -11,6 +11,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     protected static final float SPEED = 1.5f;
     protected static final float WHEEL_ROTATION_SPEED = 150;
+    protected static final float ACCERLATION = 0.5f;
+    protected static final float DECELERATION = 3;
+    protected static final float CLAMP = 0.001f;
+    protected static final float STEERING = 2f;
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);
@@ -115,4 +119,11 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         return super.getBodyElements()[0].getEntity().getRotation();
     }
 
+    public float getSpeedLeft() {
+        return leftWheelSpeed;
+    }
+
+    public float getSpeedRight() {
+        return rightWheelSpeed;
+    }
 }
