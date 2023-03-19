@@ -18,16 +18,8 @@ public class Entity {
         this.scale = scale;
     }
 
-    public void move(float dx, float dy, float dz) {
-        this.position.x += dx;
-        this.position.y += dy;
-        this.position.z += dz;
-    }
-
-    public void rotate(float dx, float dy, float dz) {
-        this.rotation.x += dx;
-        this.rotation.y += dy;
-        this.rotation.z += dz;
+    public void move(Vector3f vector) {
+        this.position.add(vector);
     }
 
     public Model getModel() {
