@@ -42,13 +42,14 @@ public class Main {
         //Dragon dragon = new Dragon(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
-        Controllable tegenhanger = new Controllable(modelLoader,
+        Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
         Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
+        // TODO change to array and add body.visible + body.active
         List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, mainLamp, colouredLamp));
 
         // Create lights
@@ -75,11 +76,11 @@ public class Main {
 
             // TODO remove demo code
             if (demo.getSpawnSecondCar().get()) {
-                if (!bodies.contains(tegenhanger)) {
-                    bodies.add(tegenhanger);
+                if (!bodies.contains(secondCar)) {
+                    bodies.add(secondCar);
                 }
             } else {
-                bodies.remove(tegenhanger);
+                bodies.remove(secondCar);
             }
 
             // TODO remove demo code

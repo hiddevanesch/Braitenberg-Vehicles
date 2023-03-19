@@ -16,7 +16,7 @@ public class Demo extends Element {
     private List<Float> vehicleSpeedsLeft = new ArrayList<>();
     private List<Float> vehicleSpeedsRight = new ArrayList<>();
 
-    private  ImBoolean spawnSecondCar = new ImBoolean(false);
+    private ImBoolean spawnSecondCar = new ImBoolean(false);
 
     @Override
     public void render() {
