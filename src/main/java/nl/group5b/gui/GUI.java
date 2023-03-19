@@ -3,7 +3,6 @@ package nl.group5b.gui;
 import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import nl.group5b.gui.elements.Element;
 
 public class GUI {
 

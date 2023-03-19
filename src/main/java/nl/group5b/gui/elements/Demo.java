@@ -2,7 +2,7 @@ package nl.group5b.gui.elements;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
-import imgui.type.ImFloat;
+import nl.group5b.gui.Element;
 
 import java.util.ArrayList;
 import java.util.List;

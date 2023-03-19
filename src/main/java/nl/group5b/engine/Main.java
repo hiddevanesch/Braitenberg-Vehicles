@@ -1,7 +1,7 @@
 package nl.group5b.engine;
 
 import nl.group5b.gui.GUI;
-import nl.group5b.gui.elements.Element;
+import nl.group5b.gui.Element;
 import nl.group5b.gui.elements.Demo;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
