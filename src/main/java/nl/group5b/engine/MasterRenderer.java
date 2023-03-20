@@ -3,6 +3,7 @@ package nl.group5b.engine;
 import nl.group5b.camera.Camera;
 import nl.group5b.gui.GUI;
 import nl.group5b.light.Light;
+import nl.group5b.light.ShadowMasterRenderer;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
@@ -16,15 +17,27 @@ public class MasterRenderer {
     private ViewportShader shader;
 
     private Renderer renderer;
+    private ShadowMasterRenderer shadowRenderer;
+
+    private static Camera camera;
 
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
-    public MasterRenderer(int lightCount) {
+    public MasterRenderer(int lightCount, Light sun) {
         this.shader = new ViewportShader(lightCount);
         this.renderer = new Renderer(shader);
+        this.shadowRenderer = new ShadowMasterRenderer(sun);
     }
 
-    public void render(Light[] lights, Camera camera, long window, GUI gui) {
+    public static void setCamera(Camera camera) {
+        MasterRenderer.camera = camera;
+    }
+
+    public static Camera getCamera() {
+        return camera;
+    }
+
+    public void render(Light[] lights, long window, GUI gui) {
         renderer.prepare();
         shader.start();
         shader.loadLights(lights);
@@ -44,8 +57,17 @@ public class MasterRenderer {
         renderMap.clear();
     }
 
+    public void computeShadows() {
+        shadowRenderer.render(renderMap);
+    }
+
+    public int getShadowMapTexture() {
+        return shadowRenderer.getShadowMap();
+    }
+
     public void cleanUp() {
         shader.cleanUp();
+        shadowRenderer.cleanUp();
     }
 
     public Renderer getRenderer() {
@@ -56,10 +78,6 @@ public class MasterRenderer {
         for (Body body : bodies) {
             processBody(body);
         }
-    }
-
-    public Map<Model, List<BodyElement>> getRenderMap() {
-        return renderMap;
     }
 
     private void processBody(Body body) {

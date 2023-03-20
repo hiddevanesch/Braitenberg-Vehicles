@@ -2,6 +2,7 @@ package nl.group5b.gui.elements;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
+import imgui.type.ImInt;
 import nl.group5b.gui.Element;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Demo extends Element {
 
     private ImBoolean spawnSecondCar = new ImBoolean(false);
 
+    private int image;
+
     @Override
     public void render() {
         ImGui.begin("Demo GUI");
@@ -29,6 +32,8 @@ public class Demo extends Element {
         ImGui.separator();
         ImGui.text("Spawn second car:");
         ImGui.checkbox("Spawn second car", spawnSecondCar);
+        ImGui.separator();
+        ImGui.image(image, 1024, 1024);
         ImGui.end();
     }
 
@@ -61,6 +66,10 @@ public class Demo extends Element {
             speeds[i] = vehicleSpeedsRight.get(i);
         }
         return speeds;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 
 }

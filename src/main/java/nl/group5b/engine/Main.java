@@ -54,8 +54,7 @@ public class Main {
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
-        // TODO change to array and add body.visible + body.active
-        List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, colouredLamp));
+        List<Body> bodies = new ArrayList<>(List.of(braitenbergVehicle, colouredLamp));
 
         // Create lights
         //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
@@ -65,13 +64,15 @@ public class Main {
         Light[] lights = {sun, colouredLamp.getLight()};
 
         // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(lights.length);
+        MasterRenderer renderer = new MasterRenderer(lights.length, sun);
 
         BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
         //camera.setPosition(new Vector3f(-15, 7, 15));
         //camera.setRotation(new Vector3f(30, 45, 0));
         camera.enableZoom(window);
         camera.enableMouseTracking(window);
+
+        MasterRenderer.setCamera(camera);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -102,8 +103,12 @@ public class Main {
             renderer.processBodies(bodies);
 
             // Render shadows using renderer.getRenderMap()
+            renderer.computeShadows();
 
-            renderer.render(lights, camera, window, gui);
+            // Update texture in GUI
+            demo.setImage(renderer.getShadowMapTexture());
+
+            renderer.render(lights, window, gui);
 
         }
 

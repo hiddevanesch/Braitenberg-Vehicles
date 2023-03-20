@@ -1,7 +1,7 @@
 package nl.group5b.light;
 
-import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
+import nl.group5b.engine.MasterRenderer;
 import nl.group5b.engine.Renderer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,29 +19,30 @@ public class ShadowBox {
 	private float minY, maxY;
 	private float minZ, maxZ;
 	private Matrix4f lightViewMatrix;
-	private Camera camera;
 
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
-	protected ShadowBox(Matrix4f lightViewMatrix, Camera camera) {
+	protected ShadowBox(Matrix4f lightViewMatrix) {
 		this.lightViewMatrix = lightViewMatrix;
-		this.camera = camera;
-
 	}
 
 	protected void update() {
 		updateWidthsAndHeights();
 
 		Matrix4f rotation = calculateCameraRotationMatrix();
-		Vector3f forwardVector = new Vector3f((Vector3fc) rotation.transform(FORWARD));
+		Vector4f newRotation = new Vector4f();
+		rotation.transform(FORWARD, newRotation);
+		Vector3f forwardVector = new Vector3f(newRotation.x, newRotation.y, newRotation.z);
 
 		Vector3f toFar = new Vector3f(forwardVector);
 		toFar.mul(SHADOW_RANGE);
 		Vector3f toNear = new Vector3f(forwardVector);
 		toNear.mul(Renderer.getNearPlane());
-        Vector3f cameraPosition = camera.getPosition();
-		Vector3f centerNear = toNear.add(cameraPosition);
-		Vector3f centerFar = toFar.add(cameraPosition);
+        Vector3f cameraPosition = MasterRenderer.getCamera().getPosition();
+		Vector3f centerNear = new Vector3f();
+		toNear.add(cameraPosition, centerNear);
+		Vector3f centerFar = new Vector3f();
+		toFar.add(cameraPosition, centerFar);
 
 		Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear,
 				centerFar);
@@ -85,7 +86,8 @@ public class ShadowBox {
 		Vector4f center = new Vector4f(x, y, z, 1);
 		Matrix4f invertedLight = new Matrix4f();
         lightViewMatrix.invert(invertedLight);
-		return new Vector3f((Vector3fc) invertedLight.transform(center));
+		Vector4f newCenter = invertedLight.transform(center);
+		return new Vector3f(newCenter.x, newCenter.y, newCenter.z);
 	}
 
 	protected float getWidth() {
@@ -102,8 +104,11 @@ public class ShadowBox {
 
 	private Vector4f[] calculateFrustumVertices(Matrix4f rotation, Vector3f forwardVector,
 			Vector3f centerNear, Vector3f centerFar) {
-		Vector3f upVector = new Vector3f((Vector3fc) rotation.transform(UP));
-		Vector3f rightVector = forwardVector.cross(upVector);
+		Vector4f newRotation = new Vector4f();
+		rotation.transform(UP, newRotation);
+		Vector3f upVector = new Vector3f(newRotation.x, newRotation.y, newRotation.z);
+		Vector3f rightVector = new Vector3f();
+		forwardVector.cross(upVector, rightVector);
 		Vector3f downVector = new Vector3f(-upVector.x, -upVector.y, -upVector.z);
 		Vector3f leftVector = new Vector3f(-rightVector.x, -rightVector.y, -rightVector.z);
 
@@ -136,7 +141,8 @@ public class ShadowBox {
 
 	private Vector4f calculateLightSpaceFrustumCorner(Vector3f startPoint, Vector3f direction,
 			float width) {
-		Vector3f point = startPoint.add(new Vector3f(direction.x * width, direction.y * width, direction.z * width));
+		Vector3f point = new Vector3f();
+		startPoint.add(new Vector3f(direction.x * width, direction.y * width, direction.z * width), point);
 		Vector4f point4f = new Vector4f(point.x, point.y, point.z, 1f);
         lightViewMatrix.transform(point4f, point4f);
 		return point4f;
@@ -144,8 +150,8 @@ public class ShadowBox {
 
 	private Matrix4f calculateCameraRotationMatrix() {
 		Matrix4f rotation = new Matrix4f();
-		rotation.rotate((float) Math.toRadians(-camera.getRotation().y()), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-camera.getRotation().x()), new Vector3f(1, 0, 0));
+		rotation.rotate((float) Math.toRadians(-MasterRenderer.getCamera().getRotation().y()), new Vector3f(0, 1, 0));
+		rotation.rotate((float) Math.toRadians(-MasterRenderer.getCamera().getRotation().x()), new Vector3f(1, 0, 0));
 		return rotation;
 	}
 

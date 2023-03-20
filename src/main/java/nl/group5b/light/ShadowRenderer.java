@@ -39,7 +39,6 @@ public class ShadowRenderer {
 		}
 		GL46.glDisableVertexAttribArray(0);
 		GL46.glBindVertexArray(0);
-
 	}
 
 	private void prepareModel(Model model) {
@@ -62,7 +61,7 @@ public class ShadowRenderer {
 				entity.getRotation(), entity.getScale());
 
 		// Create MVP matrix
-		Matrix4f mvpMatrix = projectionViewMatrix.mul(modelMatrix);
+		Matrix4f mvpMatrix = new Matrix4f(projectionViewMatrix).mul(modelMatrix);
 
 		// Load MVP matrix into shader
 		shader.loadMvpMatrix(mvpMatrix);
