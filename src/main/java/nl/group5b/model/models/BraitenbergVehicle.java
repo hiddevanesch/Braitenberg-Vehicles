@@ -1,13 +1,16 @@
 package nl.group5b.model.models;
 
 import nl.group5b.model.*;
+import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
-public abstract class BraitenbergVehicle extends Body implements PositionHandler {
+public abstract class BraitenbergVehicle extends Body implements PositionHandler, CollisionHandler {
 
     protected static final float SPEED = 1.5f;
     protected static final float WHEEL_ROTATION_SPEED = 150;
@@ -15,6 +18,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected static final float DECELERATION = 3;
     protected static final float CLAMP = 0.001f;
     protected static final float STEERING = 1.3f;
+
+
+    protected HitBox hitBox = new HitBox(new Vector3f(-0.67f, 0, 1.7f), new Vector3f(0.67f, 0, 1.7f), new Vector3f(-0.67f, 0, -0.3f), new Vector3f(0.67f, 0, -0.3f));
+    protected static List<Body> bodiesPotentialCollide;
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);
@@ -125,5 +132,43 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public float getSpeedRight() {
         return rightWheelSpeed;
+    }
+
+    public void setBodies(List<Body> bodies) {
+        bodiesPotentialCollide = bodies;
+    }
+
+    protected void updateHitBox(HitBox nextHitBox) {
+        hitBox = nextHitBox;
+    }
+
+    protected HitBox nextHitBox(Vector3f deltaPosition) {
+        // update the hitbox of the vehicle with the new position
+        Vector3f frontLeft = new Vector3f(hitBox.getFrontLeft()).add(deltaPosition);
+        Vector3f frontRight = new Vector3f(hitBox.getFrontRight()).add(deltaPosition);
+        Vector3f rearLeft = new Vector3f(hitBox.getRearLeft()).add(deltaPosition);
+        Vector3f rearRight = new Vector3f(hitBox.getRearRight()).add(deltaPosition);
+
+        return new HitBox(frontLeft, frontRight, rearLeft, rearRight);
+    }
+
+    // Function that goes through all the bodies and checks if the hitbox of the vehicle is overlapping with the hitbox of the target
+    @Override
+    public boolean isColliding(HitBox hitBox, List<Body> bodies) {
+        // Loop over all bodies in the list, exluding the vehicle itself
+        for (Body body : bodies) {
+            if (body != this && body instanceof CollisionHandler) {
+                if (((CollisionHandler) body).isInHitBox(hitBox)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Function that uses the algebra util to check if the hitbox of the vehicle is overlapping with the hitbox of the target
+    @Override
+    public boolean isInHitBox(HitBox hitBoxTarget) {
+        return Algebra.hitboxOverlap(hitBox, hitBoxTarget);
     }
 }
