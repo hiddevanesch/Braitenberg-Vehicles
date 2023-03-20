@@ -63,16 +63,12 @@ public class Main {
         // Load lights into array (has to be an array with predefined length)
         Light[] lights = {sun, colouredLamp.getLight()};
 
-        // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(lights.length, sun);
-
         BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
-        //camera.setPosition(new Vector3f(-15, 7, 15));
-        //camera.setRotation(new Vector3f(30, 45, 0));
         camera.enableZoom(window);
         camera.enableMouseTracking(window);
 
-        MasterRenderer.setCamera(camera);
+        // Create MasterRenderer instance
+        MasterRenderer renderer = new MasterRenderer(lights.length, sun, lights, camera, window, gui);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -108,8 +104,7 @@ public class Main {
             // Update texture in GUI
             demo.setImage(renderer.getShadowMapTexture());
 
-            renderer.render(lights, window, gui);
-
+            renderer.render();
         }
 
         // Clean up renderer

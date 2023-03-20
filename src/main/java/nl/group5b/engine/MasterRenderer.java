@@ -19,25 +19,29 @@ public class MasterRenderer {
     private Renderer renderer;
     private ShadowMasterRenderer shadowRenderer;
 
-    private static Camera camera;
+    private final Light[] lights;
+    private Camera camera;
+    private long window;
+    private GUI gui;
 
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
-    public MasterRenderer(int lightCount, Light sun) {
+    public MasterRenderer(int lightCount, Light sun, Light[] lights, Camera camera, long window, GUI gui) {
         this.shader = new ViewportShader(lightCount);
         this.renderer = new Renderer(shader);
-        this.shadowRenderer = new ShadowMasterRenderer(sun);
+        this.shadowRenderer = new ShadowMasterRenderer(sun, camera);
+        this.lights = lights;
+        this.camera = camera;
+        this.window = window;
+        this.gui = gui;
     }
 
-    public static void setCamera(Camera camera) {
-        MasterRenderer.camera = camera;
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+        shadowRenderer.setCamera(camera);
     }
 
-    public static Camera getCamera() {
-        return camera;
-    }
-
-    public void render(Light[] lights, long window, GUI gui) {
+    public void render() {
         renderer.prepare();
         shader.start();
         shader.loadLights(lights);

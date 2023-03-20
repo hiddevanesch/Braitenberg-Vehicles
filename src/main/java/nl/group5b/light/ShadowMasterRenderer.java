@@ -1,7 +1,6 @@
 package nl.group5b.light;
 
 import nl.group5b.camera.Camera;
-import nl.group5b.engine.MasterRenderer;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
 import nl.group5b.shaders.shadow.ShadowShader;
@@ -29,9 +28,9 @@ public class ShadowMasterRenderer {
 
 	private ShadowRenderer shadowRenderer;
 
-	public ShadowMasterRenderer(Light sun) {
+	public ShadowMasterRenderer(Light sun, Camera camera) {
 		shader = new ShadowShader();
-		shadowBox = new ShadowBox(lightViewMatrix);
+		shadowBox = new ShadowBox(lightViewMatrix, camera);
 		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 		shadowRenderer = new ShadowRenderer(shader, projectionViewMatrix);
 
@@ -64,7 +63,7 @@ public class ShadowMasterRenderer {
 	}
 
 	private void prepare(Vector3f lightDirection, ShadowBox box) {
-		updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
+		updateProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
 		updateLightViewMatrix(lightDirection, box.getCenter());
         projectionMatrix.mul(lightViewMatrix, projectionViewMatrix);
 		shadowFbo.bindFrameBuffer();
@@ -94,7 +93,7 @@ public class ShadowMasterRenderer {
         lightViewMatrix.translate(newCenter);
 	}
 
-	private void updateOrthoProjectionMatrix(float width, float height, float length) {
+	private void updateProjectionMatrix(float width, float height, float length) {
 		projectionMatrix.identity();
 		projectionMatrix.m00(2f / width);
 		projectionMatrix.m11(2f / height);
@@ -106,5 +105,9 @@ public class ShadowMasterRenderer {
 		offset.translate(new Vector3f(0.5f, 0.5f, 0.5f));
 		offset.scale(new Vector3f(0.5f, 0.5f, 0.5f));
 		return offset;
+	}
+
+	public void setCamera(Camera camera) {
+		shadowBox.setCamera(camera);
 	}
 }

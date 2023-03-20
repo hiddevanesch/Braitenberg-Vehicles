@@ -1,5 +1,6 @@
 package nl.group5b.light;
 
+import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
 import nl.group5b.engine.MasterRenderer;
 import nl.group5b.engine.Renderer;
@@ -20,10 +21,13 @@ public class ShadowBox {
 	private float minZ, maxZ;
 	private Matrix4f lightViewMatrix;
 
+	private Camera camera;
+
 	private float farHeight, farWidth, nearHeight, nearWidth;
 
-	protected ShadowBox(Matrix4f lightViewMatrix) {
+	protected ShadowBox(Matrix4f lightViewMatrix, Camera camera) {
 		this.lightViewMatrix = lightViewMatrix;
+		this.camera = camera;
 	}
 
 	protected void update() {
@@ -38,7 +42,7 @@ public class ShadowBox {
 		toFar.mul(SHADOW_RANGE);
 		Vector3f toNear = new Vector3f(forwardVector);
 		toNear.mul(Renderer.getNearPlane());
-        Vector3f cameraPosition = MasterRenderer.getCamera().getPosition();
+        Vector3f cameraPosition = camera.getPosition();
 		Vector3f centerNear = new Vector3f();
 		toNear.add(cameraPosition, centerNear);
 		Vector3f centerFar = new Vector3f();
@@ -150,8 +154,8 @@ public class ShadowBox {
 
 	private Matrix4f calculateCameraRotationMatrix() {
 		Matrix4f rotation = new Matrix4f();
-		rotation.rotate((float) Math.toRadians(-MasterRenderer.getCamera().getRotation().y()), new Vector3f(0, 1, 0));
-		rotation.rotate((float) Math.toRadians(-MasterRenderer.getCamera().getRotation().x()), new Vector3f(1, 0, 0));
+		rotation.rotate((float) Math.toRadians(-camera.getRotation().y()), new Vector3f(0, 1, 0));
+		rotation.rotate((float) Math.toRadians(-camera.getRotation().x()), new Vector3f(1, 0, 0));
 		return rotation;
 	}
 
@@ -167,4 +171,7 @@ public class ShadowBox {
 		return (float) DisplayBuilder.getWidth() / (float) DisplayBuilder.getHeight();
 	}
 
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
 }
