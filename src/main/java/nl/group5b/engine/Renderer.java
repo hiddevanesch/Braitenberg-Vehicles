@@ -136,4 +136,12 @@ public class Renderer {
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
     }
+
+    public static float getFOV() {
+        return FOV;
+    }
+
+    public static float getNearPlane() {
+        return NEAR_PLANE;
+    }
 }

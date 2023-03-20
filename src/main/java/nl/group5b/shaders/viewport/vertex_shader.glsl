@@ -13,7 +13,7 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-uniform vec3 lightPosition[LIGHT_COUNT];
+uniform vec4 lightPosition[LIGHT_COUNT];
 
 void main(void) {
     // Compute the position of the vertex in world space
@@ -27,7 +27,12 @@ void main(void) {
 
     // Compute the vector from the vertex to the light in eye space
     for (int i = 0; i < LIGHT_COUNT; i++) {
-        toLight[i] = lightPosition[i] - worldPosition.xyz;
+        // Check if the light is directional or a point light
+        if (lightPosition[i].w == 0.0) {
+            toLight[i] = lightPosition[i].xyz;
+        } else {
+            toLight[i] = lightPosition[i].xyz - worldPosition.xyz;
+        }
     }
 
     // Compute the vector from the vertex to the camera in eye space

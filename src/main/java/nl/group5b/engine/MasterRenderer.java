@@ -58,6 +58,10 @@ public class MasterRenderer {
         }
     }
 
+    public Map<Model, List<BodyElement>> getRenderMap() {
+        return renderMap;
+    }
+
     private void processBody(Body body) {
         for (BodyElement bodyElement : body.getBodyElements()) {
             processBodyElement(bodyElement);

@@ -1,9 +1,12 @@
 //package nl.group5b.light;
 //
 //import nl.group5b.camera.Camera;
+//import nl.group5b.model.BodyElement;
+//import nl.group5b.model.Model;
 //import nl.group5b.shaders.shadow.ShadowShader;
 //import org.joml.Matrix4f;
 //import org.joml.Vector3f;
+//import org.lwjgl.opengl.GL46;
 //
 //import java.util.List;
 //import java.util.Map;
@@ -20,21 +23,21 @@
 //	private Matrix4f projectionViewMatrix = new Matrix4f();
 //	private Matrix4f offset = createOffset();
 //
-//	private ShadowMapEntityRenderer entityRenderer;
+//	private ShadowRenderer shadowRenderer;
 //
 //	public ShadowMasterRenderer(Camera camera) {
 //		shader = new ShadowShader();
 //		shadowBox = new ShadowBox(lightViewMatrix, camera);
 //		shadowFbo = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
-//		entityRenderer = new ShadowMapEntityRenderer(shader, projectionViewMatrix);
+//		shadowRenderer = new ShadowRenderer(shader, projectionViewMatrix);
 //	}
 //
-//	public void render(Map<TexturedModel, List<Entity>> entities, Light sun) {
+//	public void render(Map<Model, List<BodyElement>> renderMap, Light sun) {
 //		shadowBox.update();
 //		Vector3f sunPosition = sun.getPosition();
 //		Vector3f lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
 //		prepare(lightDirection, shadowBox);
-//		entityRenderer.render(entities);
+//		shadowRenderer.render(renderMap);
 //		finish();
 //	}
 //
@@ -60,8 +63,8 @@
 //		updateLightViewMatrix(lightDirection, box.getCenter());
 //		Matrix4f.mul(projectionMatrix, lightViewMatrix, projectionViewMatrix);
 //		shadowFbo.bindFrameBuffer();
-//		GL11.glEnable(GL11.GL_DEPTH_TEST);
-//		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+//		GL46.glEnable(GL46.GL_DEPTH_TEST);
+//        GL46.glClear(GL46.GL_DEPTH_BUFFER_BIT);
 //		shader.start();
 //	}
 //

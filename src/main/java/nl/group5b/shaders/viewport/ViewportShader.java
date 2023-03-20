@@ -72,14 +72,14 @@ public class ViewportShader extends ShaderProgram {
 
     public void loadLights(Light[] lights) {
         for (int i = 0; i < super.getLightCount(); i++) {
-            super.loadVector(lightPositionLocations[i], lights[i].getPosition());
-            super.loadVector(lightColourLocations[i], lights[i].getColour());
-            super.loadVector(lightAttenuationLocations[i], lights[i].getAttenuation());
+            super.loadVector4f(lightPositionLocations[i], lights[i].getPosition());
+            super.loadVector3f(lightColourLocations[i], lights[i].getColour());
+            super.loadVector3f(lightAttenuationLocations[i], lights[i].getAttenuation());
         }
     }
 
     public void loadMaterial(Material material) {
-        super.loadVector(colourLocation, material.getColour());
+        super.loadVector3f(colourLocation, material.getColour());
         super.loadFloat(dampingLocation, material.getDamping());
         super.loadFloat(shininessLocation, material.getShininess());
     }

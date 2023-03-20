@@ -1,5 +1,6 @@
 package nl.group5b.shaders;
 
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
 
@@ -74,8 +75,12 @@ public abstract class ShaderProgram {
         GL46.glUniform1f(location, value);
     }
 
-    protected void loadVector(int location, Vector3f vector) {
+    protected void loadVector3f(int location, Vector3f vector) {
         GL46.glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    protected void loadVector4f(int location, Vector4f vector) {
+        GL46.glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
     }
 
     protected void loadBoolean(int location, boolean value) {

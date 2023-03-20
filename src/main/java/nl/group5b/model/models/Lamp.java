@@ -4,6 +4,7 @@ import nl.group5b.light.Light;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.PositionHandler;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.io.FileNotFoundException;
 
@@ -22,7 +23,7 @@ public class Lamp extends Body implements PositionHandler {
         Vector3f[] startingRotations = {rotation};
         float[] scales = {1};
 
-        this.light = new Light(position, new Vector3f(1, 1, 1));
+        this.light = new Light(new Vector4f(position, 1), new Vector3f(1, 1, 1));
 
         super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
     }
@@ -37,7 +38,7 @@ public class Lamp extends Body implements PositionHandler {
     @Override
     public void setPosition(Vector3f position) {
         super.getBodyElements()[0].getEntity().setPosition(position);
-        this.light.setPosition(position);
+        this.light.setPosition(new Vector4f(position, 1));
     }
 
     @Override

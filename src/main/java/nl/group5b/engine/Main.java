@@ -9,6 +9,7 @@ import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.models.*;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
 
@@ -39,6 +40,9 @@ public class Main {
         // Create ModelLoader instance
         ModelLoader modelLoader = new ModelLoader();
 
+        // Create sun
+        Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(1, 1, 1));
+
         // Create Bodies
         Arena arena = new Arena(modelLoader);
         //Dragon dragon = new Dragon(modelLoader);
@@ -46,20 +50,19 @@ public class Main {
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
-        Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
         // TODO change to array and add body.visible + body.active
-        List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, mainLamp, colouredLamp));
+        List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, colouredLamp));
 
         // Create lights
         //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
         //Light colouredLight = new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f));
 
         // Load lights into array (has to be an array with predefined length)
-        Light[] lights = {mainLamp.getLight(), colouredLamp.getLight()};
+        Light[] lights = {sun, colouredLamp.getLight()};
 
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights.length);
@@ -97,6 +100,8 @@ public class Main {
             camera.move(window);
 
             renderer.processBodies(bodies);
+
+            // Render shadows using renderer.getRenderMap()
 
             renderer.render(lights, camera, window, gui);
 
