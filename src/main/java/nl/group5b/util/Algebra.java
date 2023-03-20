@@ -1,6 +1,6 @@
 package nl.group5b.util;
 
-import nl.group5b.engine.Camera;
+import nl.group5b.camera.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

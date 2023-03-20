@@ -1,17 +1,18 @@
-package nl.group5b.shaders;
+package nl.group5b.shaders.viewport;
 
-import nl.group5b.engine.Camera;
-import nl.group5b.engine.Light;
+import nl.group5b.camera.Camera;
+import nl.group5b.light.Light;
 import nl.group5b.model.Material;
 import nl.group5b.model.Model;
+import nl.group5b.shaders.ShaderProgram;
 import nl.group5b.util.Algebra;
 import org.joml.Matrix4f;
 
 
-public class StaticShader extends ShaderProgram {
+public class ViewportShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/vertex_shader.glsl";
-    private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/fragment_shader.glsl";
+    private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/viewport/vertex_shader.glsl";
+    private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/viewport/fragment_shader.glsl";
 
     private int transformationMatrixLocation;
     private int projectionMatrixLocation;
@@ -24,7 +25,7 @@ public class StaticShader extends ShaderProgram {
     private int lightColourLocations[];
     private int lightAttenuationLocations[];
 
-    public StaticShader(int lightCount) {
+    public ViewportShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
     }
 

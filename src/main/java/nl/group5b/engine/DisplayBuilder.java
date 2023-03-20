@@ -13,13 +13,13 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DisplayBuilder {
     // Define variables used for the DisplayController
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
     private static final String TITLE = "Group 5B - Braitenberg Vehicles";
     private static final int REFRESH_RATE = 60;
 
     // The window handle
     public static long window;
+    private static int width = 1280;
+    private static int height = 720;
 
     public static void init() {
         // Setup an error callback. The default implementation
@@ -37,7 +37,7 @@ public class DisplayBuilder {
         glfwWindowHint(GLFW_REFRESH_RATE, REFRESH_RATE); // Set the refresh rate to REFRESH_RATE
 
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
+        window = glfwCreateWindow(width, height, TITLE, NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -45,6 +45,12 @@ public class DisplayBuilder {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+        });
+
+        // Setup window resize callback
+        glfwSetFramebufferSizeCallback(window, (window, newWidth, newHeight) -> {
+            width = newWidth;
+            height = newHeight;
         });
 
         // Get the thread stack and push a new frame
@@ -68,20 +74,23 @@ public class DisplayBuilder {
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
+
         // Enable v-sync
         glfwSwapInterval(1);
 
         // Make the window visible
         glfwShowWindow(window);
 
+        // Create the OpenGL capabilities
         GL.createCapabilities();
     }
 
     public static int getWidth() {
-        return WIDTH;
+        return width;
     }
 
     public static int getHeight() {
-        return HEIGHT;
+        return height;
     }
+
 }

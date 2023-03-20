@@ -1,8 +1,10 @@
 package nl.group5b.engine;
 
+import nl.group5b.camera.BodyCamera;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.elements.Demo;
+import nl.group5b.light.Light;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.models.*;

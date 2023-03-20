@@ -1,5 +1,6 @@
-package nl.group5b.engine;
+package nl.group5b.camera;
 
+import nl.group5b.camera.Camera;
 import nl.group5b.model.interfaces.PositionHandler;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;

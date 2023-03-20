@@ -37,6 +37,11 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float dx = (float) (distance * Math.sin(Math.toRadians(getRotation().y)));
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
+
+        // Check for collision
+        // If collision is detected, set wheel speeds to 0
+
+        // Move the vehicle when no collision is detected
         movePosition(deltaPosition);
 
         // Rotate the wheels

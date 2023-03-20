@@ -1,24 +1,26 @@
 package nl.group5b.engine;
 
+import nl.group5b.camera.Camera;
 import nl.group5b.gui.GUI;
+import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.StaticShader;
+import nl.group5b.shaders.viewport.ViewportShader;
 
 import java.util.List;
 import java.util.Map;
 
 public class MasterRenderer {
 
-    private StaticShader shader;
+    private ViewportShader shader;
 
     private Renderer renderer;
 
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
     public MasterRenderer(int lightCount) {
-        this.shader = new StaticShader(lightCount);
+        this.shader = new ViewportShader(lightCount);
         this.renderer = new Renderer(shader);
     }
 

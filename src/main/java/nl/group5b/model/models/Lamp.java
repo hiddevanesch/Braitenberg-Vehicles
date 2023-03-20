@@ -1,6 +1,6 @@
 package nl.group5b.model.models;
 
-import nl.group5b.engine.Light;
+import nl.group5b.light.Light;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.PositionHandler;
 import org.joml.Vector3f;

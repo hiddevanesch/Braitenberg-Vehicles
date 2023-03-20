@@ -1,6 +1,5 @@
 package nl.group5b.model;
 
-import nl.group5b.engine.Entity;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;

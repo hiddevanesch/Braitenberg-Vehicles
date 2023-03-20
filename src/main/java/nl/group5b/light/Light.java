@@ -1,4 +1,4 @@
-package nl.group5b.engine;
+package nl.group5b.light;
 
 
 import org.joml.Vector3f;
