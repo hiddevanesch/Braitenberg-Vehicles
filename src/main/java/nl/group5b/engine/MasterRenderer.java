@@ -108,8 +108,4 @@ public class MasterRenderer {
             renderMap.put(model, newBodyElements);
         }
     }
-
-    public void processArena(Arena arena) {
-        processBody(arena);
-    }
 }

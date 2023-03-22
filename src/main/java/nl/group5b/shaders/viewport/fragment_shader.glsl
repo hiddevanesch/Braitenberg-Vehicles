@@ -1,7 +1,14 @@
 # version 460
 
 #define LIGHT_COUNT 1
-#define SHADOW_FACE_OFFSET 0.0005
+
+#define SHADOW_FACE_OFFSET 0.0011
+#define SHADOW_TEXTURE_SIZE 4096
+#define TEXEL_SIZE (1.0 / SHADOW_TEXTURE_SIZE)
+
+#define PCF_RADIUS 3
+#define PCF_KERNEL_SIZE (2 * PCF_RADIUS + 1)
+#define PCF_TOTAL_KERNEL_SIZE (PCF_KERNEL_SIZE * PCF_KERNEL_SIZE)
 
 in vec3 surfaceNormal;
 in vec3 toLight[LIGHT_COUNT];
@@ -19,12 +26,18 @@ uniform float damping;
 uniform float shininess;
 
 void main(void) {
-    // Check if the fragment is in shadow
-    float objectNearestLight = texture(shadowMap, shadowCoordinates.xy).r + SHADOW_FACE_OFFSET;
-    float shadowFactor = 1.0;
-    if (shadowCoordinates.z > objectNearestLight) {
-        shadowFactor -= (0.5 * shadowCoordinates.w);
+    // Compute the shadow factor
+    float totalShadow = 0.0;
+    for (int x = -PCF_RADIUS; x <= PCF_RADIUS; x++) {
+        for (int y = -PCF_RADIUS; y <= PCF_RADIUS; y++) {
+            float objectNearestLight = texture(shadowMap, shadowCoordinates.xy + vec2(x, y) * TEXEL_SIZE).r + SHADOW_FACE_OFFSET;
+            if (shadowCoordinates.z > objectNearestLight) {
+                totalShadow += 1.0;
+            }
+        }
     }
+    totalShadow /= PCF_TOTAL_KERNEL_SIZE;
+    float shadowFactor = 1.0 - (totalShadow * shadowCoordinates.w);
 
     // Normalise the vectors
     vec3 unitNormal = normalize(surfaceNormal);
@@ -55,7 +68,7 @@ void main(void) {
     }
 
     // Add ambient light
-    totalDiffuse = max(totalDiffuse, 0.15 * colour) * shadowFactor;
+    totalDiffuse = max(totalDiffuse * shadowFactor, 0.15 * colour);
 
     // Compute out colour
     outColour = vec4(totalDiffuse, 1.0) + vec4(totalSpecular, 1.0);

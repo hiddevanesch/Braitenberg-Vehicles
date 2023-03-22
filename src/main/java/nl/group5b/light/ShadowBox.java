@@ -12,6 +12,7 @@ public class ShadowBox {
 	private static final float OFFSET = 10;
 	private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
 	private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
+	// TODO parse to shader
 	private static final float SHADOW_RANGE = 25; // WARNING! If changed, also change this in the shadow vertex shader!
 
 	private float minX, maxX;

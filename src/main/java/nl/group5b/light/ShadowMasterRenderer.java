@@ -15,7 +15,8 @@ import java.util.Map;
 
 public class ShadowMasterRenderer {
 
-	private static final int SHADOW_MAP_SIZE = 4096;
+	// TODO parse to shader
+	private static final int SHADOW_MAP_SIZE = 4096; // WARNING! If changed, also change this in the shadow vertex shader!
 
 	private ShadowFrameBuffer shadowFbo;
 	private ShadowShader shader;

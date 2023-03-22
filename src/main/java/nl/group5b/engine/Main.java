@@ -45,10 +45,8 @@ public class Main {
         // Create sun
         Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(1, 1, 1));
 
-        // Create Arena body
+        // Create the Bodies
         Arena arena = new Arena(modelLoader);
-
-        // Create the rest of the Bodies
         Controllable braitenbergVehicle = new Controllable(modelLoader,
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable secondCar = new Controllable(modelLoader,
@@ -58,6 +56,7 @@ public class Main {
 
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
+                arena,
                 braitenbergVehicle,
                 colouredLamp
         ));
@@ -105,9 +104,6 @@ public class Main {
 
             // Render shadows using renderer.getRenderMap()
             renderer.computeShadows();
-
-            // Add arena to renderMap
-            renderer.processArena(arena);
 
             // Update texture in GUI
             //demo.setImage(renderer.getShadowMapTexture());
