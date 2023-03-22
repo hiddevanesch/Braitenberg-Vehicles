@@ -1,10 +1,10 @@
 # version 460
 
-#define LIGHT_COUNT 1
+#define LIGHT_COUNT 1 // Will be overwritten upon compilation
 
 #define SHADOW_FACE_OFFSET 0.0011
-#define SHADOW_TEXTURE_SIZE 4096
-#define TEXEL_SIZE (1.0 / SHADOW_TEXTURE_SIZE)
+#define SHADOW_MAP_SIZE 4096 // Will be overwritten upon compilation
+#define TEXEL_SIZE (1.0 / SHADOW_MAP_SIZE)
 
 #define PCF_RADIUS 3
 #define PCF_KERNEL_SIZE (2 * PCF_RADIUS + 1)

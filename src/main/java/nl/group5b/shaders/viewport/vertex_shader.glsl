@@ -1,8 +1,8 @@
 #version 460
 
-#define LIGHT_COUNT 1
+#define LIGHT_COUNT 1 // Will be overwritten upon compilation
 
-#define SHADOW_RANGE 25.0
+#define SHADOW_RANGE 25.0 // Will be overwritten upon compilation
 #define SHADOW_GRADIENT 2.0
 
 in vec3 position;

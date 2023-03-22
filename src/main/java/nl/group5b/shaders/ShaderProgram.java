@@ -1,5 +1,7 @@
 package nl.group5b.shaders;
 
+import nl.group5b.light.ShadowBox;
+import nl.group5b.light.ShadowMasterRenderer;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
@@ -112,6 +114,14 @@ public abstract class ShaderProgram {
                 if (line.startsWith("#define LIGHT_COUNT")) {
                     String[] split = line.split(" ");
                     split[2] = String.valueOf(lightCount);
+                    line = String.join(" ", split);
+                } else if (line.startsWith("#define SHADOW_RANGE")) {
+                    String[] split = line.split(" ");
+                    split[2] = String.valueOf(ShadowBox.SHADOW_RANGE);
+                    line = String.join(" ", split);
+                } else if (line.startsWith("#define SHADOW_MAP_SIZE")) {
+                    String[] split = line.split(" ");
+                    split[2] = String.valueOf(ShadowMasterRenderer.SHADOW_MAP_SIZE);
                     line = String.join(" ", split);
                 }
                 shaderSource.append(line).append("\n");
