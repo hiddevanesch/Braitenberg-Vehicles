@@ -32,7 +32,9 @@ public class Main {
         Demo demo = new Demo();
 
         // Load GUI Elements into array
-        Element[] elements = {demo};
+        Element[] elements = {
+                demo
+        };
 
         // Create GUI
         GUI gui = new GUI(window, elements);
@@ -43,9 +45,10 @@ public class Main {
         // Create sun
         Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(1, 1, 1));
 
-        // Create Bodies
+        // Create Arena body
         Arena arena = new Arena(modelLoader);
-        //Dragon dragon = new Dragon(modelLoader);
+
+        // Create the rest of the Bodies
         Controllable braitenbergVehicle = new Controllable(modelLoader,
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable secondCar = new Controllable(modelLoader,
@@ -53,22 +56,26 @@ public class Main {
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
-        // Load bodies into array
-        List<Body> bodies = new ArrayList<>(List.of(braitenbergVehicle, colouredLamp));
-
-        // Create lights
-        //Light sun = new Light(new Vector3f(0, 20, 0), new Vector3f(1, 1, 1));
-        //Light colouredLight = new Light(new Vector3f(0, 10, 15), new Vector3f(0.25f, 0, 0.5f));
+        // Load bodies (except Arena) into list
+        List<Body> bodies = new ArrayList<>(List.of(
+                braitenbergVehicle,
+                colouredLamp
+        ));
 
         // Load lights into array (has to be an array with predefined length)
-        Light[] lights = {sun, colouredLamp.getLight()};
+        // IMPORTANT! Sun HAS to be present at index 0 ======================
+        Light[] lights = {
+                sun,
+                colouredLamp.getLight()
+        };
 
+        // Create Camera's
         BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
         camera.enableZoom(window);
         camera.enableMouseTracking(window);
 
         // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(lights.length, sun, lights, camera, window, gui);
+        MasterRenderer renderer = new MasterRenderer(lights, camera, window, gui);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -96,14 +103,19 @@ public class Main {
 
             camera.move(window);
 
+            // Make renderMap of bodies
             renderer.processBodies(bodies);
 
             // Render shadows using renderer.getRenderMap()
             renderer.computeShadows();
 
+            // Add arena to renderMap
+            renderer.processArena(arena);
+
             // Update texture in GUI
             demo.setImage(renderer.getShadowMapTexture());
 
+            // Render scene
             renderer.render();
         }
 

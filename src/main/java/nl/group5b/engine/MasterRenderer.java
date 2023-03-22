@@ -7,6 +7,7 @@ import nl.group5b.light.ShadowMasterRenderer;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
+import nl.group5b.model.models.Arena;
 import nl.group5b.shaders.viewport.ViewportShader;
 
 import java.util.List;
@@ -26,10 +27,10 @@ public class MasterRenderer {
 
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
-    public MasterRenderer(int lightCount, Light sun, Light[] lights, Camera camera, long window, GUI gui) {
-        this.shader = new ViewportShader(lightCount);
+    public MasterRenderer(Light[] lights, Camera camera, long window, GUI gui) {
+        this.shader = new ViewportShader(lights.length);
         this.renderer = new Renderer(shader);
-        this.shadowRenderer = new ShadowMasterRenderer(sun, camera);
+        this.shadowRenderer = new ShadowMasterRenderer(lights[0], camera);
         this.lights = lights;
         this.camera = camera;
         this.window = window;
@@ -103,4 +104,7 @@ public class MasterRenderer {
         }
     }
 
+    public void processArena(Arena arena) {
+        processBody(arena);
+    }
 }
