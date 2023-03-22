@@ -37,8 +37,6 @@ public class ShadowRenderer {
 			}
 			unbindModel();
 		}
-		GL46.glDisableVertexAttribArray(0);
-		GL46.glBindVertexArray(0);
 	}
 
 	private void prepareModel(Model model) {

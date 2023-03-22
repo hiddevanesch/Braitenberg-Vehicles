@@ -161,8 +161,9 @@ public class ShadowBox {
         float fovTan = (float) Math.tan(Math.toRadians(Renderer.getFOV()));
 		farWidth = SHADOW_RANGE * fovTan;
 		nearWidth = Renderer.getNearPlane() * fovTan;
-		farHeight = farWidth / getAspectRatio();
-		nearHeight = nearWidth / getAspectRatio();
+		float aspectRatio = getAspectRatio();
+		farHeight = farWidth / aspectRatio;
+		nearHeight = nearWidth / aspectRatio;
 	}
 
 	private float getAspectRatio() {

@@ -29,7 +29,6 @@ public class ShadowFrameBuffer {
 
 	protected void unbindFrameBuffer() {
 		GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, 0);
-		GL46.glViewport(0, 0, DisplayBuilder.getWidth(), DisplayBuilder.getHeight());
 	}
 
 	protected int getShadowMap() {
