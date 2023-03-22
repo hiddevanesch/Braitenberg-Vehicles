@@ -71,5 +71,5 @@ void main(void) {
     totalDiffuse = max(totalDiffuse * shadowFactor, 0.15 * colour);
 
     // Compute out colour
-    outColour = vec4(totalDiffuse, 1.0) + vec4(totalSpecular, 1.0);
+    outColour = vec4(totalDiffuse + (totalSpecular * shadowFactor), 1.0);
 }
