@@ -2,11 +2,9 @@ package nl.group5b.light;
 
 import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
-import nl.group5b.engine.MasterRenderer;
 import nl.group5b.engine.Renderer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 import org.joml.Vector4f;
 
 public class ShadowBox {
@@ -14,7 +12,7 @@ public class ShadowBox {
 	private static final float OFFSET = 10;
 	private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
 	private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-	private static final float SHADOW_RANGE = 100;
+	private static final float SHADOW_RANGE = 25; // WARNING! If changed, also change this in the shadow vertex shader!
 
 	private float minX, maxX;
 	private float minY, maxY;

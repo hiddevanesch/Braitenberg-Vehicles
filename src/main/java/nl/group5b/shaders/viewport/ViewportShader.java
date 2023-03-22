@@ -20,6 +20,8 @@ public class ViewportShader extends ShaderProgram {
     private int colourLocation;
     private int dampingLocation;
     private int shininessLocation;
+    private int toShadowMapSpaceLocation;
+    private int shadowMapLocation;
 
     private int lightPositionLocations[];
     private int lightColourLocations[];
@@ -43,6 +45,8 @@ public class ViewportShader extends ShaderProgram {
         colourLocation = super.getUniformLocation("colour");
         dampingLocation = super.getUniformLocation("damping");
         shininessLocation = super.getUniformLocation("shininess");
+        toShadowMapSpaceLocation = super.getUniformLocation("toShadowMapSpace");
+        shadowMapLocation = super.getUniformLocation("shadowMap");
 
         int lightCount = super.getLightCount();
 
@@ -55,6 +59,10 @@ public class ViewportShader extends ShaderProgram {
             lightColourLocations[i] = super.getUniformLocation("lightColour[" + i + "]");
             lightAttenuationLocations[i] = super.getUniformLocation("lightAttenuation[" + i + "]");
         }
+    }
+
+    public void connectTextureUnits() {
+        super.loadInt(shadowMapLocation, 0);
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
@@ -82,6 +90,10 @@ public class ViewportShader extends ShaderProgram {
         super.loadVector3f(colourLocation, material.getColour());
         super.loadFloat(dampingLocation, material.getDamping());
         super.loadFloat(shininessLocation, material.getShininess());
+    }
+
+    public void loadToShadowMapSpaceMatrix(Matrix4f matrix) {
+        super.loadMatrix(toShadowMapSpaceLocation, matrix);
     }
 
 }

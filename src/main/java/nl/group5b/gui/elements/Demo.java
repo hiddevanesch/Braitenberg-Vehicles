@@ -32,8 +32,8 @@ public class Demo extends Element {
         ImGui.separator();
         ImGui.text("Spawn second car:");
         ImGui.checkbox("Spawn second car", spawnSecondCar);
-        ImGui.separator();
-        ImGui.image(image, 1024, 1024);
+        //ImGui.separator();
+        //ImGui.image(image, 1024, 1024);
         ImGui.end();
     }
 

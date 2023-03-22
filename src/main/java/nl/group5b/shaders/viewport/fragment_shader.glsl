@@ -1,12 +1,16 @@
 # version 460
 
 #define LIGHT_COUNT 1
+#define SHADOW_FACE_OFFSET 0.0005
 
 in vec3 surfaceNormal;
 in vec3 toLight[LIGHT_COUNT];
 in vec3 toCamera;
+in vec4 shadowCoordinates;
 
 out vec4 outColour;
+
+uniform sampler2D shadowMap;
 
 uniform vec3 lightColour[LIGHT_COUNT];
 uniform vec3 lightAttenuation[LIGHT_COUNT];
@@ -15,6 +19,13 @@ uniform float damping;
 uniform float shininess;
 
 void main(void) {
+    // Check if the fragment is in shadow
+    float objectNearestLight = texture(shadowMap, shadowCoordinates.xy).r + SHADOW_FACE_OFFSET;
+    float shadowFactor = 1.0;
+    if (shadowCoordinates.z > objectNearestLight) {
+        shadowFactor -= (0.5 * shadowCoordinates.w);
+    }
+
     // Normalise the vectors
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitCamera = normalize(toCamera);
@@ -44,7 +55,7 @@ void main(void) {
     }
 
     // Add ambient light
-    totalDiffuse = max(totalDiffuse, 0.15 * colour);
+    totalDiffuse = max(totalDiffuse, 0.15 * colour) * shadowFactor;
 
     // Compute out colour
     outColour = vec4(totalDiffuse, 1.0) + vec4(totalSpecular, 1.0);

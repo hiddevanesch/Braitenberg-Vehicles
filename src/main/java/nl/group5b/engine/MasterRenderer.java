@@ -44,9 +44,14 @@ public class MasterRenderer {
 
     public void render() {
         renderer.prepare();
+
+        // Load the shadow map into the shader
+        renderer.loadTexture(shadowRenderer.getShadowMap());
+
         shader.start();
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
+        shader.loadToShadowMapSpaceMatrix(shadowRenderer.getToShadowMapSpaceMatrix());
 
         // Render all BodyElements in the map
         renderer.render(renderMap);

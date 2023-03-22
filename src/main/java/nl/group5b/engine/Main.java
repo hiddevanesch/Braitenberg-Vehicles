@@ -80,9 +80,6 @@ public class Main {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
-            // Poll for window events and move camera accordingly
-            //camera.move(window);
-
             // TODO remove demo code
             if (demo.getSpawnSecondCar().get()) {
                 if (!bodies.contains(secondCar)) {
@@ -113,7 +110,7 @@ public class Main {
             renderer.processArena(arena);
 
             // Update texture in GUI
-            demo.setImage(renderer.getShadowMapTexture());
+            //demo.setImage(renderer.getShadowMapTexture());
 
             // Render scene
             renderer.render();

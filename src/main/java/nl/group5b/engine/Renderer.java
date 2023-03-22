@@ -144,4 +144,9 @@ public class Renderer {
     public static float getNearPlane() {
         return NEAR_PLANE;
     }
+
+    public void loadTexture(int shadowMap) {
+        GL46.glActiveTexture(GL46.GL_TEXTURE0);
+        GL46.glBindTexture(GL46.GL_TEXTURE_2D, shadowMap);
+    }
 }

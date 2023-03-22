@@ -71,6 +71,10 @@ public abstract class ShaderProgram {
         GL46.glBindAttribLocation(programID, attribute, variableName);
     }
 
+    protected void loadInt(int location, int value) {
+        GL46.glUniform1i(location, value);
+    }
+
     protected void loadFloat(int location, float value) {
         GL46.glUniform1f(location, value);
     }
