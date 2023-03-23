@@ -1,6 +1,7 @@
 package nl.group5b.camera;
 
 import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 
@@ -82,5 +83,26 @@ public class Sensor {
 
     public int getHeight() {
         return height;
+    }
+
+    public float calculateSensorBrightness() {
+        float brightness = 0.0f;
+        int totalPixels = width * height;
+
+        // Create a buffer to store the data
+        ByteBuffer buffer = BufferUtils.createByteBuffer(totalPixels * 4);
+
+        // Bind the Texture and read the data
+        GL46.glBindTexture(GL46.GL_TEXTURE_2D, textureID);
+        GL46.glGetTexImage(GL46.GL_TEXTURE_2D, 0, GL46.GL_RGB, GL46.GL_UNSIGNED_BYTE, buffer);
+
+        for (int i = 0; i < totalPixels; i++) {
+            float r = (buffer.get() & 0xFF) / 255.0f;
+            float g = (buffer.get() & 0xFF) / 255.0f;
+            float b = (buffer.get() & 0xFF) / 255.0f;
+            brightness += (0.2126f * r + 0.7152f * g + 0.0722f * b);
+        }
+
+        return brightness / totalPixels;
     }
 }

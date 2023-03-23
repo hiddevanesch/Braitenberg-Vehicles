@@ -87,10 +87,10 @@ public class Algebra {
         return new Vector3f((float) Math.toDegrees(result.x), (float) Math.toDegrees(result.y), (float) Math.toDegrees(result.z));
     }
 
-    public static Matrix4f createProjectionMatrix(int width, int height) {
+    public static Matrix4f createProjectionMatrix(int width, int height, float fov) {
         Matrix4f projectionMatrix = new Matrix4f();
         float aspectRatio = (float) width / (float) height;
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.VIEWPORT_FOV / 2f))));
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = Settings.VIEWPORT_FAR_PLANE - Settings.VIEWPORT_NEAR_PLANE;
 

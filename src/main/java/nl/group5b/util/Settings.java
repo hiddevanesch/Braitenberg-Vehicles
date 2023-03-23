@@ -30,7 +30,8 @@ public class Settings {
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
     public static final float VEHICLE_STEERING_FACTOR = 1.3f;
-    public static final int SENSOR_RESOLUTION = 500;
+    public static final int SENSOR_RESOLUTION = 100;
+    public static final float SENSOR_FOV = 25;
 
     // GUI
     public static final int GUI_GRAPH_HISTORY_SIZE = 500;

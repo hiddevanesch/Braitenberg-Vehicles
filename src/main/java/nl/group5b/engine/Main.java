@@ -48,7 +48,7 @@ public class Main {
         ModelLoader modelLoader = new ModelLoader();
 
         // Create sun
-        Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(1, 1, 1));
+        Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(0.5f, 0.5f, 0.5f));
 
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
@@ -56,8 +56,8 @@ public class Main {
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
-        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 3, 0),
-                new Vector3f(1, 1, 0), new Vector3f(1, 0.75f, 0.75f));
+        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 1, 5),
+                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
 
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
@@ -115,6 +115,8 @@ public class Main {
 
             // Render scene
             renderer.render(bodies, sensor);
+
+            System.out.println(sensor.calculateSensorBrightness());
         }
 
         // Clean up renderer

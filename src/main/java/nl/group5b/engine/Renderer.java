@@ -35,7 +35,7 @@ public class Renderer {
         // Update screen size
         int width = sensor.getWidth();
         int height = sensor.getHeight();
-        updateProjectionMatrix(width, height);
+        updateProjectionMatrix(width, height, Settings.SENSOR_FOV);
 
         // Bind the framebuffer
         sensor.bind();
@@ -49,7 +49,7 @@ public class Renderer {
         int width = DisplayBuilder.getWidth();
         int height = DisplayBuilder.getHeight();
         GL46.glViewport(0, 0, width, height);
-        updateProjectionMatrix(width, height);
+        updateProjectionMatrix(width, height, Settings.VIEWPORT_FOV);
 
         // Enable backface culling
         GL46.glEnable(GL46.GL_CULL_FACE);
@@ -131,9 +131,9 @@ public class Renderer {
         return delta;
     }
 
-    private void updateProjectionMatrix(int width, int height) {
+    private void updateProjectionMatrix(int width, int height, float fov) {
         shader.start();
-        shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height));
+        shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
         shader.stop();
     }
 }
