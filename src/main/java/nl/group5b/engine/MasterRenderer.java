@@ -1,20 +1,23 @@
 package nl.group5b.engine;
 
 import nl.group5b.camera.Camera;
+import nl.group5b.camera.Sensor;
 import nl.group5b.gui.GUI;
 import nl.group5b.light.Light;
 import nl.group5b.light.ShadowMasterRenderer;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.viewport.ViewportShader;
+import nl.group5b.model.models.BraitenbergVehicle;
+import nl.group5b.shaders.real.RealShader;
+import org.lwjgl.opengl.GL46;
 
 import java.util.List;
 import java.util.Map;
 
 public class MasterRenderer {
 
-    private ViewportShader shader;
+    private RealShader shader;
 
     private Renderer renderer;
     private ShadowMasterRenderer shadowRenderer;
@@ -27,9 +30,9 @@ public class MasterRenderer {
     private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
     public MasterRenderer(Light[] lights, Camera camera, long window, GUI gui) {
-        this.shader = new ViewportShader(lights.length);
+        this.shader = new RealShader(lights.length);
         this.renderer = new Renderer(shader);
-        this.shadowRenderer = new ShadowMasterRenderer(lights[0], camera);
+        this.shadowRenderer = new ShadowMasterRenderer(lights[0]);
         this.lights = lights;
         this.camera = camera;
         this.window = window;
@@ -38,37 +41,85 @@ public class MasterRenderer {
 
     public void setCamera(Camera camera) {
         this.camera = camera;
-        shadowRenderer.setCamera(camera);
     }
 
-    public void render() {
-        renderer.prepare();
+    private void prepareShader() {
+        // Load the shadow map
+        GL46.glActiveTexture(GL46.GL_TEXTURE0);
+        GL46.glBindTexture(GL46.GL_TEXTURE_2D, shadowRenderer.getShadowMap());
 
-        // Load the shadow map into the shader
-        renderer.loadTexture(shadowRenderer.getShadowMap());
-
+        // Load lights (should be done every frame, because the lights can move)
         shader.start();
         shader.loadLights(lights);
-        shader.loadViewMatrix(camera);
         shader.loadToShadowMapSpaceMatrix(shadowRenderer.getToShadowMapSpaceMatrix());
+        shader.stop();
+    }
+
+    private void renderShadows() {
+        shadowRenderer.render(renderMap);
+    }
+
+    private void renderSensors(List<Body> bodies) {
+        for (Body body : bodies) {
+            if (body instanceof BraitenbergVehicle braitenbergVehicle) {
+                for (Sensor sensor : braitenbergVehicle.getSensors()) {
+                    renderer.prepareSensor(sensor);
+                    shader.start();
+                    shader.loadViewMatrix(sensor.getCamera());
+                    renderer.render(renderMap);
+                    shader.stop();
+                    renderer.completeSensor(sensor);
+                }
+            }
+        }
+    }
+
+    private void renderViewport() {
+        shader.start();
+        shader.loadViewMatrix(camera);
 
         // Render all BodyElements in the map
         renderer.render(renderMap);
 
         shader.stop();
+    }
 
-        // Render the GUI
+    private void renderGUI() {
         gui.render();
+    }
 
-        renderer.complete(window);
+    public void render(List<Body> bodies, Sensor sensor) {
+        // Process all the bodies
+        for (Body body : bodies) {
+            processBody(body);
+        }
 
-        // Clear the map of BodyElements to render
+        // Compute shadow map
+        renderShadows();
+
+        // Prepare the RealShader
+        prepareShader();
+
+        // Render all the sensors
+        //renderSensors(bodies);
+        renderer.prepareSensor(sensor);
+        shader.start();
+        shader.loadViewMatrix(sensor.getCamera());
+        renderer.render(renderMap);
+        shader.stop();
+        renderer.completeSensor(sensor);
+
+        // Render the viewport
+        renderer.prepareViewport();
+        renderViewport();
+        renderGUI();
+        renderer.completeViewport(window);
+
+        // Clear the render map
         renderMap.clear();
     }
 
-    public void computeShadows() {
-        shadowRenderer.render(renderMap);
-    }
+
 
     public int getShadowMapTexture() {
         return shadowRenderer.getShadowMap();
@@ -81,12 +132,6 @@ public class MasterRenderer {
 
     public Renderer getRenderer() {
         return renderer;
-    }
-
-    public void processBodies(List<Body> bodies) {
-        for (Body body : bodies) {
-            processBody(body);
-        }
     }
 
     private void processBody(Body body) {

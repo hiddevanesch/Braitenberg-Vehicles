@@ -1,6 +1,7 @@
 package nl.group5b.engine;
 
 import nl.group5b.camera.BodyCamera;
+import nl.group5b.camera.Sensor;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.Demo;
@@ -11,6 +12,7 @@ import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Controllable;
 import nl.group5b.model.models.Lamp;
+import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
@@ -71,6 +73,8 @@ public class Main {
                 colouredLamp.getLight()
         };
 
+        Sensor sensor = new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 0, 0), Settings.SENSOR_RESOLUTION);
+
         // Create Camera's
         BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
         camera.enableZoom(window);
@@ -102,17 +106,15 @@ public class Main {
 
             camera.move(window);
 
-            // Make renderMap of bodies
-            renderer.processBodies(bodies);
-
-            // Render shadows using renderer.getRenderMap()
-            renderer.computeShadows();
+            // Render sensor views
+            //renderer.renderSensors(bodies);
+            //renderer.renderSensor();
 
             // Update texture in GUI
-            //demo.setImage(renderer.getShadowMapTexture());
+            demo.setImage(sensor.getTextureID());
 
             // Render scene
-            renderer.render();
+            renderer.render(bodies, sensor);
         }
 
         // Clean up renderer

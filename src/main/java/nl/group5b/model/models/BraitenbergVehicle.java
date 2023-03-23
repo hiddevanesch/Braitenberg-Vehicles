@@ -1,5 +1,6 @@
 package nl.group5b.model.models;
 
+import nl.group5b.camera.Sensor;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
@@ -119,5 +120,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public float getSpeedRight() {
         return rightWheelSpeed;
+    }
+
+    public Sensor[] getSensors() {
+        // TODO implement
+        return null;
     }
 }

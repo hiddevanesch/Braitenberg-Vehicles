@@ -2,9 +2,6 @@
 
 #define LIGHT_COUNT 1 // Will be overwritten upon compilation
 
-#define SHADOW_RANGE 25.0 // Will be overwritten upon compilation
-#define SHADOW_GRADIENT 2.0
-
 in vec3 position;
 in vec3 normal;
 
@@ -26,17 +23,8 @@ void main(void) {
     vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
     shadowCoordinates = toShadowMapSpace * worldPosition;
 
-    vec4 positionRelativeToCamera = viewMatrix * worldPosition;
-
-    // Compute the shadow gradient factor
-    shadowCoordinates.w = clamp(
-        1.0 - ((length(positionRelativeToCamera.xyz) - (SHADOW_RANGE - SHADOW_GRADIENT)) / SHADOW_GRADIENT),
-        0.0,
-        1.0
-    );
-
     // Compute the vertex position in eye space
-    gl_Position = projectionMatrix * positionRelativeToCamera;
+    gl_Position = projectionMatrix * viewMatrix * worldPosition;
 
     // Compute the vertex's normal in eye space
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;

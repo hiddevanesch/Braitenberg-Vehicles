@@ -1,18 +1,43 @@
 package nl.group5b.camera;
 
+import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL46;
 
+import java.nio.ByteBuffer;
+
 public class Sensor {
+
+    private final int width;
+    private final int height;
+    private int frameBufferID;
+    private int textureID;
+    private Camera camera;
+
+    public Sensor(Vector3f position, Vector3f rotation, int resolution) {
+        this.width = resolution;
+        this.height = resolution;
+        this.camera = new Camera(position, rotation);
+        this.frameBufferID = createFrameBuffer();
+        this.textureID = createTexture(width, height);
+    }
 
     private int createFrameBuffer() {
         int frameBuffer = GL46.glGenFramebuffers();
         GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, frameBuffer);
-        GL46.glDrawBuffer(GL46.GL_COLOR_ATTACHMENT0);
+        GL46.glFramebufferRenderbuffer(GL46.GL_FRAMEBUFFER, GL46.GL_DEPTH_ATTACHMENT, GL46.GL_RENDERBUFFER, GL46.glGenRenderbuffers());
+        GL46.glRenderbufferStorage(GL46.GL_RENDERBUFFER, GL46.GL_DEPTH_COMPONENT, width, height);
+
+        // Create a depth buffer attachment
+        int depthBuffer = GL46.glGenRenderbuffers();
+        GL46.glBindRenderbuffer(GL46.GL_RENDERBUFFER, depthBuffer);
+        GL46.glRenderbufferStorage(GL46.GL_RENDERBUFFER, GL46.GL_DEPTH_COMPONENT, width, height);
+        GL46.glFramebufferRenderbuffer(GL46.GL_FRAMEBUFFER, GL46.GL_DEPTH_ATTACHMENT, GL46.GL_RENDERBUFFER, depthBuffer);
+
         return frameBuffer;
     }
 
     private int createTexture(int width, int height) {
-        // TODO only need brightness, not color
         int texture = GL46.glGenTextures();
         GL46.glBindTexture(GL46.GL_TEXTURE_2D, texture);
         GL46.glTexImage2D(GL46.GL_TEXTURE_2D, 0, GL46.GL_RGB, width, height, 0, GL46.GL_RGB, GL46.GL_UNSIGNED_BYTE, 0);
@@ -22,7 +47,40 @@ public class Sensor {
         return texture;
     }
 
+    public void bind() {
+        GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, frameBufferID);
+        GL46.glViewport(0, 0, width, height);
+    }
+
+    public void unbind() {
+        GL46.glBindFramebuffer(GL46.GL_FRAMEBUFFER, 0);
+    }
+
+    public int getTextureID() {
+        return textureID;
+    }
+
     public void cleanUp() {
 
+    }
+
+    public void setPosition(Vector3f position) {
+        this.camera.setPosition(position);
+    }
+
+    public void setRotation(Vector3f rotation) {
+        this.camera.setRotation(rotation);
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

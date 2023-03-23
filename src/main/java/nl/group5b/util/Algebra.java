@@ -1,6 +1,7 @@
 package nl.group5b.util;
 
 import nl.group5b.camera.Camera;
+import nl.group5b.engine.DisplayBuilder;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -84,5 +85,22 @@ public class Algebra {
 
         // Convert the result to degrees
         return new Vector3f((float) Math.toDegrees(result.x), (float) Math.toDegrees(result.y), (float) Math.toDegrees(result.z));
+    }
+
+    public static Matrix4f createProjectionMatrix(int width, int height) {
+        Matrix4f projectionMatrix = new Matrix4f();
+        float aspectRatio = (float) width / (float) height;
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.VIEWPORT_FOV / 2f))));
+        float x_scale = y_scale / aspectRatio;
+        float frustum_length = Settings.VIEWPORT_FAR_PLANE - Settings.VIEWPORT_NEAR_PLANE;
+
+        projectionMatrix.m00(x_scale);
+        projectionMatrix.m11(y_scale);
+        projectionMatrix.m22(-((Settings.VIEWPORT_FAR_PLANE + Settings.VIEWPORT_NEAR_PLANE) / frustum_length));
+        projectionMatrix.m23(-1);
+        projectionMatrix.m32(-((2 * Settings.VIEWPORT_NEAR_PLANE * Settings.VIEWPORT_FAR_PLANE) / frustum_length));
+        projectionMatrix.m33(0);
+
+        return projectionMatrix;
     }
 }

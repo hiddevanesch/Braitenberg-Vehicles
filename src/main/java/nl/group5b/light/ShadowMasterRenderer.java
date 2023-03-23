@@ -1,6 +1,5 @@
 package nl.group5b.light;
 
-import nl.group5b.camera.Camera;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
 import nl.group5b.shaders.shadow.ShadowShader;
@@ -16,9 +15,15 @@ import java.util.Map;
 
 public class ShadowMasterRenderer {
 
+	private static final float SHADOW_BOX_MIN_X = -Settings.SHADOW_BOX_RADIUS;
+	private static final float SHADOW_BOX_MAX_X = Settings.SHADOW_BOX_RADIUS;
+	private static final float SHADOW_BOX_MIN_Y = -Settings.SHADOW_BOX_RADIUS;
+	private static final float SHADOW_BOX_MAX_Y = Settings.SHADOW_BOX_RADIUS;
+	private static final float SHADOW_BOX_MIN_Z = -Settings.SHADOW_BOX_RADIUS;
+	private static final float SHADOW_BOX_MAX_Z = Settings.SHADOW_BOX_RADIUS;
+
 	private ShadowFrameBuffer shadowFbo;
 	private ShadowShader shader;
-	private ShadowBox shadowBox;
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f lightViewMatrix = new Matrix4f();
 	private Matrix4f projectionViewMatrix = new Matrix4f();
@@ -27,21 +32,32 @@ public class ShadowMasterRenderer {
 
 	private ShadowRenderer shadowRenderer;
 
-	public ShadowMasterRenderer(Light sun, Camera camera) {
+	public ShadowMasterRenderer(Light sun) {
 		shader = new ShadowShader();
-		shadowBox = new ShadowBox(lightViewMatrix, camera);
-		shadowFbo = new ShadowFrameBuffer(Settings.SHADOW_MAP_SIZE, Settings.SHADOW_MAP_SIZE);
+		shadowFbo = new ShadowFrameBuffer(Settings.SHADOW_MAP_RESOLUTION, Settings.SHADOW_MAP_RESOLUTION);
 		shadowRenderer = new ShadowRenderer(shader, projectionViewMatrix);
 
+		// Compute the light direction
         Vector4f sunPosition = sun.getPosition();
         lightDirection = new Vector3f(-sunPosition.x, -sunPosition.y, -sunPosition.z);
+
+		setProjectionMatrix();
+
+		setLightViewMatrix(lightDirection, getCenter());
+
+		// Set projection view matrix
+		projectionMatrix.mul(lightViewMatrix, projectionViewMatrix);
 	}
 
 	public void render(Map<Model, List<BodyElement>> renderMap) {
-		shadowBox.update();
-		prepare(lightDirection, shadowBox);
+		shadowFbo.bindFrameBuffer();
+		GL46.glClear(GL46.GL_DEPTH_BUFFER_BIT);
+		shader.start();
+
 		shadowRenderer.render(renderMap);
-		finish();
+
+		shader.stop();
+		shadowFbo.unbindFrameBuffer();
 	}
 
 	public Matrix4f getToShadowMapSpaceMatrix() {
@@ -61,22 +77,7 @@ public class ShadowMasterRenderer {
 		return lightViewMatrix;
 	}
 
-	private void prepare(Vector3f lightDirection, ShadowBox box) {
-		updateProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
-		updateLightViewMatrix(lightDirection, box.getCenter());
-        projectionMatrix.mul(lightViewMatrix, projectionViewMatrix);
-		shadowFbo.bindFrameBuffer();
-		GL46.glEnable(GL46.GL_DEPTH_TEST);
-        GL46.glClear(GL46.GL_DEPTH_BUFFER_BIT);
-		shader.start();
-	}
-
-	private void finish() {
-		shader.stop();
-		shadowFbo.unbindFrameBuffer();
-	}
-
-	private void updateLightViewMatrix(Vector3f direction, Vector3f center) {
+	private void setLightViewMatrix(Vector3f direction, Vector3f center) {
 		Vector3f newDirection = new Vector3f(direction);
 		Vector3f newCenter = new Vector3f(center);
 		newDirection.normalize();
@@ -92,11 +93,11 @@ public class ShadowMasterRenderer {
         lightViewMatrix.translate(newCenter);
 	}
 
-	private void updateProjectionMatrix(float width, float height, float length) {
+	private void setProjectionMatrix() {
 		projectionMatrix.identity();
-		projectionMatrix.m00(2f / width);
-		projectionMatrix.m11(2f / height);
-		projectionMatrix.m22(-2f / length);
+		projectionMatrix.m00(2f / (SHADOW_BOX_MAX_X - SHADOW_BOX_MIN_X));
+		projectionMatrix.m11(2f / (SHADOW_BOX_MAX_Y - SHADOW_BOX_MIN_Y));
+		projectionMatrix.m22(-2f / (SHADOW_BOX_MAX_Z - SHADOW_BOX_MIN_Z));
 	}
 
 	private static Matrix4f createOffset() {
@@ -106,7 +107,14 @@ public class ShadowMasterRenderer {
 		return offset;
 	}
 
-	public void setCamera(Camera camera) {
-		shadowBox.setCamera(camera);
+	private Vector3f getCenter() {
+		float x = (SHADOW_BOX_MIN_X + SHADOW_BOX_MAX_X) / 2f;
+		float y = (SHADOW_BOX_MIN_Y + SHADOW_BOX_MAX_Y) / 2f;
+		float z = (SHADOW_BOX_MIN_Z + SHADOW_BOX_MAX_Z) / 2f;
+		Vector4f center = new Vector4f(x, y, z, 1);
+		Matrix4f invertedLight = new Matrix4f();
+		lightViewMatrix.invert(invertedLight);
+		Vector4f newCenter = invertedLight.transform(center);
+		return new Vector3f(newCenter.x, newCenter.y, newCenter.z);
 	}
 }

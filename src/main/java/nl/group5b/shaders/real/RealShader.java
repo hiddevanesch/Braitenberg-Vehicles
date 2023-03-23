@@ -1,4 +1,4 @@
-package nl.group5b.shaders.viewport;
+package nl.group5b.shaders.real;
 
 import nl.group5b.camera.Camera;
 import nl.group5b.light.Light;
@@ -9,10 +9,10 @@ import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 
 
-public class ViewportShader extends ShaderProgram {
+public class RealShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/viewport/vertex_shader.glsl";
-    private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/viewport/fragment_shader.glsl";
+    private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/real/vertex_shader.glsl";
+    private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/real/fragment_shader.glsl";
 
     private int transformationMatrixLocation;
     private int projectionMatrixLocation;
@@ -28,7 +28,7 @@ public class ViewportShader extends ShaderProgram {
     private int lightColourLocations[];
     private int lightAttenuationLocations[];
 
-    public ViewportShader(int lightCount) {
+    public RealShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
     }
 
@@ -102,5 +102,4 @@ public class ViewportShader extends ShaderProgram {
     public void loadToShadowMapSpaceMatrix(Matrix4f matrix) {
         super.loadMatrix(toShadowMapSpaceLocation, matrix);
     }
-
 }

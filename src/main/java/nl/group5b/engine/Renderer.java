@@ -1,9 +1,10 @@
 package nl.group5b.engine;
 
+import nl.group5b.camera.Sensor;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.viewport.ViewportShader;
+import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
@@ -18,30 +19,44 @@ public class Renderer {
     private static long lastFrameTime;
     private static float delta;
 
-    private Matrix4f projectionMatrix;
-    private ViewportShader shader;
+    private RealShader shader;
 
-    public Renderer(ViewportShader shader) {
+    public Renderer(RealShader shader) {
         this.shader = shader;
-    }
-
-    public void prepare() {
-        // Update screen size
-        GL46.glViewport(0, 0, DisplayBuilder.getWidth(), DisplayBuilder.getHeight());
-        updateProjectionMatrix();
 
         // Set the clear color
         GL46.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        // Clear the framebuffer
-        GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
-
         // Enable depth testing
         GL46.glEnable(GL46.GL_DEPTH_TEST);
+    }
+
+    public void prepareSensor(Sensor sensor) {
+        // Update screen size
+        int width = sensor.getWidth();
+        int height = sensor.getHeight();
+        updateProjectionMatrix(width, height);
+
+        // Bind the framebuffer
+        sensor.bind();
+
+        // Clear the framebuffer
+        GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
+    }
+
+    public void prepareViewport() {
+        // Update screen size
+        int width = DisplayBuilder.getWidth();
+        int height = DisplayBuilder.getHeight();
+        GL46.glViewport(0, 0, width, height);
+        updateProjectionMatrix(width, height);
 
         // Enable backface culling
         GL46.glEnable(GL46.GL_CULL_FACE);
         GL46.glCullFace(GL46.GL_BACK);
+
+        // Clear the framebuffer
+        GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
     }
 
     public void render(Map<Model, List<BodyElement>> renderMap) {
@@ -63,21 +78,21 @@ public class Renderer {
         }
     }
 
-    private void prepareModel (Model model) {
+    private void prepareModel(Model model) {
         // Bind the VAO
         GL46.glBindVertexArray(model.getVaoID());
         GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
         GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
     }
 
-    private void unbindModel () {
+    private void unbindModel() {
         // Unbind the VAO
         GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
         GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
         GL46.glBindVertexArray(0);
     }
 
-    private void prepareInstance (BodyElement bodyElement) {
+    private void prepareInstance(BodyElement bodyElement) {
         Entity entity = bodyElement.getEntity();
 
         // Create transformation matrix
@@ -90,7 +105,12 @@ public class Renderer {
         shader.loadMaterial(bodyElement.getMaterial());
     }
 
-    public void complete(long window) {
+    public void completeSensor(Sensor sensor) {
+        // Unbind the framebuffer
+        sensor.unbind();
+    }
+
+    public void completeViewport(long window) {
         // Swap the color buffers
         GLFW.glfwSwapBuffers(window);
 
@@ -111,30 +131,9 @@ public class Renderer {
         return delta;
     }
 
-    private void createProjectionMatrix() {
-        projectionMatrix = new Matrix4f();
-        float aspectRatio = (float) DisplayBuilder.getWidth() / (float) DisplayBuilder.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.VIEWPORT_FOV / 2f))));
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = Settings.VIEWPORT_FAR_PLANE - Settings.VIEWPORT_NEAR_PLANE;
-
-        projectionMatrix.m00(x_scale);
-        projectionMatrix.m11(y_scale);
-        projectionMatrix.m22(-((Settings.VIEWPORT_FAR_PLANE + Settings.VIEWPORT_NEAR_PLANE) / frustum_length));
-        projectionMatrix.m23(-1);
-        projectionMatrix.m32(-((2 * Settings.VIEWPORT_NEAR_PLANE * Settings.VIEWPORT_FAR_PLANE) / frustum_length));
-        projectionMatrix.m33(0);
-    }
-
-    private void updateProjectionMatrix() {
-        createProjectionMatrix();
+    private void updateProjectionMatrix(int width, int height) {
         shader.start();
-        shader.loadProjectionMatrix(projectionMatrix);
+        shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height));
         shader.stop();
-    }
-
-    public void loadTexture(int shadowMap) {
-        GL46.glActiveTexture(GL46.GL_TEXTURE0);
-        GL46.glBindTexture(GL46.GL_TEXTURE_2D, shadowMap);
     }
 }

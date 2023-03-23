@@ -26,6 +26,7 @@ public class BodyCamera extends Camera {
 
     // require Body that implements MoveHandler
     public BodyCamera(PositionHandler body, float heightOffset) {
+        super(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
         this.body = body;
         this.heightOffset = heightOffset; // TODO change to body height / 2
     }

@@ -44,7 +44,7 @@ void main(void) {
             }
         }
         totalShadow /= PCF_TOTAL_KERNEL_SIZE;
-        float shadowFactor = 1.0 - (totalShadow * shadowCoordinates.w);
+        float shadowFactor = 1.0 - (totalShadow);
 
         // Normalise the vectors
         vec3 unitNormal = normalize(surfaceNormal);

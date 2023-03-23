@@ -17,21 +17,21 @@ public class Settings {
 
     // Graphics
     public static final float AMBIENT_LIGHT = 0.15f;
-    public static final float SHADOW_RANGE = 25; // WARNING! If changed, this also changes in the shadow vertex shader!
-    public static final int SHADOW_MAP_SIZE = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
+    public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
+    public static final float SHADOW_BOX_RADIUS = 10;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
 
     // Vehicle
     public static final float VEHICLE_SPEED = 1.5f;
-    public static final float WHEEL_ROTATION_SPEED = VEHICLE_SPEED *100;
+    public static final float WHEEL_ROTATION_SPEED = VEHICLE_SPEED * 200;
     public static final float VEHICLE_ACCELERATION = 0.5f;
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
     public static final float VEHICLE_STEERING_FACTOR = 1.3f;
+    public static final int SENSOR_RESOLUTION = 500;
 
     // GUI
     public static final int GUI_GRAPH_HISTORY_SIZE = 500;
-
 }
