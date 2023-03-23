@@ -3,18 +3,12 @@ package nl.group5b.model.models;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
+import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
 
 public abstract class BraitenbergVehicle extends Body implements PositionHandler {
-
-    protected static final float SPEED = 1.5f;
-    protected static final float WHEEL_ROTATION_SPEED = 150;
-    protected static final float ACCELERATION = 0.5f;
-    protected static final float DECELERATION = 3;
-    protected static final float CLAMP = 0.001f;
-    protected static final float STEERING = 1.3f;
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);
@@ -53,8 +47,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     }
 
     protected void rotateWheels(float frameTime) {
-        leftWheelRotation += leftWheelSpeed * WHEEL_ROTATION_SPEED * frameTime;
-        rightWheelRotation += rightWheelSpeed * WHEEL_ROTATION_SPEED * frameTime;
+        leftWheelRotation += leftWheelSpeed * Settings.WHEEL_ROTATION_SPEED * frameTime;
+        rightWheelRotation += rightWheelSpeed * Settings.WHEEL_ROTATION_SPEED * frameTime;
 
         // Get y-axis rotation
         float yRotation = getRotation().y;

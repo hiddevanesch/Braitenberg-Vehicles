@@ -7,7 +7,6 @@ import nl.group5b.light.ShadowMasterRenderer;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
-import nl.group5b.model.models.Arena;
 import nl.group5b.shaders.viewport.ViewportShader;
 
 import java.util.List;

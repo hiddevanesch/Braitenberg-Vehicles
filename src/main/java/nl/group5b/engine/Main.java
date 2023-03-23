@@ -1,17 +1,20 @@
 package nl.group5b.engine;
 
 import nl.group5b.camera.BodyCamera;
-import nl.group5b.gui.GUI;
 import nl.group5b.gui.Element;
+import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.Demo;
 import nl.group5b.light.Light;
-import nl.group5b.model.*;
+import nl.group5b.model.Body;
+import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
-import nl.group5b.model.models.*;
+import nl.group5b.model.models.Arena;
+import nl.group5b.model.models.Controllable;
+import nl.group5b.model.models.Lamp;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

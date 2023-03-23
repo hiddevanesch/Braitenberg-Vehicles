@@ -1,5 +1,6 @@
 package nl.group5b.engine;
 
+import nl.group5b.util.Settings;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -12,10 +13,6 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DisplayBuilder {
-    // Define variables used for the DisplayController
-    private static final String TITLE = "Group 5B - Braitenberg Vehicles";
-    private static final int REFRESH_RATE = 60;
-
     // The window handle
     public static long window;
     private static int width = 1280;
@@ -34,10 +31,10 @@ public class DisplayBuilder {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_REFRESH_RATE, REFRESH_RATE); // Set the refresh rate to REFRESH_RATE
+        glfwWindowHint(GLFW_REFRESH_RATE, Settings.REFRESH_RATE); // Set the refresh rate to REFRESH_RATE
 
         // Create the window
-        window = glfwCreateWindow(width, height, TITLE, NULL, NULL);
+        window = glfwCreateWindow(width, height, Settings.WINDOW_TITLE, NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 

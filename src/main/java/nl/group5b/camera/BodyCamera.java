@@ -1,20 +1,17 @@
 package nl.group5b.camera;
 
-import nl.group5b.camera.Camera;
 import nl.group5b.model.interfaces.PositionHandler;
+import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
-
 
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 
 
 public class BodyCamera extends Camera {
     private PositionHandler body;
-
-    private static final float SENSITIVITY = 0.2f;
 
     private float heightOffset;
 
@@ -47,7 +44,7 @@ public class BodyCamera extends Camera {
 
     private void computePitch(long window) {
         if (glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS) {
-            float pitchChange = mouseDY * SENSITIVITY;
+            float pitchChange = mouseDY * Settings.CAMERA_MOUSE_SENSITIVITY;
             bodyPitch += pitchChange;
             mouseDY = 0;
         }
@@ -55,7 +52,7 @@ public class BodyCamera extends Camera {
 
     private void computeAngle(long window) {
         if (glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS) {
-            float angleChange = mouseDX * SENSITIVITY;
+            float angleChange = mouseDX * Settings.CAMERA_MOUSE_SENSITIVITY;
             angle -= angleChange;
             mouseDX = 0;
         }
@@ -86,7 +83,7 @@ public class BodyCamera extends Camera {
         GLFW.glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long win, double dx, double dy) {
-                float zoomLevel = (float) dy * distance * SENSITIVITY;
+                float zoomLevel = (float) dy * distance * Settings.CAMERA_MOUSE_SENSITIVITY;
                 distance -= zoomLevel;
             }
         });

@@ -3,9 +3,9 @@ package nl.group5b.shaders.viewport;
 import nl.group5b.camera.Camera;
 import nl.group5b.light.Light;
 import nl.group5b.model.Material;
-import nl.group5b.model.Model;
 import nl.group5b.shaders.ShaderProgram;
 import nl.group5b.util.Algebra;
+import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 
 
@@ -33,8 +33,8 @@ public class ViewportShader extends ShaderProgram {
 
     @Override
     protected void bindAttributes() {
-        super.bindAttribute(Model.POSITION_ATTR, "position");
-        super.bindAttribute(Model.NORMAL_ATTR, "normal");
+        super.bindAttribute(Settings.VAO_POSITION_ATTR, "position");
+        super.bindAttribute(Settings.VAO_NORMAL_ATTR, "normal");
     }
 
     @Override

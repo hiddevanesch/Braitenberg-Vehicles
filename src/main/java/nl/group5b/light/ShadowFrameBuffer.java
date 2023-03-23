@@ -1,20 +1,19 @@
 package nl.group5b.light;
 
-import java.nio.ByteBuffer;
-
-import nl.group5b.engine.DisplayBuilder;
 import org.lwjgl.opengl.GL46;
+
+import java.nio.ByteBuffer;
 
 public class ShadowFrameBuffer {
 
-	private final int WIDTH;
-	private final int HEIGHT;
+	private final int width;
+	private final int height;
 	private int fbo;
 	private int shadowMap;
 
 	protected ShadowFrameBuffer(int width, int height) {
-		this.WIDTH = width;
-		this.HEIGHT = height;
+		this.width = width;
+		this.height = height;
 		initialiseFrameBuffer();
 	}
 
@@ -24,7 +23,7 @@ public class ShadowFrameBuffer {
 	}
 
 	protected void bindFrameBuffer() {
-		bindFrameBuffer(fbo, WIDTH, HEIGHT);
+		bindFrameBuffer(fbo, width, height);
 	}
 
 	protected void unbindFrameBuffer() {
@@ -37,7 +36,7 @@ public class ShadowFrameBuffer {
 
 	private void initialiseFrameBuffer() {
 		fbo = createFrameBuffer();
-		shadowMap = createDepthBufferAttachment(WIDTH, HEIGHT);
+		shadowMap = createDepthBufferAttachment(width, height);
 		unbindFrameBuffer();
 	}
 

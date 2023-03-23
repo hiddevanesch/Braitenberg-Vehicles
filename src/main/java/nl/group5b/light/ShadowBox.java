@@ -2,7 +2,7 @@ package nl.group5b.light;
 
 import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
-import nl.group5b.engine.Renderer;
+import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -12,7 +12,6 @@ public class ShadowBox {
 	private static final float OFFSET = 10;
 	private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
 	private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-	public static final float SHADOW_RANGE = 25; // WARNING! If changed, this also changes in the shadow vertex shader!
 
 	private float minX, maxX;
 	private float minY, maxY;
@@ -37,9 +36,9 @@ public class ShadowBox {
 		Vector3f forwardVector = new Vector3f(newRotation.x, newRotation.y, newRotation.z);
 
 		Vector3f toFar = new Vector3f(forwardVector);
-		toFar.mul(SHADOW_RANGE);
+		toFar.mul(Settings.SHADOW_RANGE);
 		Vector3f toNear = new Vector3f(forwardVector);
-		toNear.mul(Renderer.getNearPlane());
+		toNear.mul(Settings.VIEWPORT_NEAR_PLANE);
         Vector3f cameraPosition = camera.getPosition();
 		Vector3f centerNear = new Vector3f();
 		toNear.add(cameraPosition, centerNear);
@@ -158,9 +157,9 @@ public class ShadowBox {
 	}
 
 	private void updateWidthsAndHeights() {
-        float fovTan = (float) Math.tan(Math.toRadians(Renderer.getFOV()));
-		farWidth = SHADOW_RANGE * fovTan;
-		nearWidth = Renderer.getNearPlane() * fovTan;
+        float fovTan = (float) Math.tan(Math.toRadians(Settings.VIEWPORT_FOV));
+		farWidth = Settings.SHADOW_RANGE * fovTan;
+		nearWidth = Settings.VIEWPORT_NEAR_PLANE * fovTan;
 		float aspectRatio = getAspectRatio();
 		farHeight = farWidth / aspectRatio;
 		nearHeight = nearWidth / aspectRatio;

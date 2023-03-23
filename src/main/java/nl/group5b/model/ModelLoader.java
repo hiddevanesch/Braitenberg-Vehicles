@@ -1,5 +1,6 @@
 package nl.group5b.model;
 
+import nl.group5b.util.Settings;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
 
@@ -16,8 +17,8 @@ public class ModelLoader {
     public Model loadToVAO(float[] positions, float[] normals, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
-        storeDataInAttributeList(Model.POSITION_ATTR, 3, positions);
-        storeDataInAttributeList(Model.NORMAL_ATTR, 3, normals);
+        storeDataInAttributeList(Settings.VAO_POSITION_ATTR, 3, positions);
+        storeDataInAttributeList(Settings.VAO_NORMAL_ATTR, 3, normals);
         unbindVAO();
         return new Model(vaoID, indices.length);
     }

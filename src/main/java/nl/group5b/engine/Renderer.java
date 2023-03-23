@@ -5,7 +5,7 @@ import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
 import nl.group5b.shaders.viewport.ViewportShader;
 import nl.group5b.util.Algebra;
-
+import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
@@ -14,10 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Renderer {
-
-    private static final float FOV = 55;
-    private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000;
 
     private static long lastFrameTime;
     private static float delta;
@@ -70,14 +66,14 @@ public class Renderer {
     private void prepareModel (Model model) {
         // Bind the VAO
         GL46.glBindVertexArray(model.getVaoID());
-        GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
-        GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
+        GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+        GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
     }
 
     private void unbindModel () {
         // Unbind the VAO
-        GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
-        GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
+        GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+        GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
         GL46.glBindVertexArray(0);
     }
 
@@ -118,15 +114,15 @@ public class Renderer {
     private void createProjectionMatrix() {
         projectionMatrix = new Matrix4f();
         float aspectRatio = (float) DisplayBuilder.getWidth() / (float) DisplayBuilder.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.VIEWPORT_FOV / 2f))));
         float x_scale = y_scale / aspectRatio;
-        float frustum_length = FAR_PLANE - NEAR_PLANE;
+        float frustum_length = Settings.VIEWPORT_FAR_PLANE - Settings.VIEWPORT_NEAR_PLANE;
 
         projectionMatrix.m00(x_scale);
         projectionMatrix.m11(y_scale);
-        projectionMatrix.m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
+        projectionMatrix.m22(-((Settings.VIEWPORT_FAR_PLANE + Settings.VIEWPORT_NEAR_PLANE) / frustum_length));
         projectionMatrix.m23(-1);
-        projectionMatrix.m32(-((2 * NEAR_PLANE * FAR_PLANE) / frustum_length));
+        projectionMatrix.m32(-((2 * Settings.VIEWPORT_NEAR_PLANE * Settings.VIEWPORT_FAR_PLANE) / frustum_length));
         projectionMatrix.m33(0);
     }
 
@@ -135,14 +131,6 @@ public class Renderer {
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
-    }
-
-    public static float getFOV() {
-        return FOV;
-    }
-
-    public static float getNearPlane() {
-        return NEAR_PLANE;
     }
 
     public void loadTexture(int shadowMap) {

@@ -2,8 +2,8 @@ package nl.group5b.gui.elements;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
-import imgui.type.ImInt;
 import nl.group5b.gui.Element;
+import nl.group5b.util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,6 @@ import java.util.List;
 public class Demo extends Element {
 
     int[] demoDate = {16, 3, 2023};
-
-    private static final int SPEED_HISTORY_SIZE = 500;
 
     private List<Float> vehicleSpeedsLeft = new ArrayList<>();
     private List<Float> vehicleSpeedsRight = new ArrayList<>();
@@ -42,11 +40,11 @@ public class Demo extends Element {
     }
 
     public void addVehicleSpeed(float speedLeft, float speedRight) {
-        if (vehicleSpeedsLeft.size() > SPEED_HISTORY_SIZE) {
+        if (vehicleSpeedsLeft.size() > Settings.GUI_GRAPH_HISTORY_SIZE) {
             vehicleSpeedsLeft.remove(0);
         }
         vehicleSpeedsLeft.add(speedLeft);
-        if (vehicleSpeedsRight.size() > SPEED_HISTORY_SIZE) {
+        if (vehicleSpeedsRight.size() > Settings.GUI_GRAPH_HISTORY_SIZE) {
             vehicleSpeedsRight.remove(0);
         }
         vehicleSpeedsRight.add(speedRight);

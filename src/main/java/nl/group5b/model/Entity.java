@@ -1,6 +1,4 @@
 package nl.group5b.model;
-
-import nl.group5b.model.Model;
 import org.joml.Vector3f;
 
 

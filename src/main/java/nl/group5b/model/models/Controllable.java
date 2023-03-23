@@ -3,6 +3,7 @@ package nl.group5b.model.models;
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
+import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
@@ -53,7 +54,7 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW.GLFW_PRESS) {
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
                 // Decrease right wheel speed
-                if (rightWheelSpeed > SPEED / STEERING) {
+                if (rightWheelSpeed > Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR) {
                     decelerateRightWheel(frameTime);
                 } else {
                     accelerateRightWheel(frameTime);
@@ -61,7 +62,7 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
                 accelerateLeftWheel(frameTime);
             } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
                 // Decrease left wheel speed
-                if (leftWheelSpeed > SPEED / STEERING) {
+                if (leftWheelSpeed > Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR) {
                     decelerateLeftWheel(frameTime);
                 } else {
                     accelerateLeftWheel(frameTime);
@@ -73,21 +74,21 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
                 accelerateRightWheel(frameTime);
             }
             // Bound the wheel speeds
-            if (leftWheelSpeed > SPEED) {
-                leftWheelSpeed = SPEED;
+            if (leftWheelSpeed > Settings.VEHICLE_SPEED) {
+                leftWheelSpeed = Settings.VEHICLE_SPEED;
             }
-            if (rightWheelSpeed > SPEED) {
-                rightWheelSpeed = SPEED;
+            if (rightWheelSpeed > Settings.VEHICLE_SPEED) {
+                rightWheelSpeed = Settings.VEHICLE_SPEED;
             }
         } else {
             // Slow down
-            if (leftWheelSpeed < CLAMP) {
+            if (leftWheelSpeed < Settings.VEHICLE_CLAMP_SPEED) {
                 leftWheelSpeed = 0;
             }
             else {
                 decelerateLeftWheel(frameTime);
             }
-            if (rightWheelSpeed < CLAMP) {
+            if (rightWheelSpeed < Settings.VEHICLE_CLAMP_SPEED) {
                 rightWheelSpeed = 0;
             }
             else {
@@ -97,18 +98,18 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
     }
 
     private void accelerateLeftWheel(float frameTime) {
-        leftWheelSpeed += frameTime / (leftWheelSpeed + ACCELERATION);
+        leftWheelSpeed += frameTime / (leftWheelSpeed + Settings.VEHICLE_ACCELERATION);
     }
 
     private void accelerateRightWheel(float frameTime) {
-        rightWheelSpeed += frameTime / (rightWheelSpeed + ACCELERATION);
+        rightWheelSpeed += frameTime / (rightWheelSpeed + Settings.VEHICLE_ACCELERATION);
     }
 
     private void decelerateLeftWheel(float frameTime) {
-        leftWheelSpeed *= 1 - (frameTime * DECELERATION);
+        leftWheelSpeed *= 1 - (frameTime * Settings.VEHICLE_DECELERATION);
     }
 
     private void decelerateRightWheel(float frameTime) {
-        rightWheelSpeed *= 1 - (frameTime * DECELERATION);
+        rightWheelSpeed *= 1 - (frameTime * Settings.VEHICLE_DECELERATION);
     }
 }
