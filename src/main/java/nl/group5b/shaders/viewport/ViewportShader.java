@@ -18,6 +18,7 @@ public class ViewportShader extends ShaderProgram {
     private int projectionMatrixLocation;
     private int viewMatrixLocation;
     private int colourLocation;
+    private int isEmissiveLocation;
     private int dampingLocation;
     private int shininessLocation;
     private int toShadowMapSpaceLocation;
@@ -43,6 +44,7 @@ public class ViewportShader extends ShaderProgram {
         projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
         viewMatrixLocation = super.getUniformLocation("viewMatrix");
         colourLocation = super.getUniformLocation("colour");
+        isEmissiveLocation = super.getUniformLocation("isEmissive");
         dampingLocation = super.getUniformLocation("damping");
         shininessLocation = super.getUniformLocation("shininess");
         toShadowMapSpaceLocation = super.getUniformLocation("toShadowMapSpace");
@@ -88,8 +90,13 @@ public class ViewportShader extends ShaderProgram {
 
     public void loadMaterial(Material material) {
         super.loadVector3f(colourLocation, material.getColour());
-        super.loadFloat(dampingLocation, material.getDamping());
-        super.loadFloat(shininessLocation, material.getShininess());
+        if (material.isEmissive()) {
+            super.loadBoolean(isEmissiveLocation, true);
+        } else {
+            super.loadBoolean(isEmissiveLocation, false);
+            super.loadFloat(dampingLocation, material.getDamping());
+            super.loadFloat(shininessLocation, material.getShininess());
+        }
     }
 
     public void loadToShadowMapSpaceMatrix(Matrix4f matrix) {

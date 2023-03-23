@@ -16,6 +16,7 @@ public class Settings {
     public static final float VIEWPORT_FAR_PLANE = 1000;
 
     // Graphics
+    public static final float AMBIENT_LIGHT = 0.15f;
     public static final float SHADOW_RANGE = 25; // WARNING! If changed, this also changes in the shadow vertex shader!
     public static final int SHADOW_MAP_SIZE = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
 

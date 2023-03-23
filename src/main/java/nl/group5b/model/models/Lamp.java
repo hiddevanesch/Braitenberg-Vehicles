@@ -12,27 +12,25 @@ public class Lamp extends Body implements PositionHandler {
 
     private Light light;
 
-    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation) throws FileNotFoundException {
+    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f colour,
+                Vector3f attenuation) throws FileNotFoundException {
         Model lamp = OBJLoader.loadOBJ("lamp", modelLoader);
+        Model lampBase = OBJLoader.loadOBJ("lampbase", modelLoader);
 
-        Material yellowMaterial = new Material(0.75f, 0.75f, 0, 10, 0.5f);
+        Material lampMaterial = new Material(colour.x, colour.y, colour.z, true);
+        Material metalMaterial = new Material(0.5f, 0.5f, 0.5f, 2, 0.5f);
 
-        Model[] loadedModels = {lamp};
-        Material[] materialSets = {yellowMaterial};
-        Vector3f[] startingPositions = {position};
-        Vector3f[] startingRotations = {rotation};
-        float[] scales = {1};
+        Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
-        this.light = new Light(new Vector4f(position, 1), new Vector3f(1, 1, 1));
+        Model[] loadedModels = {lamp, lampBase};
+        Material[] materialSets = {lampMaterial, metalMaterial};
+        Vector3f[] startingPositions = {position, position};
+        Vector3f[] startingRotations = {defaultRotation, defaultRotation};
+        float[] scales = {1, 1};
+
+        this.light = new Light(new Vector4f(position, 1), colour, attenuation);
 
         super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
-    }
-
-    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f rotation,
-                Vector3f colour, Vector3f attenuation) throws FileNotFoundException {
-        this(modelLoader, position, rotation);
-        this.light.setColour(colour);
-        this.light.setAttenuation(attenuation);
     }
 
     @Override

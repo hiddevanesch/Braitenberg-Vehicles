@@ -105,12 +105,15 @@ public abstract class ShaderProgram {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
-                // This allows us to compile the shader with a "dynamic" amount of lights
-                // If for some reason this line fails, the default shaders have 1 as value,
-                // so only the light with index 0 will be used
+                // This allows us to compile the shader with a "dynamic" definitions
+                // If for some reason this line fails, the shaders should have default values
                 if (line.startsWith("#define LIGHT_COUNT")) {
                     String[] split = line.split(" ");
                     split[2] = String.valueOf(lightCount);
+                    line = String.join(" ", split);
+                } else if (line.startsWith("#define AMBIENT_LIGHT")) {
+                    String[] split = line.split(" ");
+                    split[2] = String.valueOf(Settings.AMBIENT_LIGHT);
                     line = String.join(" ", split);
                 } else if (line.startsWith("#define SHADOW_RANGE")) {
                     String[] split = line.split(" ");

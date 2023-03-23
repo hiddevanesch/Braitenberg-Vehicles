@@ -54,8 +54,8 @@ public class Main {
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
-        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
-                new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
+        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 3, 0),
+                new Vector3f(1, 1, 0), new Vector3f(1, 0.75f, 0.75f));
 
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(

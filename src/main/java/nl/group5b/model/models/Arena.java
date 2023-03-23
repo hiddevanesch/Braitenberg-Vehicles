@@ -9,7 +9,7 @@ public class Arena extends Body {
     public Arena(ModelLoader modelLoader) throws FileNotFoundException {
         Model arena = OBJLoader.loadOBJ("arena", modelLoader);
 
-        Material greenMaterial = new Material(0.1f, 0.6f, 0.2f, 10, 0.5f);
+        Material greenMaterial = new Material(0.05f, 0.5f, 0.15f, 10, 0.1f);
 
         Vector3f defaultPosition = new Vector3f(0, 0, 0);
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
