@@ -1,13 +1,15 @@
 package nl.group5b.engine;
 
-import nl.group5b.model.BodyElement;
-import nl.group5b.model.Entity;
-import nl.group5b.model.Model;
+import nl.group5b.model.*;
 import nl.group5b.shaders.viewport.ViewportShader;
 import nl.group5b.util.Algebra;
 
+import nl.group5b.model.models.Controllable;
+
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
 
 import java.util.List;
@@ -48,7 +50,7 @@ public class Renderer {
         GL46.glCullFace(GL46.GL_BACK);
     }
 
-    public void render(Map<Model, List<BodyElement>> renderMap) {
+    public void render(Map<Model, List<BodyElement>> renderMap, List<Body> bodies) {
         // Iterate over all the different models
         for (Model model : renderMap.keySet()) {
             prepareModel(model);
@@ -64,6 +66,44 @@ public class Renderer {
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
             }
             unbindModel();
+        }
+
+        // For each body in bodies that is instance of Controllable
+        for(Body body : bodies){
+            if(body instanceof Controllable){
+                // Draw the hitbox
+                drawHitbox(body);
+            }
+        }
+    }
+
+    // Function that draws a line between two points
+    public void drawLine(Vector3f start, Vector3f end) {
+        GL46.glBegin(GL46.GL_LINES);
+        GL46.glVertex3f(start.x, start.y, start.z);
+        GL46.glVertex3f(end.x, end.y, end.z);
+        GL46.glEnd();
+    }
+
+    public void drawHitbox(Body body){
+        // Set the line thickness
+        GL46.glLineWidth(10.0f);
+
+        // If body is instance of Controllable
+        if(body instanceof Controllable){
+            // Get the hitbox
+            HitBox hitbox = ((Controllable) body).getHitBox();
+            // get the four corners of the hitbox
+            Vector3f frontLeft = hitbox.getFrontLeft();
+            Vector3f frontRight = hitbox.getFrontRight();
+            Vector3f rearLeft = hitbox.getRearLeft();
+            Vector3f rearRight = hitbox.getRearRight();
+
+            // Draw the lines
+            drawLine(frontLeft, frontRight);
+            drawLine(frontRight, rearRight);
+            drawLine(rearRight, rearLeft);
+            drawLine(rearLeft, frontLeft);
         }
     }
 

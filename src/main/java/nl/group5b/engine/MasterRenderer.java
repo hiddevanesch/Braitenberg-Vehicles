@@ -24,14 +24,14 @@ public class MasterRenderer {
         this.renderer = new Renderer(shader);
     }
 
-    public void render(Light[] lights, Camera camera, long window, GUI gui) {
+    public void render(Light[] lights, Camera camera, long window, GUI gui, List<Body> bodies) {
         renderer.prepare();
         shader.start();
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
 
         // Render all BodyElements in the map
-        renderer.render(renderMap);
+        renderer.render(renderMap, bodies);
 
         shader.stop();
 

@@ -21,10 +21,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
 
     protected HitBox hitBox = new HitBox(
-            new Vector3f(-0.67f, 0, 1.7f), // front left
-            new Vector3f(0.67f, 0, 1.7f), // front right
-            new Vector3f(-0.67f, 0, -0.3f), // rear left
-            new Vector3f(0.67f, 0, -0.3f));// rear right
+            new Vector3f(-0.67f, 1, 1.7f), // front left
+            new Vector3f(0.67f, 1, 1.7f), // front right
+            new Vector3f(-0.67f, 1, -0.3f), // rear left
+            new Vector3f(0.67f, 1, -0.3f));// rear right
     protected static List<Body> bodiesPotentialCollide;
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
@@ -142,6 +142,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         return rightWheelSpeed;
     }
 
+    public HitBox getHitBox() {
+        return hitBox;
+    }
+
     public void setBodies(List<Body> bodies) {
         bodiesPotentialCollide = bodies;
     }
@@ -150,13 +154,18 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         hitBox = nextHitBox;
     }
 
-    protected HitBox nextHitBox(Vector3f deltaPosition, Vector3f deltaRotation) {
+    protected HitBox nextHitBox(Vector3f deltaPosition) {
 
-        // update the hitbox of the vehicle with the new position and rotation
-        Vector3f frontLeft = Algebra.rotatePointAroundPivot(hitBox.getFrontLeft(), deltaPosition, deltaRotation.y);
-        Vector3f frontRight = Algebra.rotatePointAroundPivot(hitBox.getFrontRight(), deltaPosition, deltaRotation.y);
-        Vector3f rearLeft = Algebra.rotatePointAroundPivot(hitBox.getRearLeft(), deltaPosition, deltaRotation.y);
-        Vector3f rearRight = Algebra.rotatePointAroundPivot(hitBox.getRearRight(), deltaPosition, deltaRotation.y);
+        // Get the corners of the hitbox
+        Vector3f frontLeft = new Vector3f(hitBox.getFrontLeft());
+        Vector3f frontRight = new Vector3f(hitBox.getFrontRight());
+        Vector3f rearLeft = new Vector3f(hitBox.getRearLeft());
+        Vector3f rearRight = new Vector3f(hitBox.getRearRight());
+        // Update the corners of the hitbox
+        frontLeft.add(deltaPosition);
+        frontRight.add(deltaPosition);
+        rearLeft.add(deltaPosition);
+        rearRight.add(deltaPosition);
 
         return new HitBox(frontLeft, frontRight, rearLeft, rearRight);
     }

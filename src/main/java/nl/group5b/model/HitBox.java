@@ -1,6 +1,10 @@
 package nl.group5b.model;
 
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL46;
+import org.lwjgl.opengl.GL;
+
+
 
 public class HitBox {
     private Vector3f frontLeft;
@@ -46,4 +50,8 @@ public class HitBox {
     public void setRearRight(Vector3f rearRight) {
         this.rearRight = rearRight;
     }
+
+
+
+
 }

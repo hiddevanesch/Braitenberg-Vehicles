@@ -43,16 +43,18 @@ public class Main {
         Arena arena = new Arena(modelLoader);
         //Dragon dragon = new Dragon(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
-                new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
+                new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
-                new Vector3f(0, 0, -5), new Vector3f(0, 0, 0));
+                new Vector3f(0, 0, -5), new Vector3f(0, -90, 0));
+        Controllable thirdCar = new Controllable(modelLoader,
+                new Vector3f(-5, 0, -5), new Vector3f(0, 90, 0));
         Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));
 
         // Load bodies into array
         // TODO change to array and add body.visible + body.active
-        List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, mainLamp, colouredLamp));
+        List<Body> bodies = new ArrayList<>(List.of(arena, braitenbergVehicle, thirdCar, mainLamp, colouredLamp));
 
         // Give the bodies to the braitenbergVehicle
         braitenbergVehicle.setBodies(bodies);
@@ -101,7 +103,7 @@ public class Main {
 
             renderer.processBodies(bodies);
 
-            renderer.render(lights, camera, window, gui);
+            renderer.render(lights, camera, window, gui, bodies);
 
         }
 
