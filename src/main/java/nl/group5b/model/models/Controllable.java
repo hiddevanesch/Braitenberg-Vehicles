@@ -23,9 +23,6 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
     public Controllable(ModelLoader modelLoader, Vector3f position,
                         Vector3f rotation) throws FileNotFoundException {
         super(modelLoader, position, rotation);
-        // Update the hitbox of the vehicle based on the position of the vehicle
-        HitBox nextHitBox = nextHitBox(position);
-        updateHitBox(nextHitBox);
     }
 
     @Override
@@ -45,8 +42,8 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
 
-        // Compute the next hitbox of the vehicle
-        HitBox nextHitBox = nextHitBox(deltaPosition);
+        // Compute the next hitbox of the vehicle based on the delta position and rotation
+        HitBox nextHitBox = nextHitBox(deltaPosition, deltaRotation);
 
         // Print the next hitbox coordinates to the console
         System.out.println("Next hitbox: ");
@@ -54,6 +51,7 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         System.out.println("Front right: " + nextHitBox.getFrontRight());
         System.out.println("Rear left: " + nextHitBox.getRearLeft());
         System.out.println("Rear right: " + nextHitBox.getRearRight());
+        System.out.println("\n");
 
         // Check for collision
         if(isColliding(nextHitBox, bodiesPotentialCollide)){
