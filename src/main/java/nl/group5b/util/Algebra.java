@@ -1,7 +1,7 @@
 package nl.group5b.util;
 
 import nl.group5b.camera.Camera;
-import nl.group5b.model.HitBox;
+import nl.group5b.engine.DisplayBuilder;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -87,79 +87,20 @@ public class Algebra {
         return new Vector3f((float) Math.toDegrees(result.x), (float) Math.toDegrees(result.y), (float) Math.toDegrees(result.z));
     }
 
-    // Function that takes two hitboxes and returns true if they overlap.
-    // The y (height) axis is not taken into account.
-    // The hitboxes can be rotated
-    public static boolean hitboxOverlap(HitBox hitBoxSelf, HitBox hitBoxOther) {
-        // Get the x and z coordinates of hitBoxSelf
-        Vector3f[] coordinatesSelf = hitBoxSelf.getCoordinates();
-        Vector3f selfFrontLeft = coordinatesSelf[0];
-        Vector3f selfFrontRight = coordinatesSelf[1];
-        Vector3f selfBackRight = coordinatesSelf[2];
-        Vector3f selfBackLeft = coordinatesSelf[3];
+    public static Matrix4f createProjectionMatrix(int width, int height, float fov) {
+        Matrix4f projectionMatrix = new Matrix4f();
+        float aspectRatio = (float) width / (float) height;
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))));
+        float x_scale = y_scale / aspectRatio;
+        float frustum_length = Settings.VIEWPORT_FAR_PLANE - Settings.VIEWPORT_NEAR_PLANE;
 
-        // Get the x and z coordinates of hitBoxOther
-        Vector3f[] coordinatesOther = hitBoxOther.getCoordinates();
-        Vector3f otherFrontLeft = coordinatesOther[0];
-        Vector3f otherFrontRight = coordinatesOther[1];
-        Vector3f otherBackRight = coordinatesOther[2];
-        Vector3f otherBackLeft = coordinatesOther[3];
+        projectionMatrix.m00(x_scale);
+        projectionMatrix.m11(y_scale);
+        projectionMatrix.m22(-((Settings.VIEWPORT_FAR_PLANE + Settings.VIEWPORT_NEAR_PLANE) / frustum_length));
+        projectionMatrix.m23(-1);
+        projectionMatrix.m32(-((2 * Settings.VIEWPORT_NEAR_PLANE * Settings.VIEWPORT_FAR_PLANE) / frustum_length));
+        projectionMatrix.m33(0);
 
-        // Check if the hitboxes overlap, taking into account the rotation of the hitboxes
-        Boolean ans = isRectanglesIntersecting(new double[] {selfFrontLeft.x, selfFrontLeft.z, selfFrontRight.x, selfFrontRight.z, selfBackRight.x, selfBackRight.z, selfBackLeft.x, selfBackLeft.z},
-                new double[] {otherFrontLeft.x, otherFrontLeft.z, otherFrontRight.x, otherFrontRight.z, otherBackRight.x, otherBackRight.z, otherBackLeft.x, otherBackLeft.z});
-        return ans;
-    }
-
-    // Function that takes two rectangles in the form [x1z1, x2z2, x3z3, x4z4] and returns true if they overlap
-    // Based on the separating axis theorem
-    static boolean isRectanglesIntersecting(double[] rectA, double[] rectB)
-    {
-        for (int x=0; x<2; x++)
-        {
-            double[] rect = (x==0) ? rectA : rectB;
-            for (int i1=0; i1<4; i1+=2)
-            {
-                int   i2 = (i1 + 2) % 4;
-                double x1 = rect[i1];
-                double z1 = rect[i1+1];
-                double x2 = rect[i2];
-                double z2 = rect[i2+1];
-
-                double normalX = z2 - z1;
-                double normalZ = x1 - x2;
-
-                double minA = Double.POSITIVE_INFINITY;
-                double maxA = Double.NEGATIVE_INFINITY;
-
-                for (int j=0; j<8; j+=2)
-                {
-                    double projected = normalX * rectA[j] + normalZ * rectA[j+1];
-
-                    if (projected < minA)
-                        minA = projected;
-                    if (projected > maxA)
-                        maxA = projected;
-                }
-
-                double minB = Double.POSITIVE_INFINITY;
-                double maxB = Double.NEGATIVE_INFINITY;
-
-                for (int j=0; j<8; j+=2)
-                {
-                    double projected = normalX * rectB[j] + normalZ * rectB[j+1];
-
-                    if (projected < minB)
-                        minB = projected;
-                    if (projected > maxB)
-                        maxB = projected;
-                }
-
-                if (maxA < minB || maxB < minA)
-                    return false;
-            }
-        }
-
-        return true;
+        return projectionMatrix;
     }
 }

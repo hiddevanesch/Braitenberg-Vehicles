@@ -5,6 +5,7 @@ import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
 import nl.group5b.shaders.shadow.ShadowShader;
 import nl.group5b.util.Algebra;
+import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL46;
 
@@ -37,20 +38,17 @@ public class ShadowRenderer {
 			}
 			unbindModel();
 		}
-		GL46.glDisableVertexAttribArray(0);
-		GL46.glBindVertexArray(0);
-
 	}
 
 	private void prepareModel(Model model) {
 		// Bind the VAO
 		GL46.glBindVertexArray(model.getVaoID());
-		GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
+		GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
 	}
 
 	private void unbindModel () {
 		// Unbind the VAO
-		GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
+		GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
 		GL46.glBindVertexArray(0);
 	}
 
@@ -62,7 +60,7 @@ public class ShadowRenderer {
 				entity.getRotation(), entity.getScale());
 
 		// Create MVP matrix
-		Matrix4f mvpMatrix = projectionViewMatrix.mul(modelMatrix);
+		Matrix4f mvpMatrix = new Matrix4f(projectionViewMatrix).mul(modelMatrix);
 
 		// Load MVP matrix into shader
 		shader.loadMvpMatrix(mvpMatrix);

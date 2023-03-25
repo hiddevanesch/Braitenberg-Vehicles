@@ -11,7 +11,7 @@ public class ShadowShader extends ShaderProgram {
 	
 	private int mvpMatrixLocation;
 
-	protected ShadowShader() {
+	public ShadowShader() {
 		// lightCount can be set to 0 here, since this is not important for the shadow shader
 		super(VERTEX_FILE, FRAGMENT_FILE, 0);
 	}

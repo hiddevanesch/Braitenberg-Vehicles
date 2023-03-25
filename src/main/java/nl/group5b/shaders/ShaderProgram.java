@@ -1,5 +1,10 @@
 package nl.group5b.shaders;
 
+import nl.group5b.util.Algebra;
+import nl.group5b.util.Settings;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL46;
 
@@ -7,11 +12,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
-
-import org.joml.Vector3f;
-import org.joml.Matrix4f;
-
-import nl.group5b.util.Algebra;
 
 public abstract class ShaderProgram {
 
@@ -70,12 +70,20 @@ public abstract class ShaderProgram {
         GL46.glBindAttribLocation(programID, attribute, variableName);
     }
 
+    protected void loadInt(int location, int value) {
+        GL46.glUniform1i(location, value);
+    }
+
     protected void loadFloat(int location, float value) {
         GL46.glUniform1f(location, value);
     }
 
-    protected void loadVector(int location, Vector3f vector) {
+    protected void loadVector3f(int location, Vector3f vector) {
         GL46.glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    protected void loadVector4f(int location, Vector4f vector) {
+        GL46.glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
     }
 
     protected void loadBoolean(int location, boolean value) {
@@ -97,12 +105,19 @@ public abstract class ShaderProgram {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
-                // This allows us to compile the shader with a "dynamic" amount of lights
-                // If for some reason this line fails, the default shaders have 1 as value,
-                // so only the light with index 0 will be used
+                // This allows us to compile the shader with a "dynamic" definitions
+                // If for some reason this line fails, the shaders should have default values
                 if (line.startsWith("#define LIGHT_COUNT")) {
                     String[] split = line.split(" ");
                     split[2] = String.valueOf(lightCount);
+                    line = String.join(" ", split);
+                } else if (line.startsWith("#define AMBIENT_LIGHT")) {
+                    String[] split = line.split(" ");
+                    split[2] = String.valueOf(Settings.AMBIENT_LIGHT);
+                    line = String.join(" ", split);
+                } else if (line.startsWith("#define SHADOW_MAP_SIZE")) {
+                    String[] split = line.split(" ");
+                    split[2] = String.valueOf(Settings.SHADOW_MAP_RESOLUTION);
                     line = String.join(" ", split);
                 }
                 shaderSource.append(line).append("\n");

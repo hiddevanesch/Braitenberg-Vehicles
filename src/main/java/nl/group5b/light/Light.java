@@ -2,29 +2,30 @@ package nl.group5b.light;
 
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Light {
 
-    private Vector3f position;
+    private Vector4f position; // w = 0 -> directional light, w = 1 -> point light
     private Vector3f colour;
     private Vector3f attenuation = new Vector3f(1, 0, 0);
 
-    public Light(Vector3f position, Vector3f colour) {
+    public Light(Vector4f position, Vector3f colour) {
         this.position = position;
         this.colour = colour;
     }
 
-    public Light(Vector3f position, Vector3f colour, Vector3f attenuation) {
+    public Light(Vector4f position, Vector3f colour, Vector3f attenuation) {
         this.position = position;
         this.colour = colour;
         this.attenuation = attenuation;
     }
 
-    public Vector3f getPosition() {
+    public Vector4f getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3f position) {
+    public void setPosition(Vector4f position) {
         this.position = position;
     }
 

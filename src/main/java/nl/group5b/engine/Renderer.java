@@ -1,13 +1,13 @@
 package nl.group5b.engine;
 
-import nl.group5b.model.*;
-import nl.group5b.shaders.viewport.ViewportShader;
+import nl.group5b.camera.Sensor;
+import nl.group5b.model.BodyElement;
+import nl.group5b.model.Entity;
+import nl.group5b.model.Model;
+import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Algebra;
-
-import nl.group5b.model.models.Controllable;
-
+import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
 
@@ -16,40 +16,50 @@ import java.util.Map;
 
 public class Renderer {
 
-    private static final float FOV = 55;
-    private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000;
-
     private static long lastFrameTime;
     private static float delta;
 
-    private Matrix4f projectionMatrix;
-    private ViewportShader shader;
+    private RealShader shader;
 
-    public Renderer(ViewportShader shader) {
+    public Renderer(RealShader shader) {
         this.shader = shader;
-    }
-
-    public void prepare() {
-        // Update screen size
-        GL46.glViewport(0, 0, DisplayBuilder.getWidth(), DisplayBuilder.getHeight());
-        updateProjectionMatrix();
 
         // Set the clear color
         GL46.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        // Clear the framebuffer
-        GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
-
         // Enable depth testing
         GL46.glEnable(GL46.GL_DEPTH_TEST);
+    }
+
+    public void prepareSensor(Sensor sensor) {
+        // Update screen size
+        int width = sensor.getWidth();
+        int height = sensor.getHeight();
+        updateProjectionMatrix(width, height, Settings.SENSOR_FOV);
+
+        // Bind the framebuffer
+        sensor.bind();
+
+        // Clear the framebuffer
+        GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
+    }
+
+    public void prepareViewport() {
+        // Update screen size
+        int width = DisplayBuilder.getWidth();
+        int height = DisplayBuilder.getHeight();
+        GL46.glViewport(0, 0, width, height);
+        updateProjectionMatrix(width, height, Settings.VIEWPORT_FOV);
 
         // Enable backface culling
         GL46.glEnable(GL46.GL_CULL_FACE);
         GL46.glCullFace(GL46.GL_BACK);
+
+        // Clear the framebuffer
+        GL46.glClear(GL46.GL_COLOR_BUFFER_BIT | GL46.GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Map<Model, List<BodyElement>> renderMap, List<Body> bodies) {
+    public void render(Map<Model, List<BodyElement>> renderMap) {
         // Iterate over all the different models
         for (Model model : renderMap.keySet()) {
             prepareModel(model);
@@ -63,79 +73,26 @@ public class Renderer {
 
                 // Render the BodyElement by drawing the triangles
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
-
-                // TODO test purposes
-                // Draw a red dot at the center of the entity of the BodyElement
-                GL46.glPointSize(10.0f);
-                GL46.glBegin(GL46.GL_POINTS);
-                GL46.glColor3f(1.0f, 0.0f, 0.0f);
-                GL46.glVertex3f(bodyElement.getEntity().getPosition().x, bodyElement.getEntity().getPosition().y, bodyElement.getEntity().getPosition().z);
-                GL46.glEnd();
-                // TODO end test purposes
             }
             unbindModel();
         }
-
-        // For each body in bodies that is instance of Controllable
-//        for(Body body : bodies){
-//            if(body instanceof Controllable){
-//                // Draw the hitbox
-//                drawHitbox(body);
-//            }
-//        }
     }
 
-    // Function that draws a line between two points
-    public void drawLine(Vector3f start, Vector3f end) {
-        GL46.glBegin(GL46.GL_LINES);
-        GL46.glVertex3f(start.x, start.y, start.z);
-        GL46.glVertex3f(end.x, end.y, end.z);
-        GL46.glEnd();
-    }
-
-    public void drawHitbox(Body body){
-        // Set the line thickness
-        GL46.glLineWidth(3.0f);
-
-        // If body is instance of Controllable
-        if(body instanceof Controllable){
-            // Get the hitbox
-            HitBox hitbox = ((Controllable) body).getHitBox();
-            // get the coordinates of the hitbox
-            Vector3f[] coordinates = hitbox.getCoordinates();
-
-            // Draw the lines
-            drawLine(coordinates[0], coordinates[1]);
-            drawLine(coordinates[2], coordinates[3]);
-            drawLine(coordinates[0], coordinates[2]);
-            drawLine(coordinates[1], coordinates[3]);
-
-            // Get the position of the entity
-            Vector3f position = body.getBodyElements()[0].getEntity().getPosition();
-
-            // Draw a dot at the position of the body
-            GL46.glPointSize(10.0f);
-            GL46.glBegin(GL46.GL_POINTS);
-            GL46.glVertex3f(position.x, position.y, position.z);
-            GL46.glEnd();
-        }
-    }
-
-    private void prepareModel (Model model) {
+    private void prepareModel(Model model) {
         // Bind the VAO
         GL46.glBindVertexArray(model.getVaoID());
-        GL46.glEnableVertexAttribArray(Model.POSITION_ATTR);
-        GL46.glEnableVertexAttribArray(Model.NORMAL_ATTR);
+        GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+        GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
     }
 
-    private void unbindModel () {
+    private void unbindModel() {
         // Unbind the VAO
-        GL46.glDisableVertexAttribArray(Model.POSITION_ATTR);
-        GL46.glDisableVertexAttribArray(Model.NORMAL_ATTR);
+        GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+        GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
         GL46.glBindVertexArray(0);
     }
 
-    private void prepareInstance (BodyElement bodyElement) {
+    private void prepareInstance(BodyElement bodyElement) {
         Entity entity = bodyElement.getEntity();
 
         // Create transformation matrix
@@ -148,7 +105,12 @@ public class Renderer {
         shader.loadMaterial(bodyElement.getMaterial());
     }
 
-    public void complete(long window) {
+    public void completeSensor(Sensor sensor) {
+        // Unbind the framebuffer
+        sensor.unbind();
+    }
+
+    public void completeViewport(long window) {
         // Swap the color buffers
         GLFW.glfwSwapBuffers(window);
 
@@ -169,25 +131,9 @@ public class Renderer {
         return delta;
     }
 
-    private void createProjectionMatrix() {
-        projectionMatrix = new Matrix4f();
-        float aspectRatio = (float) DisplayBuilder.getWidth() / (float) DisplayBuilder.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = FAR_PLANE - NEAR_PLANE;
-
-        projectionMatrix.m00(x_scale);
-        projectionMatrix.m11(y_scale);
-        projectionMatrix.m22(-((FAR_PLANE + NEAR_PLANE) / frustum_length));
-        projectionMatrix.m23(-1);
-        projectionMatrix.m32(-((2 * NEAR_PLANE * FAR_PLANE) / frustum_length));
-        projectionMatrix.m33(0);
-    }
-
-    private void updateProjectionMatrix() {
-        createProjectionMatrix();
+    private void updateProjectionMatrix(int width, int height, float fov) {
         shader.start();
-        shader.loadProjectionMatrix(projectionMatrix);
+        shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
         shader.stop();
     }
 }
