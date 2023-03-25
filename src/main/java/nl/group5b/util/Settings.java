@@ -20,6 +20,9 @@ public class Settings {
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
     public static final float SHADOW_BOX_RADIUS = 10;
 
+    // Scene
+    public static final float SUN_BRIGHTNESS = 0.5f;
+
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
 

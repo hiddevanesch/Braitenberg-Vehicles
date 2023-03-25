@@ -96,6 +96,7 @@ public class Sensor {
         GL46.glBindTexture(GL46.GL_TEXTURE_2D, textureID);
         GL46.glGetTexImage(GL46.GL_TEXTURE_2D, 0, GL46.GL_RGB, GL46.GL_UNSIGNED_BYTE, buffer);
 
+        // Compute luminance
         for (int i = 0; i < totalPixels; i++) {
             float r = (buffer.get() & 0xFF) / 255.0f;
             float g = (buffer.get() & 0xFF) / 255.0f;
