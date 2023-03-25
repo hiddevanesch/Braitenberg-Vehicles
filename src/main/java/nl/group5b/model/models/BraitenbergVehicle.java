@@ -163,4 +163,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     public boolean isInHitBox(HitBox hitBoxTarget) {
         return Algebra.hitboxOverlap(hitBox, hitBoxTarget);
     }
+    public HitBox getHitBox() {
+        return hitBox;
+    }
 }

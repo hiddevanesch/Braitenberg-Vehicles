@@ -1,13 +1,16 @@
 package nl.group5b.engine;
 
 import nl.group5b.camera.Sensor;
+import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
+import nl.group5b.model.models.Controllable;
 import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
 
@@ -20,6 +23,8 @@ public class Renderer {
     private static float delta;
 
     private RealShader shader;
+
+    private List<Body> bodies; // used for hitboxes
 
     public Renderer(RealShader shader) {
         this.shader = shader;
@@ -73,75 +78,104 @@ public class Renderer {
 
                 // Render the BodyElement by drawing the triangles
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
-
-                // TODO testing purposes
-                // Draw a red dot at the center of the BodyElement entity position
-                GL46.glPointSize(10.0f);
-                GL46.glBegin(GL46.GL_POINTS);
-                GL46.glColor3f(1.0f, 0.0f, 0.0f);
-                GL46.glVertex3f(bodyElement.getEntity().getPosition().x, bodyElement.getEntity().getPosition().y, bodyElement.getEntity().getPosition().z);
-                GL46.glEnd();
             }
             unbindModel();
         }
+
+        // For every body that is instance of controllable
+        for (Body body : bodies) {
+            if (body instanceof Controllable) {
+                // Get position, rotation, and scale from the entity of the body
+                Vector3f position = body.getBodyElements()[0].getEntity().getPosition();
+                Vector3f rotation = body.getBodyElements()[0].getEntity().getRotation();
+                float scale = body.getBodyElements()[0].getEntity().getScale();
+
+                // Create transformation matrix
+                Matrix4f transformationMatrix = Algebra.createTransformationMatrix(position, rotation, scale);
+
+                // Load transformation matrix
+                shader.loadTransformationMatrix(transformationMatrix);
+
+                // Get the coordinates of the hitbox
+                Vector3f[] coordinates = ((Controllable) body).getHitBox().getCoordinates();
+
+                // Draw a line between coordinates (0,1) (2,3) (0,2) (1,3)
+                GL46.glBegin(GL46.GL_LINES);
+                GL46.glVertex3f(coordinates[0].x, coordinates[0].y, coordinates[0].z);
+                GL46.glVertex3f(coordinates[1].x, coordinates[1].y, coordinates[1].z);
+                GL46.glVertex3f(coordinates[2].x, coordinates[2].y, coordinates[2].z);
+                GL46.glVertex3f(coordinates[3].x, coordinates[3].y, coordinates[3].z);
+                GL46.glVertex3f(coordinates[0].x, coordinates[0].y, coordinates[0].z);
+                GL46.glVertex3f(coordinates[2].x, coordinates[2].y, coordinates[2].z);
+                GL46.glVertex3f(coordinates[1].x, coordinates[1].y, coordinates[1].z);
+                GL46.glVertex3f(coordinates[3].x, coordinates[3].y, coordinates[3].z);
+                GL46.glEnd();
+            }
+        }
+
     }
 
-    private void prepareModel(Model model) {
-        // Bind the VAO
-        GL46.glBindVertexArray(model.getVaoID());
-        GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
-        GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
-    }
+        private void prepareModel (Model model){
+            // Bind the VAO
+            GL46.glBindVertexArray(model.getVaoID());
+            GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+            GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
+        }
 
-    private void unbindModel() {
-        // Unbind the VAO
-        GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
-        GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
-        GL46.glBindVertexArray(0);
-    }
+        private void unbindModel () {
+            // Unbind the VAO
+            GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+            GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
+            GL46.glBindVertexArray(0);
+        }
 
-    private void prepareInstance(BodyElement bodyElement) {
-        Entity entity = bodyElement.getEntity();
+        private void prepareInstance (BodyElement bodyElement){
+            Entity entity = bodyElement.getEntity();
 
-        // Create transformation matrix
-        Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
+            // Create transformation matrix
+            Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 
-        // Load transformation matrix into shader
-        shader.loadTransformationMatrix(transformationMatrix);
+            // Load transformation matrix into shader
+            shader.loadTransformationMatrix(transformationMatrix);
 
-        // Load shine variables into shader
-        shader.loadMaterial(bodyElement.getMaterial());
-    }
+            // Load shine variables into shader
+            shader.loadMaterial(bodyElement.getMaterial());
+        }
 
-    public void completeSensor(Sensor sensor) {
-        // Unbind the framebuffer
-        sensor.unbind();
-    }
+        public void completeSensor (Sensor sensor){
+            // Unbind the framebuffer
+            sensor.unbind();
+        }
 
-    public void completeViewport(long window) {
-        // Swap the color buffers
-        GLFW.glfwSwapBuffers(window);
+        public void completeViewport ( long window){
+            // Swap the color buffers
+            GLFW.glfwSwapBuffers(window);
 
-        // Poll for window events. The key callback above will only be
-        // invoked during this call.
-        GLFW.glfwPollEvents();
+            // Poll for window events. The key callback above will only be
+            // invoked during this call.
+            GLFW.glfwPollEvents();
 
-        long currentFrameTime = getCurrentTime();
-        delta = (currentFrameTime - lastFrameTime) / 1000f;
-        lastFrameTime = currentFrameTime;
-    }
+            long currentFrameTime = getCurrentTime();
+            delta = (currentFrameTime - lastFrameTime) / 1000f;
+            lastFrameTime = currentFrameTime;
+        }
 
-    public long getCurrentTime() {
-        return System.nanoTime() / 1000000;
-    }
+        public long getCurrentTime () {
+            return System.nanoTime() / 1000000;
+        }
 
-    public float getFrameTimeSeconds() {
-        return delta;
-    }
+        public float getFrameTimeSeconds () {
+            return delta;
+        }
 
-    private void updateProjectionMatrix(int width, int height, float fov) {
-        shader.start();
-        shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
-        shader.stop();
-    }
+        private void updateProjectionMatrix ( int width, int height, float fov){
+            shader.start();
+            shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
+            shader.stop();
+        }
+
+        public void setBodies (List < Body > bodies) {
+            this.bodies = bodies;
+        }
+
 }

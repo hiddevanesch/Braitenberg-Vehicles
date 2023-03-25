@@ -84,6 +84,7 @@ public class Main {
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights, camera, window, gui);
 
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
@@ -113,6 +114,9 @@ public class Main {
 
             // Update texture in GUI
             demo.setImage(sensor.getTextureID());
+
+            // Give bodies to renderer
+            renderer.getRenderer().setBodies(bodies);
 
             // Render scene
             renderer.render(bodies, sensor);
