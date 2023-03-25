@@ -2,6 +2,7 @@ package nl.group5b.model.models;
 
 import nl.group5b.camera.Sensor;
 import nl.group5b.model.*;
+import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
@@ -141,5 +142,25 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public void setBodies(List<Body> bodies) {
         bodiesPotentialCollide = bodies;
+    }
+
+    // Function that goes through all the bodies and checks if the hitbox of the vehicle is overlapping with the hitbox of the target
+    @Override
+    public boolean isColliding(HitBox hitBox, List<Body> bodies) {
+        // Loop over all bodies in the list, exluding the vehicle itself
+        for (Body body : bodies) {
+            if (body != this && body instanceof CollisionHandler) {
+                if (((CollisionHandler) body).isInHitBox(hitBox)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Function that uses the algebra util to check if the hitbox of the vehicle is overlapping with the hitbox of the target
+    @Override
+    public boolean isInHitBox(HitBox hitBoxTarget) {
+        return Algebra.hitboxOverlap(hitBox, hitBoxTarget);
     }
 }
