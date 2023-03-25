@@ -9,7 +9,6 @@ import nl.group5b.model.models.Controllable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL46;
 
 import java.util.List;
@@ -64,17 +63,26 @@ public class Renderer {
 
                 // Render the BodyElement by drawing the triangles
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
+
+                // TODO test purposes
+                // Draw a red dot at the center of the entity of the BodyElement
+                GL46.glPointSize(10.0f);
+                GL46.glBegin(GL46.GL_POINTS);
+                GL46.glColor3f(1.0f, 0.0f, 0.0f);
+                GL46.glVertex3f(bodyElement.getEntity().getPosition().x, bodyElement.getEntity().getPosition().y, bodyElement.getEntity().getPosition().z);
+                GL46.glEnd();
+                // TODO end test purposes
             }
             unbindModel();
         }
 
         // For each body in bodies that is instance of Controllable
-        for(Body body : bodies){
-            if(body instanceof Controllable){
-                // Draw the hitbox
-                drawHitbox(body);
-            }
-        }
+//        for(Body body : bodies){
+//            if(body instanceof Controllable){
+//                // Draw the hitbox
+//                drawHitbox(body);
+//            }
+//        }
     }
 
     // Function that draws a line between two points
@@ -87,23 +95,29 @@ public class Renderer {
 
     public void drawHitbox(Body body){
         // Set the line thickness
-        GL46.glLineWidth(10.0f);
+        GL46.glLineWidth(3.0f);
 
         // If body is instance of Controllable
         if(body instanceof Controllable){
             // Get the hitbox
             HitBox hitbox = ((Controllable) body).getHitBox();
-            // get the four corners of the hitbox
-            Vector3f frontLeft = hitbox.getFrontLeft();
-            Vector3f frontRight = hitbox.getFrontRight();
-            Vector3f rearLeft = hitbox.getRearLeft();
-            Vector3f rearRight = hitbox.getRearRight();
+            // get the coordinates of the hitbox
+            Vector3f[] coordinates = hitbox.getCoordinates();
 
             // Draw the lines
-            drawLine(frontLeft, frontRight);
-            drawLine(frontRight, rearRight);
-            drawLine(rearRight, rearLeft);
-            drawLine(rearLeft, frontLeft);
+            drawLine(coordinates[0], coordinates[1]);
+            drawLine(coordinates[2], coordinates[3]);
+            drawLine(coordinates[0], coordinates[2]);
+            drawLine(coordinates[1], coordinates[3]);
+
+            // Get the position of the entity
+            Vector3f position = body.getBodyElements()[0].getEntity().getPosition();
+
+            // Draw a dot at the position of the body
+            GL46.glPointSize(10.0f);
+            GL46.glBegin(GL46.GL_POINTS);
+            GL46.glVertex3f(position.x, position.y, position.z);
+            GL46.glEnd();
         }
     }
 

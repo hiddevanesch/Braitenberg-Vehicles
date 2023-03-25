@@ -4,7 +4,6 @@ import nl.group5b.model.*;
 import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
@@ -20,13 +19,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected static final float STEERING = 1.3f;
 
 
-    protected HitBox hitBox = new HitBox(
-            new Vector3f(-0.67f, 1, 1.7f), // front left
-            new Vector3f(0.67f, 1, 1.7f), // front right
-            new Vector3f(-0.67f, 1, -0.3f), // rear left
-            new Vector3f(0.67f, 1, -0.3f));// rear right
+    protected HitBox hitBox;
     protected static List<Body> bodiesPotentialCollide;
-
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);
     static final Vector3f carRightWheelRelativePosition = new Vector3f(-0.72f, 0.3f, 0);
@@ -62,9 +56,12 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         this.setPosition(position);
         this.setRotation(rotation);
 
-        // Update the hitbox of the vehicle based on the position of the vehicle
-        HitBox nextHitBox = nextHitBox(position, rotation);
-        updateHitBox(nextHitBox);
+        this. hitBox = new HitBox(
+                new Vector3f(-0.67f, 0f, 1.7f), // front left offset
+                new Vector3f(0.67f, 0f, 1.7f), // front right offset
+                new Vector3f(-0.67f, 0f, -0.3f), // rear left offset
+                new Vector3f(0.67f, 0f, -0.3f), // rear right offset
+                super.getBodyElements()[0].getEntity()); // entity (car base)
     }
 
     protected void rotateWheels(float frameTime) {
@@ -154,21 +151,21 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         hitBox = nextHitBox;
     }
 
-    protected HitBox nextHitBox(Vector3f deltaPosition) {
-
-        // Get the corners of the hitbox
-        Vector3f frontLeft = new Vector3f(hitBox.getFrontLeft());
-        Vector3f frontRight = new Vector3f(hitBox.getFrontRight());
-        Vector3f rearLeft = new Vector3f(hitBox.getRearLeft());
-        Vector3f rearRight = new Vector3f(hitBox.getRearRight());
-        // Update the corners of the hitbox
-        frontLeft.add(deltaPosition);
-        frontRight.add(deltaPosition);
-        rearLeft.add(deltaPosition);
-        rearRight.add(deltaPosition);
-
-        return new HitBox(frontLeft, frontRight, rearLeft, rearRight);
-    }
+//    protected HitBox nextHitBox(Vector3f deltaPosition) {
+//
+//        // Get the corners of the hitbox
+//        Vector3f frontLeft = new Vector3f(hitBox.getFrontLeftOffset());
+//        Vector3f frontRight = new Vector3f(hitBox.getFrontRight());
+//        Vector3f rearLeft = new Vector3f(hitBox.getRearLeft());
+//        Vector3f rearRight = new Vector3f(hitBox.getRearRight());
+//        // Update the corners of the hitbox
+//        frontLeft.add(deltaPosition);
+//        frontRight.add(deltaPosition);
+//        rearLeft.add(deltaPosition);
+//        rearRight.add(deltaPosition);
+//
+//        return new HitBox(frontLeft, frontRight, rearLeft, rearRight);
+//    }
 
     // Function that goes through all the bodies and checks if the hitbox of the vehicle is overlapping with the hitbox of the target
     @Override

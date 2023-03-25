@@ -45,9 +45,9 @@ public class Main {
         Controllable braitenbergVehicle = new Controllable(modelLoader,
                 new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
-                new Vector3f(0, 0, -5), new Vector3f(0, -90, 0));
+                new Vector3f(2, 0, 0), new Vector3f(0, 0, 0));
         Controllable thirdCar = new Controllable(modelLoader,
-                new Vector3f(-5, 0, -5), new Vector3f(0, 90, 0));
+                new Vector3f(4, 0, 0), new Vector3f(0, 0, 0));
         Lamp mainLamp = new Lamp(modelLoader, new Vector3f(0, 5, 0), new Vector3f(0, 0, 0));
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(5, 2, 0), new Vector3f(0, 0, -45),
                 new Vector3f(0.25f, 0, 1), new Vector3f(1, 0.01f, 0.002f));

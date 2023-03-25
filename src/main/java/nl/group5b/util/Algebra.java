@@ -92,20 +92,22 @@ public class Algebra {
     // The hitboxes can be rotated
     public static boolean hitboxOverlap(HitBox hitBoxSelf, HitBox hitBoxOther) {
         // Get the x and z coordinates of hitBoxSelf
-        Vector3f selfFrontLeft = hitBoxSelf.getFrontLeft();
-        Vector3f selfFrontRight = hitBoxSelf.getFrontRight();
-        Vector3f selfRearLeft = hitBoxSelf.getRearLeft();
-        Vector3f selfRearRight = hitBoxSelf.getRearRight();
+        Vector3f[] coordinatesSelf = hitBoxSelf.getCoordinates();
+        Vector3f selfFrontLeft = coordinatesSelf[0];
+        Vector3f selfFrontRight = coordinatesSelf[1];
+        Vector3f selfBackRight = coordinatesSelf[2];
+        Vector3f selfBackLeft = coordinatesSelf[3];
 
         // Get the x and z coordinates of hitBoxOther
-        Vector3f otherFrontLeft = hitBoxOther.getFrontLeft();
-        Vector3f otherFrontRight = hitBoxOther.getFrontRight();
-        Vector3f otherRearLeft = hitBoxOther.getRearLeft();
-        Vector3f otherRearRight = hitBoxOther.getRearRight();
+        Vector3f[] coordinatesOther = hitBoxOther.getCoordinates();
+        Vector3f otherFrontLeft = coordinatesOther[0];
+        Vector3f otherFrontRight = coordinatesOther[1];
+        Vector3f otherBackRight = coordinatesOther[2];
+        Vector3f otherBackLeft = coordinatesOther[3];
 
         // Check if the hitboxes overlap, taking into account the rotation of the hitboxes
-        Boolean ans = isRectanglesIntersecting(new double[] {selfFrontLeft.x, selfFrontLeft.z, selfFrontRight.x, selfFrontRight.z, selfRearRight.x, selfRearRight.z, selfRearLeft.x, selfRearLeft.z},
-                new double[] {otherFrontLeft.x, otherFrontLeft.z, otherFrontRight.x, otherFrontRight.z, otherRearRight.x, otherRearRight.z, otherRearLeft.x, otherRearLeft.z});
+        Boolean ans = isRectanglesIntersecting(new double[] {selfFrontLeft.x, selfFrontLeft.z, selfFrontRight.x, selfFrontRight.z, selfBackRight.x, selfBackRight.z, selfBackLeft.x, selfBackLeft.z},
+                new double[] {otherFrontLeft.x, otherFrontLeft.z, otherFrontRight.x, otherFrontRight.z, otherBackRight.x, otherBackRight.z, otherBackLeft.x, otherBackLeft.z});
         return ans;
     }
 

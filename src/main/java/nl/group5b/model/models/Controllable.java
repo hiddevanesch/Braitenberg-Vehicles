@@ -34,7 +34,6 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         // Compute rotation angle based on wheel speeds
         float rotationAngle = (rightWheelSpeed - leftWheelSpeed) * frameTime * 180;
         Vector3f deltaRotation = new Vector3f(0, rotationAngle, 0);
-        moveRotation(deltaRotation);
 
         // Compute position based on wheel speeds
         float distance = (leftWheelSpeed + rightWheelSpeed) * frameTime;
@@ -42,24 +41,29 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
 
-        // Compute the next hitbox of the vehicle based on the delta position
-        HitBox nextHitBox = nextHitBox(deltaPosition);
+        // Compute the next hitbox coordinates of the vehicle based on the delta rotation and position
+        // TODO
+
+        // update the rotation and position of the vehicle
+        moveRotation(deltaRotation);
+        movePosition(deltaPosition);
+        rotateWheels(frameTime);
 
         // Check for collision
-        if(isColliding(nextHitBox, bodiesPotentialCollide)){
-            // If collision is detected, set wheel speeds to 0
-            leftWheelSpeed = 0;
-            rightWheelSpeed = 0;
-        } else {
-            // Move the vehicle when no collision is detected
-            movePosition(deltaPosition);
-
-            // update the hitbox of the vehicle
-            updateHitBox(nextHitBox);
-
-            // Rotate the wheels
-            rotateWheels(frameTime);
-        }
+//        if(isColliding(nextHitBox, bodiesPotentialCollide)){
+//            // If collision is detected, set wheel speeds to 0
+//            leftWheelSpeed = 0;
+//            rightWheelSpeed = 0;
+//        } else {
+//            // Move the vehicle when no collision is detected
+//            movePosition(deltaPosition);
+//
+//            // update the hitbox of the vehicle
+//            updateHitBox(nextHitBox);
+//
+//            // Rotate the wheels
+//            rotateWheels(frameTime);
+//        }
     }
 
     private void checkInput(long window, Renderer renderer) {
