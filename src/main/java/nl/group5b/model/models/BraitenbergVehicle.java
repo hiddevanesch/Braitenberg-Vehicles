@@ -24,7 +24,6 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected float rightWheelSpeed = 0;
 
     protected HitBox hitBox;
-
     protected List<Body> bodiesPotentialCollide;
 
     public BraitenbergVehicle(ModelLoader modelLoader) throws FileNotFoundException {
@@ -42,6 +41,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
                 carRightWheelRelativePosition};
         Vector3f[] startingRotations = {defaultRotation, defaultRotation, defaultRotation};
         float[] scales = {1, 1, 1};
+
 
         super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
     }
@@ -145,12 +145,13 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     }
 
     // Function that goes through all the bodies and checks if the hitbox of the vehicle is overlapping with the hitbox of the target
-    @Override
-    public boolean isColliding(HitBox hitBox, List<Body> bodies) {
+    public boolean isColliding(Vector3f[] nextCoordinates, List<Body> bodies) {
         // Loop over all bodies in the list, exluding the vehicle itself
         for (Body body : bodies) {
             if (body != this && body instanceof CollisionHandler) {
-                if (((CollisionHandler) body).isInHitBox(hitBox)) {
+                // Get the hitbox of the target
+                HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();
+                if (((CollisionHandler) body).isInHitBox(nextCoordinates, hitBoxTarget)) {
                     return true;
                 }
             }
@@ -160,10 +161,14 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     // Function that uses the algebra util to check if the hitbox of the vehicle is overlapping with the hitbox of the target
     @Override
-    public boolean isInHitBox(HitBox hitBoxTarget) {
-        return Algebra.hitboxOverlap(hitBox, hitBoxTarget);
+    public boolean isInHitBox(Vector3f[] nextCoordinates,HitBox hitBoxTarget) {
+        return Algebra.hitboxOverlap(nextCoordinates, hitBoxTarget);
     }
     public HitBox getHitBox() {
         return hitBox;
+    }
+
+    public void setBodiesPotentialCollide(List<Body> bodiesPotentialCollide) {
+        this.bodiesPotentialCollide = bodiesPotentialCollide;
     }
 }

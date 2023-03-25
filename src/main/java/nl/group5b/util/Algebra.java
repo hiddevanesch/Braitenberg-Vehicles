@@ -109,13 +109,12 @@ public class Algebra {
     // Function that takes two hitboxes and returns true if they overlap.
     // The y (height) axis is not taken into account.
     // The hitboxes can be rotated
-    public static boolean hitboxOverlap(HitBox hitBoxSelf, HitBox hitBoxOther) {
+    public static boolean hitboxOverlap(Vector3f[] nextCoordinates, HitBox hitBoxOther) {
         // Get the x and z coordinates of hitBoxSelf
-        Vector3f[] selfCoordinates = hitBoxSelf.getCoordinates();
-        Vector3f selfFrontLeft = selfCoordinates[0];
-        Vector3f selfFrontRight = selfCoordinates[1];
-        Vector3f selfRearRight = selfCoordinates[2];
-        Vector3f selfRearLeft = selfCoordinates[3];
+        Vector3f selfFrontLeft = nextCoordinates[0];
+        Vector3f selfFrontRight = nextCoordinates[1];
+        Vector3f selfRearRight = nextCoordinates[2];
+        Vector3f selfRearLeft = nextCoordinates[3];
 
         // Get the x and z coordinates of hitBoxOther
         Vector3f[] otherCoordinates = hitBoxOther.getCoordinates();

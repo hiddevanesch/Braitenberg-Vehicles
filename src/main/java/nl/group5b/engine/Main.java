@@ -57,6 +57,9 @@ public class Main {
                 new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
+        Controllable thirdCar = new Controllable(modelLoader,
+                new Vector3f(-5, 0, -5), new Vector3f(0, 45, 0));
+
         Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 1, -5),
                 new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
 
@@ -64,7 +67,9 @@ public class Main {
         List<Body> bodies = new ArrayList<>(List.of(
                 arena,
                 braitenbergVehicle,
-                colouredLamp
+                colouredLamp,
+                secondCar,
+                thirdCar
         ));
 
         // Load lights into array (has to be an array with predefined length)
@@ -84,6 +89,10 @@ public class Main {
         // Create MasterRenderer instance
         MasterRenderer renderer = new MasterRenderer(lights, camera, window, gui);
 
+        // set the bodies that the braitenberg vehicles can collide with
+        braitenbergVehicle.setBodiesPotentialCollide(bodies);
+        secondCar.setBodiesPotentialCollide(bodies);
+        thirdCar.setBodiesPotentialCollide(bodies);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

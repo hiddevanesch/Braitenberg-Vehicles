@@ -122,16 +122,6 @@ public class Renderer {
                 GL46.glVertex3f(BackLeft4.x, BackLeft4.y, BackLeft4.z);
                 GL46.glVertex3f(FrontLeft4.x, FrontLeft4.y, FrontLeft4.z);
                 GL46.glEnd();
-
-
-//                for (int i = 0; i < coordinates.length; i++) {
-//                    Vector3f transformedCoord = new Vector3f(coordinates[i]);
-//                    Vector4f coord4 = new Vector4f(transformedCoord, 1.0f);
-//                    transformationMatrix.transform(coord4);
-//                    GL46.glVertex3f(coord4.x, coord4.y, coord4.z);
-//                }
-
-
             }
         }
 
