@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-public abstract class BraitenbergVehicle extends Body implements PositionHandler {
+public abstract class BraitenbergVehicle extends Body implements PositionHandler, CollisionHandler {
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);

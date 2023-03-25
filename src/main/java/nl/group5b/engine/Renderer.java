@@ -73,6 +73,14 @@ public class Renderer {
 
                 // Render the BodyElement by drawing the triangles
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
+
+                // TODO testing purposes
+                // Draw a red dot at the center of the BodyElement entity position
+                GL46.glPointSize(10.0f);
+                GL46.glBegin(GL46.GL_POINTS);
+                GL46.glColor3f(1.0f, 0.0f, 0.0f);
+                GL46.glVertex3f(bodyElement.getEntity().getPosition().x, bodyElement.getEntity().getPosition().y, bodyElement.getEntity().getPosition().z);
+                GL46.glEnd();
             }
             unbindModel();
         }
