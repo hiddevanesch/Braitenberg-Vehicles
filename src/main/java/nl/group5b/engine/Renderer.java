@@ -11,6 +11,7 @@ import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
 
@@ -75,7 +76,6 @@ public class Renderer {
             // Iterate over all the BodyElements
             for (BodyElement bodyElement : bodyElements) {
                 prepareInstance(bodyElement);
-
                 // Render the BodyElement by drawing the triangles
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
             }
@@ -93,23 +93,45 @@ public class Renderer {
                 // Create transformation matrix
                 Matrix4f transformationMatrix = Algebra.createTransformationMatrix(position, rotation, scale);
 
-                // Load transformation matrix
-                shader.loadTransformationMatrix(transformationMatrix);
-
                 // Get the coordinates of the hitbox
                 Vector3f[] coordinates = ((Controllable) body).getHitBox().getCoordinates();
-
-                // Draw a line between coordinates (0,1) (2,3) (0,2) (1,3)
+                // Individual coordinates
+                Vector3f FrontLeft = coordinates[0];
+                Vector3f FrontRight = coordinates[1];
+                Vector3f BackLeft = coordinates[2];
+                Vector3f BackRight = coordinates[3];
+                // Transform each coordinate using the transformation matrix
+                Vector4f FrontLeft4 = new Vector4f(FrontLeft, 1.0f);
+                transformationMatrix.transform(FrontLeft4);
+                Vector4f FrontRight4 = new Vector4f(FrontRight, 1.0f);
+                transformationMatrix.transform(FrontRight4);
+                Vector4f BackLeft4 = new Vector4f(BackLeft, 1.0f);
+                transformationMatrix.transform(BackLeft4);
+                Vector4f BackRight4 = new Vector4f(BackRight, 1.0f);
+                transformationMatrix.transform(BackRight4);
+                // Draw the hitbox between coordinates (0,1) (1,2) (0,2) (1,3)
+                // With a thick line
+                GL46.glLineWidth(5);
                 GL46.glBegin(GL46.GL_LINES);
-                GL46.glVertex3f(coordinates[0].x, coordinates[0].y, coordinates[0].z);
-                GL46.glVertex3f(coordinates[1].x, coordinates[1].y, coordinates[1].z);
-                GL46.glVertex3f(coordinates[2].x, coordinates[2].y, coordinates[2].z);
-                GL46.glVertex3f(coordinates[3].x, coordinates[3].y, coordinates[3].z);
-                GL46.glVertex3f(coordinates[0].x, coordinates[0].y, coordinates[0].z);
-                GL46.glVertex3f(coordinates[2].x, coordinates[2].y, coordinates[2].z);
-                GL46.glVertex3f(coordinates[1].x, coordinates[1].y, coordinates[1].z);
-                GL46.glVertex3f(coordinates[3].x, coordinates[3].y, coordinates[3].z);
+                GL46.glVertex3f(FrontLeft4.x, FrontLeft4.y, FrontLeft4.z);
+                GL46.glVertex3f(FrontRight4.x, FrontRight4.y, FrontRight4.z);
+                GL46.glVertex3f(FrontRight4.x, FrontRight4.y, FrontRight4.z);
+                GL46.glVertex3f(BackRight4.x, BackRight4.y, BackRight4.z);
+                GL46.glVertex3f(BackRight4.x, BackRight4.y, BackRight4.z);
+                GL46.glVertex3f(BackLeft4.x, BackLeft4.y, BackLeft4.z);
+                GL46.glVertex3f(BackLeft4.x, BackLeft4.y, BackLeft4.z);
+                GL46.glVertex3f(FrontLeft4.x, FrontLeft4.y, FrontLeft4.z);
                 GL46.glEnd();
+
+
+//                for (int i = 0; i < coordinates.length; i++) {
+//                    Vector3f transformedCoord = new Vector3f(coordinates[i]);
+//                    Vector4f coord4 = new Vector4f(transformedCoord, 1.0f);
+//                    transformationMatrix.transform(coord4);
+//                    GL46.glVertex3f(coord4.x, coord4.y, coord4.z);
+//                }
+
+
             }
         }
 
