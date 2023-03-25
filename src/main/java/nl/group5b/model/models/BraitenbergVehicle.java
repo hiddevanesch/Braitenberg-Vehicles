@@ -8,6 +8,7 @@ import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public abstract class BraitenbergVehicle extends Body implements PositionHandler {
 
@@ -20,6 +21,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     protected float leftWheelSpeed = 0;
     protected float rightWheelSpeed = 0;
+
+    protected HitBox hitBox;
+
+    protected List<Body> bodiesPotentialCollide;
 
     public BraitenbergVehicle(ModelLoader modelLoader) throws FileNotFoundException {
         Model carBody = OBJLoader.loadOBJ("carbody", modelLoader);
@@ -45,6 +50,13 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         this(modelLoader);
         this.setPosition(position);
         this.setRotation(rotation);
+
+        hitBox = new HitBox(
+                new Vector3f(-0.67f, 0, 1.7f),
+                new Vector3f(0.67f, 0, 1.7f),
+                new Vector3f(-0.67f, 0, -0.3f),
+                new Vector3f(0.67f, 0, -0.3f),
+                this.getBodyElements()[0].getEntity());
     }
 
     protected void rotateWheels(float frameTime) {
@@ -125,5 +137,9 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     public Sensor[] getSensors() {
         // TODO implement
         return null;
+    }
+
+    public void setBodies(List<Body> bodies) {
+        bodiesPotentialCollide = bodies;
     }
 }
