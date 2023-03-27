@@ -16,6 +16,8 @@ import org.lwjgl.opengl.GL46;
 import java.util.List;
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
+
 public class MasterRenderer {
 
     private final RealShader shader;
@@ -106,11 +108,17 @@ public class MasterRenderer {
         // Render all the sensors
         renderSensors(sensors);
 
+        // Enable multisampling
+        GL46.glEnable(GL_MULTISAMPLE);
+
         // Render the viewport
         renderer.prepareViewport();
         renderViewport();
         renderGUI();
         renderer.completeViewport(window);
+
+        // Disable multisampling
+        GL46.glDisable(GL_MULTISAMPLE);
 
         // Clear the render map
         renderMap.clear();

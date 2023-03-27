@@ -19,10 +19,10 @@ public class MainPanel extends Element {
 
         float contentWidth = ImGui.getContentRegionAvailX();
         ImGui.text("Left sensor");
-        ImGui.image(leftSensorImage, contentWidth, contentWidth);
+        ImGui.image(leftSensorImage, contentWidth, contentWidth, 1, 0, 0, 1);
 
         ImGui.text("Right sensor");
-        ImGui.image(rightSensorImage, contentWidth, contentWidth);
+        ImGui.image(rightSensorImage, contentWidth, contentWidth, 1, 0, 0, 1);
         ImGui.end();
     }
 

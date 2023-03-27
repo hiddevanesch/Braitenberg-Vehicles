@@ -4,11 +4,13 @@ import nl.group5b.util.Settings;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL46;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -32,6 +34,7 @@ public class DisplayBuilder {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
         glfwWindowHint(GLFW_REFRESH_RATE, Settings.REFRESH_RATE); // Set the refresh rate to REFRESH_RATE
+        glfwWindowHint(GLFW_SAMPLES, Settings.ANTI_ALIASING_SAMPLES); // Set the antialiasing to ANTI_ALIASING_SAMPLES
 
         // Create the window
         window = glfwCreateWindow(width, height, Settings.WINDOW_TITLE, NULL, NULL);
@@ -80,6 +83,9 @@ public class DisplayBuilder {
 
         // Create the OpenGL capabilities
         GL.createCapabilities();
+
+        // Disable multisampling (will be enabled while rendering the viewport)
+        GL46.glDisable(GL_MULTISAMPLE);
     }
 
     public static int getWidth() {

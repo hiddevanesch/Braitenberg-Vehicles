@@ -39,8 +39,10 @@ public class Main {
         ModelLoader modelLoader = new ModelLoader();
 
         // Create sun
-        Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(
-                Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS));
+        Light sun = new Light(
+                new Vector4f(Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z, 0),
+                new Vector3f(Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS)
+        );
 
         // Create the Bodies
         Arena arena = new Arena(modelLoader);

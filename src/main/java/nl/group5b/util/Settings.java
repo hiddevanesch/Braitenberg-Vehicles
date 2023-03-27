@@ -5,6 +5,7 @@ public class Settings {
     // Main window
     public static final String WINDOW_TITLE = "Group 5B - Braitenberg Vehicles";
     public static final int REFRESH_RATE = 60;
+    public static final int ANTI_ALIASING_SAMPLES = 4;
 
     // OpenGL
     public static final int VAO_POSITION_ATTR = 0;
@@ -24,6 +25,9 @@ public class Settings {
 
     // Scene
     public static float SUN_BRIGHTNESS = 0.5f;
+    public static int SUN_X = 20;
+    public static int SUN_Y = 20;
+    public static int SUN_Z = 0;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
@@ -35,7 +39,7 @@ public class Settings {
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
     public static final float VEHICLE_STEERING_FACTOR = 1.3f;
-    public static final int SENSOR_RESOLUTION = 100;
+    public static final int SENSOR_RESOLUTION = 480;
     public static final float SENSOR_FOV = 25;
 
     // GUI
