@@ -90,9 +90,13 @@ public class Main {
         MasterRenderer renderer = new MasterRenderer(lights, camera, window, gui);
 
         // set the bodies that the braitenberg vehicles can collide with
-        braitenbergVehicle.setBodiesPotentialCollide(bodies);
+        braitenbergVehicle.setBodiesPotentialCollide(new ArrayList<>(List.of(
+                thirdCar
+        )));
         secondCar.setBodiesPotentialCollide(bodies);
-        thirdCar.setBodiesPotentialCollide(bodies);
+        thirdCar.setBodiesPotentialCollide(new ArrayList<>(List.of(
+                braitenbergVehicle
+        )));
 
         // TODO int for loop
         int i = 0;

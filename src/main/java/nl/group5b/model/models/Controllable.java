@@ -42,33 +42,19 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float dx = (float) (distance * Math.sin(Math.toRadians(getRotation().y)));
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
-        movePosition(deltaPosition);
-
-        rotateWheels(frameTime);
 
         Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
 
-        // Check for collision
+        // Check if the front of the car is colliding with a body
         if(isColliding(hitBoxCoordinates, bodiesPotentialCollide)){
-            // print that collision is detected
-            System.out.println("--------------------");
-            System.out.println("--------------------");
-            System.out.println("--------------------");
-            System.out.println("Collision detected");
-            System.out.println("--------------------");
-            System.out.println("--------------------");
-            System.out.println("--------------------");
             // If collision is detected, set wheel speeds to 0
             leftWheelSpeed = 0;
             rightWheelSpeed = 0;
-        } else {
-            // update the rotation and position of the vehicle
-
-
-
         }
-
-
+        else {
+            movePosition(deltaPosition);
+            rotateWheels(frameTime);
+        }
     }
 
     private void checkInput(long window, Renderer renderer) {

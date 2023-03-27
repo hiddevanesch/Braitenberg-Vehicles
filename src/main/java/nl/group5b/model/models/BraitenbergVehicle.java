@@ -144,14 +144,14 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         bodiesPotentialCollide = bodies;
     }
 
-    // Function that goes through all the bodies and checks if the hitbox of the vehicle is overlapping with the hitbox of the target
+    // Function that goes through all the bodies and checks if the front of the vehicle is colliding with any of them
     public boolean isColliding(Vector3f[] hitBoxCoordinates, List<Body> bodies) {
         // Loop over all bodies in the list, excluding the vehicle itself
         for (Body body : bodies) {
             if (body != this && body instanceof CollisionHandler) {
                 // Get the hitbox of the target
                 HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();
-                if (((CollisionHandler) body).isInHitBox(hitBoxCoordinates, hitBoxTarget)) {
+                if (Algebra.hitboxOverlap(hitBoxCoordinates, hitBoxTarget)) {
                     return true;
                 }
             }
@@ -159,11 +159,6 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         return false;
     }
 
-    // Function that uses the algebra util to check if the hitbox of the vehicle is overlapping with the hitbox of the target
-    @Override
-    public boolean isInHitBox(Vector3f[] nextCoordinates,HitBox hitBoxTarget) {
-        return Algebra.hitboxOverlap(nextCoordinates, hitBoxTarget);
-    }
     public HitBox getHitBox() {
         return hitBox;
     }
