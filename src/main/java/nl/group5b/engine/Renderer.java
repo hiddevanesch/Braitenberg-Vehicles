@@ -81,50 +81,6 @@ public class Renderer {
             }
             unbindModel();
         }
-
-        // For every body that is instance of controllable
-        for (Body body : bodies) {
-            if (body instanceof Controllable) {
-                // Get position, rotation, and scale from the entity of the body
-                Vector3f position = body.getBodyElements()[0].getEntity().getPosition();
-                Vector3f rotation = body.getBodyElements()[0].getEntity().getRotation();
-                float scale = body.getBodyElements()[0].getEntity().getScale();
-
-                // Create transformation matrix
-                Matrix4f transformationMatrix = Algebra.createTransformationMatrix(position, rotation, scale);
-
-                // Get the coordinates of the hitbox
-                Vector3f[] coordinates = ((Controllable) body).getHitBox().getCoordinates();
-                // Individual coordinates
-                Vector3f FrontLeft = coordinates[0];
-                Vector3f FrontRight = coordinates[1];
-                Vector3f BackLeft = coordinates[2];
-                Vector3f BackRight = coordinates[3];
-                // Transform each coordinate using the transformation matrix
-                Vector4f FrontLeft4 = new Vector4f(FrontLeft, 1.0f);
-                transformationMatrix.transform(FrontLeft4);
-                Vector4f FrontRight4 = new Vector4f(FrontRight, 1.0f);
-                transformationMatrix.transform(FrontRight4);
-                Vector4f BackLeft4 = new Vector4f(BackLeft, 1.0f);
-                transformationMatrix.transform(BackLeft4);
-                Vector4f BackRight4 = new Vector4f(BackRight, 1.0f);
-                transformationMatrix.transform(BackRight4);
-                // Draw the hitbox between coordinates (0,1) (1,2) (0,2) (1,3)
-                // With a thick line
-                GL46.glLineWidth(5);
-                GL46.glBegin(GL46.GL_LINES);
-                GL46.glVertex3f(FrontLeft4.x, FrontLeft4.y, FrontLeft4.z);
-                GL46.glVertex3f(FrontRight4.x, FrontRight4.y, FrontRight4.z);
-                GL46.glVertex3f(FrontRight4.x, FrontRight4.y, FrontRight4.z);
-                GL46.glVertex3f(BackRight4.x, BackRight4.y, BackRight4.z);
-                GL46.glVertex3f(BackRight4.x, BackRight4.y, BackRight4.z);
-                GL46.glVertex3f(BackLeft4.x, BackLeft4.y, BackLeft4.z);
-                GL46.glVertex3f(BackLeft4.x, BackLeft4.y, BackLeft4.z);
-                GL46.glVertex3f(FrontLeft4.x, FrontLeft4.y, FrontLeft4.z);
-                GL46.glEnd();
-            }
-        }
-
     }
 
         private void prepareModel (Model model){

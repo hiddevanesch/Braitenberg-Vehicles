@@ -54,13 +54,13 @@ public class Main {
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
-                new Vector3f(0, 0, 5), new Vector3f(0, 180, 0));
+                new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
         Controllable thirdCar = new Controllable(modelLoader,
-                new Vector3f(-5, 0, -5), new Vector3f(0, 45, 0));
+                new Vector3f(-5, 0, -1), new Vector3f(0, 45, 0));
 
-        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 1, -5),
+        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 1.5f, 0),
                 new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
 
         // Load bodies (except Arena) into list
@@ -93,6 +93,9 @@ public class Main {
         braitenbergVehicle.setBodiesPotentialCollide(bodies);
         secondCar.setBodiesPotentialCollide(bodies);
         thirdCar.setBodiesPotentialCollide(bodies);
+
+        // TODO int for loop
+        int i = 0;
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -130,7 +133,38 @@ public class Main {
             // Render scene
             renderer.render(bodies, sensor);
 
-            System.out.println(sensor.calculateSensorBrightness());
+            // if i is a multiple of 60
+            if (i % 60 == 0) {
+                // For every body that is instance of controllable
+                for (Body body : bodies) {
+                    if (body instanceof Controllable) {
+
+                        Vector3f[] coordinates = ((Controllable) body).getHitBox().getCoordinates();
+
+                        // print the coordinates in 1 decimal place
+                        System.out.println("---------------------------------------");
+                        System.out.println("Coordinates of the hitbox:");
+                        for (Vector3f coordinate : coordinates) {
+                            System.out.println(String.format("(%.1f, %.1f)", coordinate.x, coordinate.z));
+                        }
+                        // Print the length between coordinates (0,1), this is the front length
+                        System.out.println("Front length: " + coordinates[0].distance(coordinates[1]));
+                        // Print the length between coordinates (1,3), this is the right length
+                        System.out.println("Right length: " + coordinates[1].distance(coordinates[3]));
+                        // Print the length between coordinates (3,2), this is the back length
+                        System.out.println("Back length: " + coordinates[3].distance(coordinates[2]));
+                        // Print the length between coordinates (2,0), this is the left length
+                        System.out.println("Left length: " + coordinates[2].distance(coordinates[0]));
+                        System.out.println("---------------------------------------");
+
+
+                    }
+                }
+                System.out.println("\n");
+            }
+            i++;
+
+            //System.out.println(sensor.calculateSensorBrightness());
         }
 
         // Clean up renderer

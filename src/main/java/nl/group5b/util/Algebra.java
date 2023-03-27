@@ -109,12 +109,12 @@ public class Algebra {
     // Function that takes two hitboxes and returns true if they overlap.
     // The y (height) axis is not taken into account.
     // The hitboxes can be rotated
-    public static boolean hitboxOverlap(Vector3f[] nextCoordinates, HitBox hitBoxOther) {
+    public static boolean hitboxOverlap(Vector3f[] Coordinates, HitBox hitBoxOther) {
         // Get the x and z coordinates of hitBoxSelf
-        Vector3f selfFrontLeft = nextCoordinates[0];
-        Vector3f selfFrontRight = nextCoordinates[1];
-        Vector3f selfRearRight = nextCoordinates[2];
-        Vector3f selfRearLeft = nextCoordinates[3];
+        Vector3f selfFrontLeft = Coordinates[0];
+        Vector3f selfFrontRight = Coordinates[1];
+        Vector3f selfRearRight = Coordinates[2];
+        Vector3f selfRearLeft = Coordinates[3];
 
         // Get the x and z coordinates of hitBoxOther
         Vector3f[] otherCoordinates = hitBoxOther.getCoordinates();
@@ -123,61 +123,92 @@ public class Algebra {
         Vector3f otherRearRight = otherCoordinates[2];
         Vector3f otherRearLeft = otherCoordinates[3];
 
-        // Check if the hitboxes overlap, taking into account the rotation of the hitboxes
-        Boolean ans = isRectanglesIntersecting(new double[] {selfFrontLeft.x, selfFrontLeft.z, selfFrontRight.x, selfFrontRight.z, selfRearRight.x, selfRearRight.z, selfRearLeft.x, selfRearLeft.z},
-                new double[] {otherFrontLeft.x, otherFrontLeft.z, otherFrontRight.x, otherFrontRight.z, otherRearRight.x, otherRearRight.z, otherRearLeft.x, otherRearLeft.z});
-        return ans;
+        // Check for all self corners if they are inside the other hitbox using the isPointInsideRectangle function
+        if (isPointInsideRectangle(otherCoordinates, selfFrontLeft.x, selfFrontLeft.z)) {
+            return true;
+        }
+        if (isPointInsideRectangle(otherCoordinates, selfFrontRight.x, selfFrontRight.z)) {
+            return true;
+        }
+        if (isPointInsideRectangle(otherCoordinates, selfRearRight.x, selfRearRight.z)) {
+            return true;
+        }
+        if (isPointInsideRectangle(otherCoordinates, selfRearLeft.x, selfRearLeft.z)) {
+            return true;
+        }
+
+        // Check if the other hitbox is inside the self hitbox
+        if (isPointInsideRectangle(Coordinates, otherFrontLeft.x, otherFrontLeft.z)) {
+            return true;
+        }
+        if (isPointInsideRectangle(Coordinates, otherFrontRight.x, otherFrontRight.z)) {
+            return true;
+        }
+        if (isPointInsideRectangle(Coordinates, otherRearRight.x, otherRearRight.z)) {
+            return true;
+        }
+        if (isPointInsideRectangle(Coordinates, otherRearLeft.x, otherRearLeft.z)) {
+            return true;
+        }
+        // If none of the above is true, the hitboxes do not overlap
+        return false;
     }
 
-    // Function that takes two rectangles in the form [x1z1, x2z2, x3z3, x4z4] and returns true if they overlap
-    // Based on the separating axis theorem
-    static boolean isRectanglesIntersecting(double[] rectA, double[] rectB)
-    {
-        for (int x=0; x<2; x++)
-        {
-            double[] rect = (x==0) ? rectA : rectB;
-            for (int i1=0; i1<4; i1+=2)
-            {
-                int   i2 = (i1 + 2) % 4;
-                double x1 = rect[i1];
-                double z1 = rect[i1+1];
-                double x2 = rect[i2];
-                double z2 = rect[i2+1];
+    public static boolean isPointInsideRectangle(Vector3f[] coordinates, double pointX, double pointY) {
 
-                double normalX = z2 - z1;
-                double normalZ = x1 - x2;
+        // Get the x and z coordinates of the rectangle
+        double frontLeftX = coordinates[0].x;
+        double frontLeftZ = coordinates[0].z;
+        double frontRightX = coordinates[1].x;
+        double frontRightZ = coordinates[1].z;
+        double backRightX = coordinates[2].x;
+        double backRightZ = coordinates[2].z;
+        double backLeftX = coordinates[3].x;
+        double backLeftZ = coordinates[3].z;
 
-                double minA = Double.POSITIVE_INFINITY;
-                double maxA = Double.NEGATIVE_INFINITY;
 
-                for (int j=0; j<8; j+=2)
-                {
-                    double projected = normalX * rectA[j] + normalZ * rectA[j+1];
+        // Determine the minimum and maximum x and y values of the rectangle
+        double minX = Math.min(Math.min(frontLeftX, frontRightX), Math.min(backLeftX, backRightX));
+        double maxX = Math.max(Math.max(frontLeftX, frontRightX), Math.max(backLeftX, backRightX));
+        double minY = Math.min(Math.min(frontLeftZ, frontRightZ), Math.min(backLeftZ, backRightZ));
+        double maxY = Math.max(Math.max(frontLeftZ, frontRightZ), Math.max(backLeftZ, backRightZ));
 
-                    if (projected < minA)
-                        minA = projected;
-                    if (projected > maxA)
-                        maxA = projected;
-                }
+        // Check if the point is inside the rectangle
+        if (pointX >= minX && pointX <= maxX && pointY >= minY && pointY <= maxY) {
 
-                double minB = Double.POSITIVE_INFINITY;
-                double maxB = Double.NEGATIVE_INFINITY;
+            // Use cross product to determine if the point is on the "right" or "left" side of each line
+            double ABx = frontRightX - frontLeftX;
+            double ABy = frontRightZ - frontLeftZ;
+            double APx = pointX - frontLeftX;
+            double APy = pointY - frontLeftZ;
+            double crossProductABAP = ABx * APy - ABy * APx;
 
-                for (int j=0; j<8; j+=2)
-                {
-                    double projected = normalX * rectB[j] + normalZ * rectB[j+1];
+            double BCx = backRightX - frontRightX;
+            double BCy = backRightZ - frontRightZ;
+            double BPx = pointX - frontRightX;
+            double BPy = pointY - frontRightZ;
+            double crossProductBCBP = BCx * BPy - BCy * BPx;
 
-                    if (projected < minB)
-                        minB = projected;
-                    if (projected > maxB)
-                        maxB = projected;
-                }
+            double CDx = backLeftX - backRightX;
+            double CDy = backLeftZ - backRightZ;
+            double CPx = pointX - backRightX;
+            double CPy = pointY - backRightZ;
+            double crossProductCDCP = CDx * CPy - CDy * CPx;
 
-                if (maxA < minB || maxB < minA)
-                    return false;
+            double DEx = frontLeftX - backLeftX;
+            double DEy = frontLeftZ - backLeftZ;
+            double DExP = pointX - backLeftX;
+            double DEyP = pointY - backLeftZ;
+            double crossProductDEDExP = DEx * DEyP - DEy * DExP;
+
+            // If the point is on the same side of all lines, it is inside the rectangle
+            if ((crossProductABAP <= 0 && crossProductBCBP >= 0 && crossProductCDCP >= 0 && crossProductDEDExP <= 0)) {
+                return true;
             }
         }
 
-        return true;
+        // If the point is outside the rectangle or not on the same side of all lines, it is not inside the rectangle
+        return false;
     }
+
 }

@@ -52,7 +52,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         this.setPosition(position);
         this.setRotation(rotation);
 
-        hitBox = new HitBox(
+        this.hitBox = new HitBox(
                 new Vector3f(-0.67f, 0, 1.7f),
                 new Vector3f(0.67f, 0, 1.7f),
                 new Vector3f(-0.67f, 0, -0.3f),
@@ -145,13 +145,13 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     }
 
     // Function that goes through all the bodies and checks if the hitbox of the vehicle is overlapping with the hitbox of the target
-    public boolean isColliding(Vector3f[] nextCoordinates, List<Body> bodies) {
-        // Loop over all bodies in the list, exluding the vehicle itself
+    public boolean isColliding(Vector3f[] hitBoxCoordinates, List<Body> bodies) {
+        // Loop over all bodies in the list, excluding the vehicle itself
         for (Body body : bodies) {
             if (body != this && body instanceof CollisionHandler) {
                 // Get the hitbox of the target
                 HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();
-                if (((CollisionHandler) body).isInHitBox(nextCoordinates, hitBoxTarget)) {
+                if (((CollisionHandler) body).isInHitBox(hitBoxCoordinates, hitBoxTarget)) {
                     return true;
                 }
             }

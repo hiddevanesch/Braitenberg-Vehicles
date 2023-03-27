@@ -35,29 +35,38 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         // Compute rotation angle based on wheel speeds
         float rotationAngle = (rightWheelSpeed - leftWheelSpeed) * frameTime * 180;
         Vector3f deltaRotation = new Vector3f(0, rotationAngle, 0);
+        moveRotation(deltaRotation);
 
         // Compute position based on wheel speeds
         float distance = (leftWheelSpeed + rightWheelSpeed) * frameTime;
         float dx = (float) (distance * Math.sin(Math.toRadians(getRotation().y)));
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
+        movePosition(deltaPosition);
 
-        // Compute the next hitbox coordinates based on the rotation and position
-        Vector3f[] nextCoordinates = hitBox.getNextCoordinates(deltaRotation, deltaPosition);
+        rotateWheels(frameTime);
+
+        Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
 
         // Check for collision
-        if(isColliding(nextCoordinates, bodiesPotentialCollide)){
+        if(isColliding(hitBoxCoordinates, bodiesPotentialCollide)){
+            // print that collision is detected
+            System.out.println("--------------------");
+            System.out.println("--------------------");
+            System.out.println("--------------------");
+            System.out.println("Collision detected");
+            System.out.println("--------------------");
+            System.out.println("--------------------");
+            System.out.println("--------------------");
             // If collision is detected, set wheel speeds to 0
             leftWheelSpeed = 0;
             rightWheelSpeed = 0;
         } else {
             // update the rotation and position of the vehicle
-            moveRotation(deltaRotation);
-            movePosition(deltaPosition);
-            rotateWheels(frameTime);
+
+
+
         }
-
-
 
 
     }
