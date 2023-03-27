@@ -6,44 +6,37 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
+import java.util.Vector;
 
 public class Algebra {
 
     public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f rotation, float scale) {
         Matrix4f matrix = new Matrix4f().identity();
         matrix.translate(translation);
-        matrix.rotate((float) Math.toRadians(rotation.x()), new Vector3f(1, 0, 0));
-        matrix.rotate((float) Math.toRadians(rotation.y()), new Vector3f(0, 1, 0));
-        matrix.rotate((float) Math.toRadians(rotation.z()), new Vector3f(0, 0, 1));
+        matrix.rotateXYZ(
+                (float) Math.toRadians(rotation.x()),
+                (float) Math.toRadians(rotation.y()),
+                (float) Math.toRadians(rotation.z())
+        );
         matrix.scale(new Vector3f(scale, scale, scale));
         return matrix;
     }
 
     public static Matrix4f createViewMatrix(Camera camera) {
         Matrix4f viewMatrix = new Matrix4f().identity();
-        viewMatrix.rotate((float) Math.toRadians(camera.getRotation().x()), new Vector3f(1, 0, 0));
-        viewMatrix.rotate((float) Math.toRadians(camera.getRotation().y()), new Vector3f(0, 1, 0));
-        viewMatrix.rotate((float) Math.toRadians(camera.getRotation().z()), new Vector3f(0, 0, 1));
+        viewMatrix.rotateXYZ(
+                (float) Math.toRadians(camera.getRotation().x()),
+                (float) Math.toRadians(camera.getRotation().y()),
+                (float) Math.toRadians(camera.getRotation().z())
+        );
         Vector3f cameraPos = camera.getPosition();
-        Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+        Vector3f negativeCameraPos = new Vector3f(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
         viewMatrix.translate(negativeCameraPos);
         return viewMatrix;
     }
 
     public static Vector3f rotatePointAroundPivot(Vector3f point, Vector3f pivot, float angle) {
-        float s = (float) Math.sin(Math.toRadians(-angle));
-        float c = (float) Math.cos(Math.toRadians(-angle));
-
-        // Rotate point
-        float newX = point.x * c - point.z * s;
-        float newZ = point.x * s + point.z * c;
-
-        // Get result
-        Vector3f result = new Vector3f();
-        result.x = newX + pivot.x;
-        result.y = pivot.y;
-        result.z = newZ + pivot.z;
-        return result;
+        return new Vector3f(point).rotateY((float) Math.toRadians(angle)).add(pivot.x, 0, pivot.z);
     }
 
     public static void matrixToBuffer(Matrix4f matrix, FloatBuffer dest)
@@ -69,11 +62,11 @@ public class Algebra {
     public static Vector3f rotateWheelGivenCurrentAngle(float angle, float amount) {
         // Create a rotation matrix for the wheel
         Matrix4f wheelRotation = new Matrix4f();
-        wheelRotation.rotate((float) Math.toRadians(angle), new Vector3f(0, 1, 0));
+        wheelRotation.rotateY((float) Math.toRadians(angle));
 
         // Create a rotation matrix for the amount to rotate forward
         Matrix4f forwardRotation = new Matrix4f();
-        forwardRotation.rotate((float) Math.toRadians(amount), new Vector3f(1, 0, 0));
+        forwardRotation.rotateX((float) Math.toRadians(amount));
 
         // Combine the two rotations by multiplying them together
         Matrix4f combinedRotation = new Matrix4f();
@@ -88,19 +81,9 @@ public class Algebra {
     }
 
     public static Matrix4f createProjectionMatrix(int width, int height, float fov) {
-        Matrix4f projectionMatrix = new Matrix4f();
         float aspectRatio = (float) width / (float) height;
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))));
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = Settings.VIEWPORT_FAR_PLANE - Settings.VIEWPORT_NEAR_PLANE;
-
-        projectionMatrix.m00(x_scale);
-        projectionMatrix.m11(y_scale);
-        projectionMatrix.m22(-((Settings.VIEWPORT_FAR_PLANE + Settings.VIEWPORT_NEAR_PLANE) / frustum_length));
-        projectionMatrix.m23(-1);
-        projectionMatrix.m32(-((2 * Settings.VIEWPORT_NEAR_PLANE * Settings.VIEWPORT_FAR_PLANE) / frustum_length));
-        projectionMatrix.m33(0);
-
-        return projectionMatrix;
+        float fovRadians = (float) Math.toRadians(fov);
+        return new Matrix4f().perspective(fovRadians, aspectRatio,
+                Settings.VIEWPORT_NEAR_PLANE, Settings.VIEWPORT_FAR_PLANE);
     }
 }
