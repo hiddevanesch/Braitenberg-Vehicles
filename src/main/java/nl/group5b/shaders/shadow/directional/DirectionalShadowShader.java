@@ -1,17 +1,17 @@
-package nl.group5b.shaders.shadow;
+package nl.group5b.shaders.shadow.directional;
 
 
 import nl.group5b.shaders.ShaderProgram;
 import org.joml.Matrix4f;
 
-public class ShadowShader extends ShaderProgram {
+public class DirectionalShadowShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/shadow/vertex_shader.glsl";
-	private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/shadow/fragment_shader.glsl";
+	private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/shadow/directional/vertex_shader.glsl";
+	private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/shadow/directional/fragment_shader.glsl";
 	
 	private int mvpMatrixLocation;
 
-	public ShadowShader() {
+	public DirectionalShadowShader() {
 		// lightCount can be set to 0 here, since this is not important for the shadow shader
 		super(VERTEX_FILE, FRAGMENT_FILE, 0);
 	}

@@ -2,6 +2,7 @@ package nl.group5b.gui.elements;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
+import nl.group5b.camera.Sensor;
 import nl.group5b.gui.Element;
 import nl.group5b.util.Settings;
 
@@ -17,7 +18,7 @@ public class Demo extends Element {
 
     private ImBoolean spawnSecondCar = new ImBoolean(false);
 
-    private int image;
+    private int[] images = new int[8];
 
     @Override
     public void render() {
@@ -31,7 +32,9 @@ public class Demo extends Element {
         ImGui.text("Spawn second car:");
         ImGui.checkbox("Spawn second car", spawnSecondCar);
         ImGui.separator();
-        ImGui.image(image, Settings.SENSOR_RESOLUTION, Settings.SENSOR_RESOLUTION, 0, 1, 1, 0);
+        for (int i = 0; i < images.length; i++) {
+            ImGui.image(images[i], Settings.SENSOR_RESOLUTION, Settings.SENSOR_RESOLUTION, 0, 1, 1, 0);
+        }
         ImGui.end();
     }
 
@@ -66,8 +69,10 @@ public class Demo extends Element {
         return speeds;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImages(Sensor[] sensors) {
+        for (int i = 0; i < sensors.length; i++) {
+            images[i] = sensors[i].getTextureID();
+        }
     }
 
 }

@@ -76,6 +76,17 @@ public class Main {
 
         Sensor sensor = new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 0, 0), Settings.SENSOR_RESOLUTION);
 
+        Sensor[] sensors = {
+                sensor,
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 45, 0), Settings.SENSOR_RESOLUTION),
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 90, 0), Settings.SENSOR_RESOLUTION),
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 135, 0), Settings.SENSOR_RESOLUTION),
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 180, 0), Settings.SENSOR_RESOLUTION),
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 225, 0), Settings.SENSOR_RESOLUTION),
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 270, 0), Settings.SENSOR_RESOLUTION),
+                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 315, 0), Settings.SENSOR_RESOLUTION)
+        };
+
         // Create Camera's
         BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
         camera.enableZoom(window);
@@ -112,12 +123,12 @@ public class Main {
             //renderer.renderSensor();
 
             // Update texture in GUI
-            demo.setImage(sensor.getTextureID());
+            demo.setImages(sensors);
 
             // Render scene
-            renderer.render(bodies, sensor);
+            renderer.render(bodies, sensors);
 
-            System.out.println(sensor.calculateSensorBrightness());
+            //System.out.println(sensor.calculateSensorBrightness());
         }
 
         // Clean up renderer

@@ -1,9 +1,9 @@
-package nl.group5b.light;
+package nl.group5b.light.directional;
 
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.shadow.ShadowShader;
+import nl.group5b.shaders.shadow.directional.DirectionalShadowShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
@@ -12,12 +12,12 @@ import org.lwjgl.opengl.GL46;
 import java.util.List;
 import java.util.Map;
 
-public class ShadowRenderer {
+public class DirectionalShadowRenderer {
 
 	private Matrix4f projectionViewMatrix;
-	private ShadowShader shader;
+	private DirectionalShadowShader shader;
 
-	public ShadowRenderer(ShadowShader shader, Matrix4f projectionViewMatrix) {
+	public DirectionalShadowRenderer(DirectionalShadowShader shader, Matrix4f projectionViewMatrix) {
 		this.shader = shader;
 		this.projectionViewMatrix = projectionViewMatrix;
 	}

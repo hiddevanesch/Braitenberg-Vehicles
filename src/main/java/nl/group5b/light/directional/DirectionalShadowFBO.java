@@ -1,29 +1,29 @@
-package nl.group5b.light;
+package nl.group5b.light.directional;
 
 import org.lwjgl.opengl.GL46;
 
 import java.nio.ByteBuffer;
 
-public class ShadowFrameBuffer {
+public class DirectionalShadowFBO {
 
 	private final int width;
 	private final int height;
-	private int fbo;
-	private int shadowMap;
+	private int frameBufferID;
+	private int shadowMapID;
 
-	protected ShadowFrameBuffer(int width, int height) {
+	protected DirectionalShadowFBO(int width, int height) {
 		this.width = width;
 		this.height = height;
 		initialiseFrameBuffer();
 	}
 
 	protected void cleanUp() {
-		GL46.glDeleteFramebuffers(fbo);
-		GL46.glDeleteTextures(shadowMap);
+		GL46.glDeleteFramebuffers(frameBufferID);
+		GL46.glDeleteTextures(shadowMapID);
 	}
 
 	protected void bindFrameBuffer() {
-		bindFrameBuffer(fbo, width, height);
+		bindFrameBuffer(frameBufferID, width, height);
 	}
 
 	protected void unbindFrameBuffer() {
@@ -31,12 +31,12 @@ public class ShadowFrameBuffer {
 	}
 
 	protected int getShadowMap() {
-		return shadowMap;
+		return shadowMapID;
 	}
 
 	private void initialiseFrameBuffer() {
-		fbo = createFrameBuffer();
-		shadowMap = createDepthBufferAttachment(width, height);
+		frameBufferID = createFrameBuffer();
+		shadowMapID = createDepthBufferAttachment(width, height);
 		unbindFrameBuffer();
 	}
 

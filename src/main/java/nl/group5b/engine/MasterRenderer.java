@@ -4,7 +4,7 @@ import nl.group5b.camera.Camera;
 import nl.group5b.camera.Sensor;
 import nl.group5b.gui.GUI;
 import nl.group5b.light.Light;
-import nl.group5b.light.ShadowMasterRenderer;
+import nl.group5b.light.directional.DirectionalShadowMR;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
@@ -20,7 +20,7 @@ public class MasterRenderer {
     private RealShader shader;
 
     private Renderer renderer;
-    private ShadowMasterRenderer shadowRenderer;
+    private DirectionalShadowMR shadowRenderer;
 
     private final Light[] lights;
     private Camera camera;
@@ -32,7 +32,7 @@ public class MasterRenderer {
     public MasterRenderer(Light[] lights, Camera camera, long window, GUI gui) {
         this.shader = new RealShader(lights.length);
         this.renderer = new Renderer(shader);
-        this.shadowRenderer = new ShadowMasterRenderer(lights[0]);
+        this.shadowRenderer = new DirectionalShadowMR(lights[0]);
         this.lights = lights;
         this.camera = camera;
         this.window = window;
@@ -62,15 +62,19 @@ public class MasterRenderer {
     private void renderSensors(List<Body> bodies) {
         for (Body body : bodies) {
             if (body instanceof BraitenbergVehicle braitenbergVehicle) {
-                for (Sensor sensor : braitenbergVehicle.getSensors()) {
-                    renderer.prepareSensor(sensor);
-                    shader.start();
-                    shader.loadViewMatrix(sensor.getCamera());
-                    renderer.render(renderMap);
-                    shader.stop();
-                    renderer.completeSensor(sensor);
-                }
+                //
             }
+        }
+    }
+
+    private void renderSensors(Sensor[] sensors) {
+        for (Sensor sensor : sensors) {
+            renderer.prepareSensor(sensor);
+            shader.start();
+            shader.loadViewMatrix(sensor.getCamera());
+            renderer.render(renderMap);
+            shader.stop();
+            renderer.completeSensor(sensor);
         }
     }
 
@@ -88,7 +92,7 @@ public class MasterRenderer {
         gui.render();
     }
 
-    public void render(List<Body> bodies, Sensor sensor) {
+    public void render(List<Body> bodies, Sensor[] sensors) {
         // Process all the bodies
         for (Body body : bodies) {
             processBody(body);
@@ -101,13 +105,7 @@ public class MasterRenderer {
         prepareShader();
 
         // Render all the sensors
-        //renderSensors(bodies);
-        renderer.prepareSensor(sensor);
-        shader.start();
-        shader.loadViewMatrix(sensor.getCamera());
-        renderer.render(renderMap);
-        shader.stop();
-        renderer.completeSensor(sensor);
+        renderSensors(sensors);
 
         // Render the viewport
         renderer.prepareViewport();
