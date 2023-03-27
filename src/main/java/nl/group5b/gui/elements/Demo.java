@@ -13,12 +13,13 @@ public class Demo extends Element {
 
     int[] demoDate = {16, 3, 2023};
 
-    private List<Float> vehicleSpeedsLeft = new ArrayList<>();
-    private List<Float> vehicleSpeedsRight = new ArrayList<>();
+    private final List<Float> vehicleSpeedsLeft = new ArrayList<>();
+    private final List<Float> vehicleSpeedsRight = new ArrayList<>();
 
-    private ImBoolean spawnSecondCar = new ImBoolean(false);
+    private final ImBoolean spawnSecondCar = new ImBoolean(false);
 
-    private int[] images = new int[8];
+    private int image;
+    private int cubeMapTex;
 
     @Override
     public void render() {
@@ -32,9 +33,7 @@ public class Demo extends Element {
         ImGui.text("Spawn second car:");
         ImGui.checkbox("Spawn second car", spawnSecondCar);
         ImGui.separator();
-        for (int i = 0; i < images.length; i++) {
-            ImGui.image(images[i], Settings.SENSOR_RESOLUTION, Settings.SENSOR_RESOLUTION, 0, 1, 1, 0);
-        }
+        ImGui.image(image, Settings.SENSOR_RESOLUTION, Settings.SENSOR_RESOLUTION, 0, 1, 1, 0);
         ImGui.end();
     }
 
@@ -69,10 +68,11 @@ public class Demo extends Element {
         return speeds;
     }
 
-    public void setImages(Sensor[] sensors) {
-        for (int i = 0; i < sensors.length; i++) {
-            images[i] = sensors[i].getTextureID();
-        }
+    public void setImages(Sensor sensor) {
+        image = sensor.getTextureID();
     }
 
+    public void setTexture(int shadowCubeMap) {
+        cubeMapTex = shadowCubeMap;
+    }
 }

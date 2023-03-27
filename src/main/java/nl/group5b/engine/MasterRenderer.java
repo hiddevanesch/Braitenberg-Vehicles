@@ -4,7 +4,7 @@ import nl.group5b.camera.Camera;
 import nl.group5b.camera.Sensor;
 import nl.group5b.gui.GUI;
 import nl.group5b.light.Light;
-import nl.group5b.light.directional.DirectionalShadowMR;
+import nl.group5b.light.DirectionalShadowMR;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
@@ -17,22 +17,22 @@ import java.util.Map;
 
 public class MasterRenderer {
 
-    private RealShader shader;
+    private final RealShader shader;
 
-    private Renderer renderer;
-    private DirectionalShadowMR shadowRenderer;
+    private final Renderer renderer;
+    private final DirectionalShadowMR directionalShadowRenderer;
 
     private final Light[] lights;
     private Camera camera;
-    private long window;
-    private GUI gui;
+    private final long window;
+    private final GUI gui;
 
-    private Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
+    private final Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
     public MasterRenderer(Light[] lights, Camera camera, long window, GUI gui) {
         this.shader = new RealShader(lights.length);
         this.renderer = new Renderer(shader);
-        this.shadowRenderer = new DirectionalShadowMR(lights[0]);
+        this.directionalShadowRenderer = new DirectionalShadowMR(lights[0]);
         this.lights = lights;
         this.camera = camera;
         this.window = window;
@@ -46,17 +46,17 @@ public class MasterRenderer {
     private void prepareShader() {
         // Load the shadow map
         GL46.glActiveTexture(GL46.GL_TEXTURE0);
-        GL46.glBindTexture(GL46.GL_TEXTURE_2D, shadowRenderer.getShadowMap());
+        GL46.glBindTexture(GL46.GL_TEXTURE_2D, directionalShadowRenderer.getShadowMap());
 
         // Load lights (should be done every frame, because the lights can move)
         shader.start();
         shader.loadLights(lights);
-        shader.loadToShadowMapSpaceMatrix(shadowRenderer.getToShadowMapSpaceMatrix());
+        shader.loadToShadowMapSpaceMatrix(directionalShadowRenderer.getToShadowMapSpaceMatrix());
         shader.stop();
     }
 
     private void renderShadows() {
-        shadowRenderer.render(renderMap);
+        directionalShadowRenderer.render(renderMap);
     }
 
     private void renderSensors(List<Body> bodies) {
@@ -98,7 +98,7 @@ public class MasterRenderer {
             processBody(body);
         }
 
-        // Compute shadow map
+        // Compute shadow maps
         renderShadows();
 
         // Prepare the RealShader
@@ -117,15 +117,9 @@ public class MasterRenderer {
         renderMap.clear();
     }
 
-
-
-    public int getShadowMapTexture() {
-        return shadowRenderer.getShadowMap();
-    }
-
     public void cleanUp() {
         shader.cleanUp();
-        shadowRenderer.cleanUp();
+        directionalShadowRenderer.cleanUp();
     }
 
     public Renderer getRenderer() {

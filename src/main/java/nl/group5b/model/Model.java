@@ -2,8 +2,8 @@ package nl.group5b.model;
 
 public class Model {
 
-    private int vaoID;
-    private int vertexCount;
+    private final int vaoID;
+    private final int vertexCount;
 
     public Model(int vaoID, int vertexCount) {
         this.vaoID = vaoID;

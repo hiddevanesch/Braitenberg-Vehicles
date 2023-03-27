@@ -1,9 +1,8 @@
-package nl.group5b.light.directional;
+package nl.group5b.light;
 
-import nl.group5b.light.Light;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.shadow.directional.DirectionalShadowShader;
+import nl.group5b.shaders.shadow.DirectionalShadowShader;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -23,20 +22,20 @@ public class DirectionalShadowMR {
 	private static final float SHADOW_BOX_MIN_Z = -Settings.SHADOW_BOX_RADIUS;
 	private static final float SHADOW_BOX_MAX_Z = Settings.SHADOW_BOX_RADIUS;
 
-	private DirectionalShadowFBO shadowFbo;
-	private DirectionalShadowShader shader;
-	private Matrix4f projectionMatrix = new Matrix4f();
-	private Matrix4f lightViewMatrix = new Matrix4f();
-	private Matrix4f projectionViewMatrix = new Matrix4f();
-	private Matrix4f offset = createOffset();
-    private Vector3f lightDirection;
+	private final DirectionalShadowFBO shadowFbo;
+	private final DirectionalShadowShader shader;
+	private final Matrix4f projectionMatrix = new Matrix4f();
+	private final Matrix4f lightViewMatrix = new Matrix4f();
+	private final Matrix4f projectionViewMatrix = new Matrix4f();
+	private final Matrix4f offset = createOffset();
+    private final Vector3f lightDirection;
 
-	private DirectionalShadowRenderer directionalShadowRenderer;
+	private final DirectionalShadowRenderer shadowRenderer;
 
 	public DirectionalShadowMR(Light sun) {
 		shader = new DirectionalShadowShader();
 		shadowFbo = new DirectionalShadowFBO(Settings.SHADOW_MAP_RESOLUTION, Settings.SHADOW_MAP_RESOLUTION);
-		directionalShadowRenderer = new DirectionalShadowRenderer(shader, projectionViewMatrix);
+		shadowRenderer = new DirectionalShadowRenderer(shader, projectionViewMatrix);
 
 		// Compute the light direction
         Vector4f sunPosition = sun.getPosition();
@@ -53,11 +52,11 @@ public class DirectionalShadowMR {
 	public void render(Map<Model, List<BodyElement>> renderMap) {
 		shadowFbo.bindFrameBuffer();
 		GL46.glClear(GL46.GL_DEPTH_BUFFER_BIT);
+
 		shader.start();
-
-		directionalShadowRenderer.render(renderMap);
-
+		shadowRenderer.render(renderMap);
 		shader.stop();
+
 		shadowFbo.unbindFrameBuffer();
 	}
 

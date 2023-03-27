@@ -9,7 +9,7 @@ public class GUI {
     private final ImGuiImplGlfw glfwGui = new ImGuiImplGlfw();
     private final ImGuiImplGl3 gl3Gui = new ImGuiImplGl3();
 
-    private Element[] elements;
+    private final Element[] elements;
 
     public GUI(long window, Element[] elements) {
         ImGui.createContext();

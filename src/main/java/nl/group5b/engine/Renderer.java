@@ -19,7 +19,7 @@ public class Renderer {
     private static long lastFrameTime;
     private static float delta;
 
-    private RealShader shader;
+    private final RealShader shader;
 
     public Renderer(RealShader shader) {
         this.shader = shader;

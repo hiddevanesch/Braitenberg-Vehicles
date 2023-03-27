@@ -51,6 +51,9 @@ public class Main {
         Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(
                 Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS));
 
+        // Create test light
+        Light testLight = new Light(new Vector4f(0, 5, 0, 1), new Vector3f(1, 1, 1));
+
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
@@ -71,20 +74,14 @@ public class Main {
         // IMPORTANT! Sun HAS to be present at index 0 ======================
         Light[] lights = {
                 sun,
-                colouredLamp.getLight()
+                colouredLamp.getLight(),
+                testLight
         };
 
         Sensor sensor = new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 0, 0), Settings.SENSOR_RESOLUTION);
 
         Sensor[] sensors = {
-                sensor,
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 45, 0), Settings.SENSOR_RESOLUTION),
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 90, 0), Settings.SENSOR_RESOLUTION),
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 135, 0), Settings.SENSOR_RESOLUTION),
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 180, 0), Settings.SENSOR_RESOLUTION),
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 225, 0), Settings.SENSOR_RESOLUTION),
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 270, 0), Settings.SENSOR_RESOLUTION),
-                new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 315, 0), Settings.SENSOR_RESOLUTION)
+                sensor
         };
 
         // Create Camera's
@@ -123,7 +120,7 @@ public class Main {
             //renderer.renderSensor();
 
             // Update texture in GUI
-            demo.setImages(sensors);
+            demo.setImages(sensor);
 
             // Render scene
             renderer.render(bodies, sensors);

@@ -3,7 +3,7 @@ package nl.group5b.model;
 import org.joml.Vector3f;
 
 public class Material {
-    private Vector3f colour;
+    private final Vector3f colour;
     private boolean isEmissive;
     private float damping;
     private float shininess;

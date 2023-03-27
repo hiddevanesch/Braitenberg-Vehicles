@@ -1,9 +1,9 @@
-package nl.group5b.light.directional;
+package nl.group5b.light;
 
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.shadow.directional.DirectionalShadowShader;
+import nl.group5b.shaders.shadow.DirectionalShadowShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class DirectionalShadowRenderer {
 
-	private Matrix4f projectionViewMatrix;
-	private DirectionalShadowShader shader;
+	private final Matrix4f projectionViewMatrix;
+	private final DirectionalShadowShader shader;
 
 	public DirectionalShadowRenderer(DirectionalShadowShader shader, Matrix4f projectionViewMatrix) {
 		this.shader = shader;

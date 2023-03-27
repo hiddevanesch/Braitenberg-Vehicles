@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 
 public class Lamp extends Body implements PositionHandler {
 
-    private Light light;
+    private final Light light;
 
     public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f colour,
                 Vector3f attenuation) throws FileNotFoundException {

@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 public class BodyCamera extends Camera {
     private PositionHandler body;
 
-    private float heightOffset;
+    private final float heightOffset;
 
     private float distance = 4;
     private float bodyPitch = 15;

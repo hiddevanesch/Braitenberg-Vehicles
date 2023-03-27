@@ -24,9 +24,9 @@ public class RealShader extends ShaderProgram {
     private int toShadowMapSpaceLocation;
     private int shadowMapLocation;
 
-    private int lightPositionLocations[];
-    private int lightColourLocations[];
-    private int lightAttenuationLocations[];
+    private int[] lightPositionLocations;
+    private int[] lightColourLocations;
+    private int[] lightAttenuationLocations;
 
     public RealShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);

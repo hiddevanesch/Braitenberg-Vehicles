@@ -1,4 +1,4 @@
-package nl.group5b.light.directional;
+package nl.group5b.light;
 
 import org.lwjgl.opengl.GL46;
 
@@ -23,7 +23,9 @@ public class DirectionalShadowFBO {
 	}
 
 	protected void bindFrameBuffer() {
-		bindFrameBuffer(frameBufferID, width, height);
+		GL46.glBindTexture(GL46.GL_TEXTURE_2D, 0);
+		GL46.glBindFramebuffer(GL46.GL_DRAW_FRAMEBUFFER, frameBufferID);
+		GL46.glViewport(0, 0, width, height);
 	}
 
 	protected void unbindFrameBuffer() {
@@ -38,12 +40,6 @@ public class DirectionalShadowFBO {
 		frameBufferID = createFrameBuffer();
 		shadowMapID = createDepthBufferAttachment(width, height);
 		unbindFrameBuffer();
-	}
-
-	private static void bindFrameBuffer(int frameBuffer, int width, int height) {
-		GL46.glBindTexture(GL46.GL_TEXTURE_2D, 0);
-		GL46.glBindFramebuffer(GL46.GL_DRAW_FRAMEBUFFER, frameBuffer);
-		GL46.glViewport(0, 0, width, height);
 	}
 
 	private static int createFrameBuffer() {
