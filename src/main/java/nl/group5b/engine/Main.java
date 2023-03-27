@@ -43,9 +43,6 @@ public class Main {
         Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(
                 Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS));
 
-        // Create test light
-        Light testLight = new Light(new Vector4f(0, 5, 0, 1), new Vector3f(0.3f, 0, 0));
-
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
@@ -67,7 +64,6 @@ public class Main {
         Light[] lights = {
                 sun,
                 colouredLamp.getLight(),
-                testLight
         };
 
         Sensor sensor = new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 0, 0), Settings.SENSOR_RESOLUTION);
@@ -84,7 +80,6 @@ public class Main {
         thirdPersonCamera.enableMouseTracking(window);
 
         // Create GUI Elements
-        //Demo demo = new Demo();
         MainPanel mainPanel = new MainPanel();
         SettingsPanel settingsPanel = new SettingsPanel(topDownCamera, thirdPersonCamera, sun);
 
@@ -123,10 +118,6 @@ public class Main {
 
             thirdPersonCamera.move(window);
 
-            // Render sensor views
-            //renderer.renderSensors(bodies);
-            //renderer.renderSensor();
-
             // Update texture in GUI
 //            demo.setImages(sensor);
 
@@ -138,9 +129,6 @@ public class Main {
 
         // Clean up renderer
         renderer.cleanUp();
-
-        // Clean up GUI
-        gui.cleanUp();
 
         // Remove all VAOs and VBOs
         modelLoader.cleanUp();

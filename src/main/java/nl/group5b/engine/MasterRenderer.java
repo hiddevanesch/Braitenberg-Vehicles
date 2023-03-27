@@ -113,6 +113,7 @@ public class MasterRenderer {
 
     public void cleanUp() {
         shader.cleanUp();
+        gui.cleanUp();
         directionalShadowRenderer.cleanUp();
     }
 
