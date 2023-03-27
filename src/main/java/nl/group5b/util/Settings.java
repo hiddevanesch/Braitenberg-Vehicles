@@ -11,7 +11,8 @@ public class Settings {
     public static final int VAO_NORMAL_ATTR = 2;
 
     // Camera
-    public static final float VIEWPORT_FOV = 55;
+    public static final cameraType DEFAULT_CAMERA = cameraType.TOP_DOWN;
+    public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
 
@@ -19,11 +20,9 @@ public class Settings {
     public static final float AMBIENT_LIGHT = 0.15f;
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
     public static final float SHADOW_BOX_RADIUS = 10;
-    public static final float SHADOW_NEAR_PLANE = 0.1f;
-    public static final float SHADOW_FAR_PLANE = 1000;
 
     // Scene
-    public static final float SUN_BRIGHTNESS = 0.5f;
+    public static float SUN_BRIGHTNESS = 0.5f;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
@@ -40,4 +39,7 @@ public class Settings {
 
     // GUI
     public static final int GUI_GRAPH_HISTORY_SIZE = 500;
+    public static final float PANEL_WIDTH_MAIN = 200;
+    public static final float PANEL_WIDTH_SETTINGS = 200;
 }
+

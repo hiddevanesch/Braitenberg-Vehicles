@@ -63,7 +63,11 @@ void main(void) {
             // Calculate the diffuse component
             float prod = dot(unitNormal, unitLight);
             float brightness = clamp(prod, 0.0, 1.0);
-            totalDiffuse += (colour * lightColour[i] * brightness) / attenuationFactor;
+            if (i == 0) {
+                totalDiffuse += ((colour * lightColour[i] * brightness) / attenuationFactor) * shadowFactor;
+            } else {
+                totalDiffuse += ((colour * lightColour[i] * brightness) / attenuationFactor);
+            }
 
             // Calculate the specular component
             vec3 lightDirection = -unitLight;
@@ -71,13 +75,17 @@ void main(void) {
             float specularFactor = dot(unitCamera, reflectedDirection);
             specularFactor = clamp(specularFactor, 0.0, 1.0);
             float dampedFactor = pow(specularFactor, damping);
-            totalSpecular += (dampedFactor * shininess * lightColour[i]) / attenuationFactor;
+            if (i == 0) {
+                totalSpecular += ((dampedFactor * shininess * lightColour[i]) / attenuationFactor) * shadowFactor;
+            } else {
+                totalSpecular += (dampedFactor * shininess * lightColour[i]) / attenuationFactor;
+            }
         }
 
         // Add ambient light
-        totalDiffuse = max(totalDiffuse * shadowFactor, AMBIENT_LIGHT * colour);
+        totalDiffuse = max(totalDiffuse, AMBIENT_LIGHT * colour);
 
         // Compute out colour
-        outColour = vec4(totalDiffuse + (totalSpecular * shadowFactor), 1.0);
+        outColour = vec4(totalDiffuse + totalSpecular, 1.0);
     }
 }

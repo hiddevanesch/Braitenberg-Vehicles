@@ -23,24 +23,18 @@ public class MasterRenderer {
     private final DirectionalShadowMR directionalShadowRenderer;
 
     private final Light[] lights;
-    private Camera camera;
     private final long window;
     private final GUI gui;
 
     private final Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
-    public MasterRenderer(Light[] lights, Camera camera, long window, GUI gui) {
+    public MasterRenderer(Light[] lights, long window, GUI gui) {
         this.shader = new RealShader(lights.length);
         this.renderer = new Renderer(shader);
         this.directionalShadowRenderer = new DirectionalShadowMR(lights[0]);
         this.lights = lights;
-        this.camera = camera;
         this.window = window;
         this.gui = gui;
-    }
-
-    public void setCamera(Camera camera) {
-        this.camera = camera;
     }
 
     private void prepareShader() {
@@ -80,7 +74,7 @@ public class MasterRenderer {
 
     private void renderViewport() {
         shader.start();
-        shader.loadViewMatrix(camera);
+        shader.loadViewMatrix(gui.getCamera());
 
         // Render all BodyElements in the map
         renderer.render(renderMap);
