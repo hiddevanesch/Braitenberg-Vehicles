@@ -27,6 +27,7 @@ uniform vec3 colour;
 uniform bool isEmissive;
 uniform float damping;
 uniform float shininess;
+uniform float gammaCorrection;
 
 void main(void) {
     if (isEmissive) {
@@ -86,6 +87,6 @@ void main(void) {
         totalDiffuse = max(totalDiffuse, AMBIENT_LIGHT * colour);
 
         // Compute out colour
-        outColour = vec4(totalDiffuse + totalSpecular, 1.0);
+        outColour = vec4(pow(totalDiffuse + totalSpecular, vec3(1.0/gammaCorrection)), 1.0);
     }
 }

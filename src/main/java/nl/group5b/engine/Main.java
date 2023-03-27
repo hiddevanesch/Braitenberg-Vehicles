@@ -5,7 +5,6 @@ import nl.group5b.camera.Camera;
 import nl.group5b.camera.Sensor;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
-import nl.group5b.gui.elements.Demo;
 import nl.group5b.gui.elements.MainPanel;
 import nl.group5b.gui.elements.SettingsPanel;
 import nl.group5b.light.Light;
@@ -66,15 +65,14 @@ public class Main {
                 colouredLamp.getLight(),
         };
 
-        Sensor sensor = new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 0, 0), Settings.SENSOR_RESOLUTION);
-
+        // TODO improve
         Sensor[] sensors = {
-                sensor
+                braitenbergVehicle.getLeftSensor(),
+                braitenbergVehicle.getRightSensor()
         };
 
         // Create Camera instances
         Camera topDownCamera = new Camera(new Vector3f(0, 20, 0), new Vector3f(90, 0, 0));
-
         BodyCamera thirdPersonCamera = new BodyCamera(braitenbergVehicle, 0.5f);
         thirdPersonCamera.enableZoom(window);
         thirdPersonCamera.enableMouseTracking(window);
@@ -119,7 +117,7 @@ public class Main {
             thirdPersonCamera.move(window);
 
             // Update texture in GUI
-//            demo.setImages(sensor);
+            mainPanel.setImages(braitenbergVehicle.getLeftSensor().getTextureID(), braitenbergVehicle.getRightSensor().getTextureID());
 
             // Render scene
             renderer.render(bodies, sensors);

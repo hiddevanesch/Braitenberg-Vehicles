@@ -8,11 +8,26 @@ import nl.group5b.util.Settings;
 
 public class MainPanel extends Element {
 
-        @Override
-        public void render() {
-            ImGui.setNextWindowPos(0, 0);
-            ImGui.setNextWindowSize(Settings.PANEL_WIDTH_MAIN, DisplayBuilder.getHeight());
-            ImGui.begin("Main", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
-            ImGui.end();
-        }
+    private int leftSensorImage;
+    private int rightSensorImage;
+
+    @Override
+    public void render() {
+        ImGui.setNextWindowPos(0, 0);
+        ImGui.setNextWindowSize(Settings.PANEL_WIDTH_MAIN, DisplayBuilder.getHeight());
+        ImGui.begin("Main", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
+
+        float contentWidth = ImGui.getContentRegionAvailX();
+        ImGui.text("Left sensor");
+        ImGui.image(leftSensorImage, contentWidth, contentWidth);
+
+        ImGui.text("Right sensor");
+        ImGui.image(rightSensorImage, contentWidth, contentWidth);
+        ImGui.end();
+    }
+
+    public void setImages(int leftSensorImage, int rightSensorImage) {
+        this.leftSensorImage = leftSensorImage;
+        this.rightSensorImage = rightSensorImage;
+    }
 }

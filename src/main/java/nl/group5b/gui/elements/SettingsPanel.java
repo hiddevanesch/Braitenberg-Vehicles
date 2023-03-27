@@ -20,6 +20,7 @@ public class SettingsPanel extends Element {
     private Light sun;
 
     private float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
+    private float[] gamma = {Settings.GAMMA_CORRECTION};
     private float[] fov = {Settings.VIEWPORT_FOV};
     private int currentCamera;
     private ImInt selectedCamera;
@@ -50,32 +51,35 @@ public class SettingsPanel extends Element {
 
         ImGui.text("Sun brightness");
         ImGui.setNextItemWidth(contentWidth);
-        ImGui.sliderFloat("##slider_sun_brightness", sunBrightness, 0, 1, "%.2f");
-        // If the slider value has changed, update the sun brightness
-        if (sunBrightness[0] != sun.getColour().x) {
+        if (ImGui.sliderFloat("##slider_sun_brightness", sunBrightness, 0, 1, "%.2f")) {
             sun.setColour(new Vector3f(sunBrightness[0], sunBrightness[0], sunBrightness[0]));
+        }
+
+        ImGui.text("Gamma");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.sliderFloat("##slider_gamma", gamma, 0, 2.2f, "%.1f")) {
+            Settings.GAMMA_CORRECTION = gamma[0];
         }
 
         ImGui.text("FOV");
         ImGui.setNextItemWidth(contentWidth);
-        ImGui.sliderFloat("##slider_fov", fov, 30, 90, "%.0f");
-        // If the slider value has changed, update the FOV
-        if (fov[0] != Settings.VIEWPORT_FOV) {
+        if (ImGui.sliderFloat("##slider_fov", fov, 30, 90, "%.0f")) {
             Settings.VIEWPORT_FOV = fov[0];
         }
 
         ImGui.text("Camera");
         ImGui.setNextItemWidth(contentWidth);
-        ImGui.combo("##combo_camera", selectedCamera, new String[]{"Third Person", "Top Down"});
-        // If the selected camera has changed, update the camera
-        if (selectedCamera.get() != currentCamera) {
-            currentCamera = selectedCamera.get();
-            if (currentCamera == 0) {
-                thirdPersonCamera.setIsActivate(true);
-                camera = thirdPersonCamera;
-            } else {
-                thirdPersonCamera.setIsActivate(false);
-                camera = topDownCamera;
+        if (ImGui.combo("##combo_camera", selectedCamera, new String[]{"Third Person", "Top Down"})) {
+            // If the selected camera has changed, update the camera
+            if (selectedCamera.get() != currentCamera) {
+                currentCamera = selectedCamera.get();
+                if (currentCamera == 0) {
+                    thirdPersonCamera.setIsActivate(true);
+                    camera = thirdPersonCamera;
+                } else {
+                    thirdPersonCamera.setIsActivate(false);
+                    camera = topDownCamera;
+                }
             }
         }
 

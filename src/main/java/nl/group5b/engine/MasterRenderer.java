@@ -10,6 +10,7 @@ import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
 import nl.group5b.model.models.BraitenbergVehicle;
 import nl.group5b.shaders.real.RealShader;
+import nl.group5b.util.Settings;
 import org.lwjgl.opengl.GL46;
 
 import java.util.List;
@@ -62,6 +63,9 @@ public class MasterRenderer {
     }
 
     private void renderSensors(Sensor[] sensors) {
+        shader.start();
+        shader.loadGammaCorrection(1.0f);
+        shader.stop();
         for (Sensor sensor : sensors) {
             renderer.prepareSensor(sensor);
             shader.start();
@@ -74,6 +78,7 @@ public class MasterRenderer {
 
     private void renderViewport() {
         shader.start();
+        shader.loadGammaCorrection(Settings.GAMMA_CORRECTION);
         shader.loadViewMatrix(gui.getCamera());
 
         // Render all BodyElements in the map

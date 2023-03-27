@@ -73,6 +73,14 @@ public class Sensor {
         this.camera.setRotation(rotation);
     }
 
+    public Vector3f getPosition() {
+        return this.camera.getPosition();
+    }
+
+    public Vector3f getRotation() {
+        return this.camera.getRotation();
+    }
+
     public Camera getCamera() {
         return camera;
     }
