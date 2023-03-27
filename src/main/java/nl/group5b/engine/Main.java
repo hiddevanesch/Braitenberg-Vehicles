@@ -141,20 +141,19 @@ public class Main {
 
                         Vector3f[] coordinates = ((Controllable) body).getHitBox().getCoordinates();
 
-                        // print the coordinates in 1 decimal place
+
                         System.out.println("---------------------------------------");
-                        System.out.println("Coordinates of the hitbox:");
-                        for (Vector3f coordinate : coordinates) {
-                            System.out.println(String.format("(%.1f, %.1f)", coordinate.x, coordinate.z));
-                        }
-                        // Print the length between coordinates (0,1), this is the front length
-                        System.out.println("Front length: " + coordinates[0].distance(coordinates[1]));
-                        // Print the length between coordinates (1,3), this is the right length
-                        System.out.println("Right length: " + coordinates[1].distance(coordinates[3]));
-                        // Print the length between coordinates (3,2), this is the back length
-                        System.out.println("Back length: " + coordinates[3].distance(coordinates[2]));
-                        // Print the length between coordinates (2,0), this is the left length
-                        System.out.println("Left length: " + coordinates[2].distance(coordinates[0]));
+                        // print the coordinates in 3 decimal place in the following format: (without newlines)
+                        // (x1, z1), (x2, z2), (x3, z3), (x4, z4)
+                        // Also replace the , in the coordinates with a .
+                        String coordinateString = "Coordinates: (" + String.format("%.3f", coordinates[0].x) + ", " + String.format("%.3f", coordinates[0].z) + "), (" + String.format("%.3f", coordinates[1].x) + ", " + String.format("%.3f", coordinates[1].z) + "), (" + String.format("%.3f", coordinates[2].x) + ", " + String.format("%.3f", coordinates[2].z) + "), (" + String.format("%.3f", coordinates[3].x) + ", " + String.format("%.3f", coordinates[3].z) + ")";
+                        coordinateString =  coordinateString.replaceAll(",", ".");
+                        coordinateString = coordinateString.replaceAll(". ", ",");
+                        String entityPosition = "Entity position: (" + String.format("%.3f", body.getBodyElements()[0].getEntity().getPosition().x) + ", " + String.format("%.3f", body.getBodyElements()[0].getEntity().getPosition().z) + ")";
+                        entityPosition = entityPosition.replaceAll(",", ".");
+                        entityPosition = entityPosition.replaceAll(". ", ",");
+                        System.out.println(coordinateString);
+                        System.out.println(entityPosition);
                         System.out.println("---------------------------------------");
 
 

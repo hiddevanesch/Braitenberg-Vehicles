@@ -123,35 +123,83 @@ public class Algebra {
         Vector3f otherRearRight = otherCoordinates[2];
         Vector3f otherRearLeft = otherCoordinates[3];
 
-        // Check for all self corners if they are inside the other hitbox using the isPointInsideRectangle function
-        if (isPointInsideRectangle(otherCoordinates, selfFrontLeft.x, selfFrontLeft.z)) {
-            return true;
-        }
-        if (isPointInsideRectangle(otherCoordinates, selfFrontRight.x, selfFrontRight.z)) {
-            return true;
-        }
-        if (isPointInsideRectangle(otherCoordinates, selfRearRight.x, selfRearRight.z)) {
-            return true;
-        }
-        if (isPointInsideRectangle(otherCoordinates, selfRearLeft.x, selfRearLeft.z)) {
-            return true;
+        // Calculate the axes to test for overlap
+        Vector3f[] axes = new Vector3f[4];
+
+        // For all axes create new vectors
+        for (int i = 0; i < axes.length; i++) {
+            axes[i] = new Vector3f();
         }
 
-        // Check if the other hitbox is inside the self hitbox
-        if (isPointInsideRectangle(Coordinates, otherFrontLeft.x, otherFrontLeft.z)) {
-            return true;
+        selfFrontRight.sub(selfFrontLeft, axes[0]);
+        selfFrontRight.sub(selfRearRight, axes[1]);
+        otherFrontLeft.sub(otherRearLeft, axes[2]);
+        otherFrontLeft.sub(otherFrontRight, axes[3]);
+
+
+        // Project each rectangle onto the axes and check for overlap
+        for (Vector3f axis : axes) {
+            axis.normalize();
+            float selfMin = Float.MAX_VALUE;
+            float selfMax = -Float.MAX_VALUE;
+            float otherMin = Float.MAX_VALUE;
+            float otherMax = -Float.MAX_VALUE;
+
+            // Project self onto the axis
+            for (Vector3f point : Coordinates) {
+                float projection = point.dot(axis);
+                selfMin = Math.min(selfMin, projection);
+                selfMax = Math.max(selfMax, projection);
+            }
+
+            // Project other onto the axis
+            for (Vector3f point : otherCoordinates) {
+                float projection = point.dot(axis);
+                otherMin = Math.min(otherMin, projection);
+                otherMax = Math.max(otherMax, projection);
+            }
+
+            // Check for overlap
+            if (selfMax < otherMin || otherMax < selfMin) {
+                // No overlap on this axis, so the rectangles do not collide
+                return false;
+            }
         }
-        if (isPointInsideRectangle(Coordinates, otherFrontRight.x, otherFrontRight.z)) {
-            return true;
-        }
-        if (isPointInsideRectangle(Coordinates, otherRearRight.x, otherRearRight.z)) {
-            return true;
-        }
-        if (isPointInsideRectangle(Coordinates, otherRearLeft.x, otherRearLeft.z)) {
-            return true;
-        }
-        // If none of the above is true, the hitboxes do not overlap
-        return false;
+
+        // All axes have overlap, so the rectangles collide
+        return true;
+
+
+
+//        // Check for all self corners if they are inside the other hitbox using the isPointInsideRectangle function
+//        if (isPointInsideRectangle(otherCoordinates, selfFrontLeft.x, selfFrontLeft.z)) {
+//            return true;
+//        }
+//        if (isPointInsideRectangle(otherCoordinates, selfFrontRight.x, selfFrontRight.z)) {
+//            return true;
+//        }
+//        if (isPointInsideRectangle(otherCoordinates, selfRearRight.x, selfRearRight.z)) {
+//            return true;
+//        }
+//        if (isPointInsideRectangle(otherCoordinates, selfRearLeft.x, selfRearLeft.z)) {
+//            return true;
+//        }
+//
+//        // Check if the other hitbox is inside the self hitbox
+//        if (isPointInsideRectangle(Coordinates, otherFrontLeft.x, otherFrontLeft.z)) {
+//            return true;
+//        }
+//        if (isPointInsideRectangle(Coordinates, otherFrontRight.x, otherFrontRight.z)) {
+//            return true;
+//        }
+//        if (isPointInsideRectangle(Coordinates, otherRearRight.x, otherRearRight.z)) {
+//            return true;
+//        }
+//        if (isPointInsideRectangle(Coordinates, otherRearLeft.x, otherRearLeft.z)) {
+//            return true;
+//        }
+//        // If none of the above is true, the hitboxes do not overlap
+//        return false;
     }
 
     public static boolean isPointInsideRectangle(Vector3f[] coordinates, double pointX, double pointY) {
@@ -202,7 +250,8 @@ public class Algebra {
             double crossProductDEDExP = DEx * DEyP - DEy * DExP;
 
             // If the point is on the same side of all lines, it is inside the rectangle
-            if ((crossProductABAP <= 0 && crossProductBCBP >= 0 && crossProductCDCP >= 0 && crossProductDEDExP <= 0)) {
+            if ((crossProductABAP <= 0 && crossProductBCBP >= 0 && crossProductCDCP >= 0 && crossProductDEDExP <= 0)
+                    || (crossProductABAP >= 0 && crossProductBCBP <= 0 && crossProductCDCP <= 0 && crossProductDEDExP >= 0)) {
                 return true;
             }
         }

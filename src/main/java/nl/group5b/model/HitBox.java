@@ -27,28 +27,32 @@ public class HitBox {
         Vector3f rotation = entity.getRotation();
         float rotationY = (float) Math.toRadians(rotation.y);
 
+        // get position.x and inverse it
+        float positionX = -position.x;
+
+
         // Compute the coordinates based on rotation and position and the offsets
         // Position of the front left corner
         coordinates[0] = new Vector3f(
-                (float) (position.x + (frontLeftOffset.x * Math.cos(rotationY) - frontLeftOffset.z * Math.sin(rotationY))),
+                (float) (positionX + (frontLeftOffset.x * Math.cos(rotationY) - frontLeftOffset.z * Math.sin(rotationY))),
                 (float) (position.y + frontLeftOffset.y),
                 (float) (position.z + (frontLeftOffset.x * Math.sin(rotationY) + frontLeftOffset.z * Math.cos(rotationY)))
         );
         // Position of the front right corner
         coordinates[1] = new Vector3f(
-                (float) (position.x + (frontRightOffset.x * Math.cos(rotationY) - frontRightOffset.z * Math.sin(rotationY))),
+                (float) (positionX + (frontRightOffset.x * Math.cos(rotationY) - frontRightOffset.z * Math.sin(rotationY))),
                 (float) (position.y + frontRightOffset.y),
                 (float) (position.z + (frontRightOffset.x * Math.sin(rotationY) + frontRightOffset.z * Math.cos(rotationY)))
         );
         // Position of the back left corner
         coordinates[2] = new Vector3f(
-                (float) (position.x + (backLeftOffset.x * Math.cos(rotationY) - backLeftOffset.z * Math.sin(rotationY))),
+                (float) (positionX + (backLeftOffset.x * Math.cos(rotationY) - backLeftOffset.z * Math.sin(rotationY))),
                 (float) (position.y + backLeftOffset.y),
                 (float) (position.z + (backLeftOffset.x * Math.sin(rotationY) + backLeftOffset.z * Math.cos(rotationY)))
         );
         // Position of the back right corner
         coordinates[3] = new Vector3f(
-                (float) (position.x + (backRightOffset.x * Math.cos(rotationY) - backRightOffset.z * Math.sin(rotationY))),
+                (float) (positionX + (backRightOffset.x * Math.cos(rotationY) - backRightOffset.z * Math.sin(rotationY))),
                 (float) (position.y + backRightOffset.y),
                 (float) (position.z + (backRightOffset.x * Math.sin(rotationY) + backRightOffset.z * Math.cos(rotationY)))
         );
