@@ -83,67 +83,67 @@ public class Renderer {
         }
     }
 
-        private void prepareModel (Model model){
-            // Bind the VAO
-            GL46.glBindVertexArray(model.getVaoID());
-            GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
-            GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
-        }
+    private void prepareModel(Model model) {
+        // Bind the VAO
+        GL46.glBindVertexArray(model.getVaoID());
+        GL46.glEnableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+        GL46.glEnableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
+    }
 
-        private void unbindModel () {
-            // Unbind the VAO
-            GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
-            GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
-            GL46.glBindVertexArray(0);
-        }
+    private void unbindModel() {
+        // Unbind the VAO
+        GL46.glDisableVertexAttribArray(Settings.VAO_POSITION_ATTR);
+        GL46.glDisableVertexAttribArray(Settings.VAO_NORMAL_ATTR);
+        GL46.glBindVertexArray(0);
+    }
 
-        private void prepareInstance (BodyElement bodyElement){
-            Entity entity = bodyElement.getEntity();
+    private void prepareInstance(BodyElement bodyElement) {
+        Entity entity = bodyElement.getEntity();
 
-            // Create transformation matrix
-            Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
+        // Create transformation matrix
+        Matrix4f transformationMatrix = Algebra.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 
-            // Load transformation matrix into shader
-            shader.loadTransformationMatrix(transformationMatrix);
+        // Load transformation matrix into shader
+        shader.loadTransformationMatrix(transformationMatrix);
 
-            // Load shine variables into shader
-            shader.loadMaterial(bodyElement.getMaterial());
-        }
+        // Load shine variables into shader
+        shader.loadMaterial(bodyElement.getMaterial());
+    }
 
-        public void completeSensor (Sensor sensor){
-            // Unbind the framebuffer
-            sensor.unbind();
-        }
+    public void completeSensor(Sensor sensor) {
+        // Unbind the framebuffer
+        sensor.unbind();
+    }
 
-        public void completeViewport ( long window){
-            // Swap the color buffers
-            GLFW.glfwSwapBuffers(window);
+    public void completeViewport(long window) {
+        // Swap the color buffers
+        GLFW.glfwSwapBuffers(window);
 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            GLFW.glfwPollEvents();
+        // Poll for window events. The key callback above will only be
+        // invoked during this call.
+        GLFW.glfwPollEvents();
 
-            long currentFrameTime = getCurrentTime();
-            delta = (currentFrameTime - lastFrameTime) / 1000f;
-            lastFrameTime = currentFrameTime;
-        }
+        long currentFrameTime = getCurrentTime();
+        delta = (currentFrameTime - lastFrameTime) / 1000f;
+        lastFrameTime = currentFrameTime;
+    }
 
-        public long getCurrentTime () {
-            return System.nanoTime() / 1000000;
-        }
+    public long getCurrentTime() {
+        return System.nanoTime() / 1000000;
+    }
 
-        public float getFrameTimeSeconds () {
-            return delta;
-        }
+    public float getFrameTimeSeconds() {
+        return delta;
+    }
 
-        private void updateProjectionMatrix ( int width, int height, float fov){
-            shader.start();
-            shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
-            shader.stop();
-        }
+    private void updateProjectionMatrix(int width, int height, float fov) {
+        shader.start();
+        shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
+        shader.stop();
+    }
 
-        public void setBodies (List < Body > bodies) {
-            this.bodies = bodies;
-        }
+    public void setBodies(List<Body> bodies) {
+        this.bodies = bodies;
+    }
 
 }

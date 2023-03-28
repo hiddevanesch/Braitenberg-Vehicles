@@ -102,13 +102,9 @@ public class Main {
         MasterRenderer renderer = new MasterRenderer(lights, window, gui);
 
         // set the bodies that the braitenberg vehicles can collide with
-        braitenbergVehicle.setBodiesPotentialCollide(new ArrayList<>(List.of(
-                thirdCar
-        )));
+        braitenbergVehicle.setBodiesPotentialCollide(bodies);
         secondCar.setBodiesPotentialCollide(bodies);
-        thirdCar.setBodiesPotentialCollide(new ArrayList<>(List.of(
-                braitenbergVehicle
-        )));
+        thirdCar.setBodiesPotentialCollide(bodies);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
