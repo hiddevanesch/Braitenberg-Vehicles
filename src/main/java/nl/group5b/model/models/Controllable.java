@@ -1,17 +1,13 @@
 package nl.group5b.model.models;
 
 import nl.group5b.engine.Renderer;
-import nl.group5b.model.Body;
-import nl.group5b.model.HitBox;
 import nl.group5b.model.ModelLoader;
-import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-
 import java.io.FileNotFoundException;
-import java.util.List;
+
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -43,10 +39,8 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
 
-        Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
-
         // Check if the front of the car is colliding with a body
-        if(isColliding(hitBoxCoordinates, bodiesPotentialCollide)){
+        if(isColliding()){
             // If collision is detected, set wheel speeds to 0
             leftWheelSpeed = 0;
             rightWheelSpeed = 0;

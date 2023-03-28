@@ -98,9 +98,6 @@ public class Main {
                 braitenbergVehicle
         )));
 
-        // TODO int for loop
-        int i = 0;
-
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
@@ -136,36 +133,6 @@ public class Main {
 
             // Render scene
             renderer.render(bodies, sensor);
-
-            // if i is a multiple of 60
-            if (i % 60 == 0) {
-                // For every body that is instance of controllable
-                for (Body body : bodies) {
-                    if (body instanceof Controllable) {
-
-                        Vector3f[] coordinates = ((Controllable) body).getHitBox().getCoordinates();
-
-
-                        System.out.println("---------------------------------------");
-                        // print the coordinates in 3 decimal place in the following format: (without newlines)
-                        // (x1, z1), (x2, z2), (x3, z3), (x4, z4)
-                        // Also replace the , in the coordinates with a .
-                        String coordinateString = "Coordinates: (" + String.format("%.3f", coordinates[0].x) + ", " + String.format("%.3f", coordinates[0].z) + "), (" + String.format("%.3f", coordinates[1].x) + ", " + String.format("%.3f", coordinates[1].z) + "), (" + String.format("%.3f", coordinates[2].x) + ", " + String.format("%.3f", coordinates[2].z) + "), (" + String.format("%.3f", coordinates[3].x) + ", " + String.format("%.3f", coordinates[3].z) + ")";
-                        coordinateString =  coordinateString.replaceAll(",", ".");
-                        coordinateString = coordinateString.replaceAll(". ", ",");
-                        String entityPosition = "Entity position: (" + String.format("%.3f", body.getBodyElements()[0].getEntity().getPosition().x) + ", " + String.format("%.3f", body.getBodyElements()[0].getEntity().getPosition().z) + ")";
-                        entityPosition = entityPosition.replaceAll(",", ".");
-                        entityPosition = entityPosition.replaceAll(". ", ",");
-                        System.out.println(coordinateString);
-                        System.out.println(entityPosition);
-                        System.out.println("---------------------------------------");
-
-
-                    }
-                }
-                System.out.println("\n");
-            }
-            i++;
 
             //System.out.println(sensor.calculateSensorBrightness());
         }

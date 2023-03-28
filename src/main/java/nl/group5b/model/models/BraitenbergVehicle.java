@@ -145,9 +145,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     }
 
     // Function that goes through all the bodies and checks if the front of the vehicle is colliding with any of them
-    public boolean isColliding(Vector3f[] hitBoxCoordinates, List<Body> bodies) {
+    public boolean isColliding() {
+        Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
         // Loop over all bodies in the list, excluding the vehicle itself
-        for (Body body : bodies) {
+        for (Body body : bodiesPotentialCollide) {
             if (body != this && body instanceof CollisionHandler) {
                 // Get the hitbox of the target
                 HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();

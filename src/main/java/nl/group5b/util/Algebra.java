@@ -110,13 +110,13 @@ public class Algebra {
         // Get the x and z coordinates of hitBoxSelf
         Vector3f selfFrontLeft = Coordinates[0];
         Vector3f selfFrontRight = Coordinates[1];
-        Vector3f selfRearRight = Coordinates[2];
+        Vector3f selfRearRight = Coordinates[3];
 
         // Get the x and z coordinates of hitBoxOther
         Vector3f[] otherCoordinates = hitBoxOther.getCoordinates();
         Vector3f otherFrontLeft = otherCoordinates[0];
         Vector3f otherFrontRight = otherCoordinates[1];
-        Vector3f otherRearLeft = otherCoordinates[3];
+        Vector3f otherRearLeft = otherCoordinates[2];
 
         // Calculate the axes to test for overlap
         Vector3f[] axes = new Vector3f[4];
@@ -161,10 +161,6 @@ public class Algebra {
                 return false;
             }
         }
-
-        // Print the front coordinates
-        System.out.println("Self FL/FR: " + selfFrontLeft + " " + selfFrontRight);
-
         // All axes have overlap, so the rectangles collide
         return true;
     }
