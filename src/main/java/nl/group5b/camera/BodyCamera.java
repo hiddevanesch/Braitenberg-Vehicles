@@ -2,6 +2,7 @@ package nl.group5b.camera;
 
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Settings;
+import nl.group5b.util.cameraType;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -13,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 public class BodyCamera extends Camera {
     private PositionHandler body;
 
-    private float heightOffset;
+    private final float heightOffset;
 
     private float distance = 4;
     private float bodyPitch = 15;
@@ -23,6 +24,7 @@ public class BodyCamera extends Camera {
     private float previousMouseY;
     private float mouseDX;
     private float mouseDY;
+    private boolean isActivate = (Settings.DEFAULT_CAMERA == cameraType.THIRD_PERSON);
 
     // require Body that implements MoveHandler
     public BodyCamera(PositionHandler body, float heightOffset) {
@@ -36,11 +38,13 @@ public class BodyCamera extends Camera {
     }
 
     public void move(long window) {
-        computePitch(window);
-        computeAngle(window);
-        float horizontalDistance = computeHorizontalDistance();
-        float verticalDistance = computeVerticalDistance();
-        computeCameraPosition(horizontalDistance, verticalDistance);
+        if (isActivate) {
+            computePitch(window);
+            computeAngle(window);
+            float horizontalDistance = computeHorizontalDistance();
+            float verticalDistance = computeVerticalDistance();
+            computeCameraPosition(horizontalDistance, verticalDistance);
+        }
     }
 
     private void computePitch(long window) {
@@ -84,8 +88,10 @@ public class BodyCamera extends Camera {
         GLFW.glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long win, double dx, double dy) {
-                float zoomLevel = (float) dy * distance * Settings.CAMERA_MOUSE_SENSITIVITY;
-                distance -= zoomLevel;
+                if (isActivate) {
+                    float zoomLevel = (float) dy * distance * Settings.CAMERA_MOUSE_SENSITIVITY;
+                    distance -= zoomLevel;
+                }
             }
         });
     }
@@ -94,11 +100,17 @@ public class BodyCamera extends Camera {
         GLFW.glfwSetCursorPosCallback(window, new GLFWCursorPosCallback() {
             @Override
             public void invoke(long win, double newX, double newY) {
-                mouseDX = ((float) newX - previousMouseX);
-                mouseDY = ((float) newY - previousMouseY);
-                previousMouseX = (float) newX;
-                previousMouseY = (float) newY;
+                if (isActivate) {
+                    mouseDX = ((float) newX - previousMouseX);
+                    mouseDY = ((float) newY - previousMouseY);
+                    previousMouseX = (float) newX;
+                    previousMouseY = (float) newY;
+                }
             }
         });
+    }
+
+    public void setIsActivate(boolean isActivate) {
+        this.isActivate = isActivate;
     }
 }

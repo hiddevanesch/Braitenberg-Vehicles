@@ -2,8 +2,8 @@ package nl.group5b.model;
 
 public class BodyElement {
 
-    private Entity entity;
-    private Material material;
+    private final Entity entity;
+    private final Material material;
 
     public BodyElement(Entity entity, Material material) {
         this.entity = entity;

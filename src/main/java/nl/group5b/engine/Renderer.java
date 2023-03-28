@@ -23,7 +23,7 @@ public class Renderer {
     private static long lastFrameTime;
     private static float delta;
 
-    private RealShader shader;
+    private final RealShader shader;
 
     private List<Body> bodies; // used for hitboxes
 

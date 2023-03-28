@@ -11,9 +11,9 @@ public class Sensor {
 
     private final int width;
     private final int height;
-    private int frameBufferID;
-    private int textureID;
-    private Camera camera;
+    private final int frameBufferID;
+    private final int textureID;
+    private final Camera camera;
 
     public Sensor(Vector3f position, Vector3f rotation, int resolution) {
         this.width = resolution;
@@ -71,6 +71,14 @@ public class Sensor {
 
     public void setRotation(Vector3f rotation) {
         this.camera.setRotation(rotation);
+    }
+
+    public Vector3f getPosition() {
+        return this.camera.getPosition();
+    }
+
+    public Vector3f getRotation() {
+        return this.camera.getRotation();
     }
 
     public Camera getCamera() {

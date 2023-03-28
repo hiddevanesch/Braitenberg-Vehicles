@@ -15,13 +15,13 @@ import java.nio.FloatBuffer;
 
 public abstract class ShaderProgram {
 
-    private int programID;
-    private int vertexShaderID;
-    private int fragmentShaderID;
+    private final int programID;
+    private final int vertexShaderID;
+    private final int fragmentShaderID;
 
     private final int lightCount;
 
-    private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+    private static final FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public ShaderProgram(String vertexFile, String fragmentFile, int lightCount) {
         this.lightCount = lightCount;

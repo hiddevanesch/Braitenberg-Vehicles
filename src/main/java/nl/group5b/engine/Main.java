@@ -1,10 +1,12 @@
 package nl.group5b.engine;
 
 import nl.group5b.camera.BodyCamera;
+import nl.group5b.camera.Camera;
 import nl.group5b.camera.Sensor;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
-import nl.group5b.gui.elements.Demo;
+import nl.group5b.gui.elements.MainPanel;
+import nl.group5b.gui.elements.SettingsPanel;
 import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
@@ -33,23 +35,14 @@ public class Main {
         // Store the window handle
         long window = DisplayBuilder.window;
 
-        // Create GUI Elements
-        Demo demo = new Demo();
-
-        // Load GUI Elements into array
-        Element[] elements = {
-                demo
-        };
-
-        // Create GUI
-        GUI gui = new GUI(window, elements);
-
         // Create ModelLoader instance
         ModelLoader modelLoader = new ModelLoader();
 
         // Create sun
-        Light sun = new Light(new Vector4f(20, 20, 0, 0), new Vector3f(
-                Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS));
+        Light sun = new Light(
+                new Vector4f(Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z, 0),
+                new Vector3f(Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS, Settings.SUN_BRIGHTNESS)
+        );
 
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
@@ -76,18 +69,36 @@ public class Main {
         // IMPORTANT! Sun HAS to be present at index 0 ======================
         Light[] lights = {
                 sun,
-                colouredLamp.getLight()
+                colouredLamp.getLight(),
         };
 
-        Sensor sensor = new Sensor(new Vector3f(0, 1, 0), new Vector3f(0, 0, 0), Settings.SENSOR_RESOLUTION);
+        // TODO improve
+        Sensor[] sensors = {
+                braitenbergVehicle.getLeftSensor(),
+                braitenbergVehicle.getRightSensor()
+        };
 
-        // Create Camera's
-        BodyCamera camera = new BodyCamera(braitenbergVehicle, 0.5f);
-        camera.enableZoom(window);
-        camera.enableMouseTracking(window);
+        // Create Camera instances
+        Camera topDownCamera = new Camera(new Vector3f(0, 20, 0), new Vector3f(90, 0, 0));
+        BodyCamera thirdPersonCamera = new BodyCamera(braitenbergVehicle, 0.5f);
+        thirdPersonCamera.enableZoom(window);
+        thirdPersonCamera.enableMouseTracking(window);
+
+        // Create GUI Elements
+        MainPanel mainPanel = new MainPanel();
+        SettingsPanel settingsPanel = new SettingsPanel(topDownCamera, thirdPersonCamera, sun);
+
+        // Load GUI Elements into array
+        Element[] elements = {
+                mainPanel,
+                settingsPanel
+        };
+
+        // Create GUI
+        GUI gui = new GUI(window, elements);
 
         // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(lights, camera, window, gui);
+        MasterRenderer renderer = new MasterRenderer(lights, window, gui);
 
         // set the bodies that the braitenberg vehicles can collide with
         braitenbergVehicle.setBodiesPotentialCollide(new ArrayList<>(List.of(
@@ -102,16 +113,16 @@ public class Main {
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
             // TODO remove demo code
-            if (demo.getSpawnSecondCar().get()) {
-                if (!bodies.contains(secondCar)) {
-                    bodies.add(secondCar);
-                }
-            } else {
-                bodies.remove(secondCar);
-            }
+//            if (demo.getSpawnSecondCar().get()) {
+//                if (!bodies.contains(secondCar)) {
+//                    bodies.add(secondCar);
+//                }
+//            } else {
+//                bodies.remove(secondCar);
+//            }
 
             // TODO remove demo code
-            demo.addVehicleSpeed(braitenbergVehicle.getSpeedLeft(), braitenbergVehicle.getSpeedRight());
+//            demo.addVehicleSpeed(braitenbergVehicle.getSpeedLeft(), braitenbergVehicle.getSpeedRight());
 
             for (Body body : bodies) {
                 if (body instanceof ControlHandler) {
@@ -119,29 +130,22 @@ public class Main {
                 }
             }
 
-            camera.move(window);
-
-            // Render sensor views
-            //renderer.renderSensors(bodies);
-            //renderer.renderSensor();
+            thirdPersonCamera.move(window);
 
             // Update texture in GUI
-            demo.setImage(sensor.getTextureID());
+            mainPanel.setImages(braitenbergVehicle.getLeftSensor().getTextureID(), braitenbergVehicle.getRightSensor().getTextureID());
 
             // Give bodies to renderer
             renderer.getRenderer().setBodies(bodies);
 
             // Render scene
-            renderer.render(bodies, sensor);
+            renderer.render(bodies, sensors);
 
             //System.out.println(sensor.calculateSensorBrightness());
         }
 
         // Clean up renderer
         renderer.cleanUp();
-
-        // Clean up GUI
-        gui.cleanUp();
 
         // Remove all VAOs and VBOs
         modelLoader.cleanUp();

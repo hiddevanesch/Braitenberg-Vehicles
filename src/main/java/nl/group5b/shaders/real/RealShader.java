@@ -23,10 +23,11 @@ public class RealShader extends ShaderProgram {
     private int shininessLocation;
     private int toShadowMapSpaceLocation;
     private int shadowMapLocation;
+    private int gammaCorrectionLocation;
 
-    private int lightPositionLocations[];
-    private int lightColourLocations[];
-    private int lightAttenuationLocations[];
+    private int[] lightPositionLocations;
+    private int[] lightColourLocations;
+    private int[] lightAttenuationLocations;
 
     public RealShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
@@ -49,6 +50,7 @@ public class RealShader extends ShaderProgram {
         shininessLocation = super.getUniformLocation("shininess");
         toShadowMapSpaceLocation = super.getUniformLocation("toShadowMapSpace");
         shadowMapLocation = super.getUniformLocation("shadowMap");
+        gammaCorrectionLocation = super.getUniformLocation("gammaCorrection");
 
         int lightCount = super.getLightCount();
 
@@ -74,6 +76,10 @@ public class RealShader extends ShaderProgram {
     public void loadViewMatrix(Camera camera) {
         Matrix4f viewMatrix = Algebra.createViewMatrix(camera);
         super.loadMatrix(viewMatrixLocation, viewMatrix);
+    }
+
+    public void loadGammaCorrection(float gammaCorrection) {
+        super.loadFloat(gammaCorrectionLocation, gammaCorrection);
     }
 
     public void loadProjectionMatrix(Matrix4f matrix) {

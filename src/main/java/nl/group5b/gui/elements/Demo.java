@@ -2,6 +2,7 @@ package nl.group5b.gui.elements;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
+import nl.group5b.camera.Sensor;
 import nl.group5b.gui.Element;
 import nl.group5b.util.Settings;
 
@@ -12,12 +13,13 @@ public class Demo extends Element {
 
     int[] demoDate = {16, 3, 2023};
 
-    private List<Float> vehicleSpeedsLeft = new ArrayList<>();
-    private List<Float> vehicleSpeedsRight = new ArrayList<>();
+    private final List<Float> vehicleSpeedsLeft = new ArrayList<>();
+    private final List<Float> vehicleSpeedsRight = new ArrayList<>();
 
-    private ImBoolean spawnSecondCar = new ImBoolean(false);
+    private final ImBoolean spawnSecondCar = new ImBoolean(false);
 
     private int image;
+    private int cubeMapTex;
 
     @Override
     public void render() {
@@ -66,8 +68,11 @@ public class Demo extends Element {
         return speeds;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImages(Sensor sensor) {
+        image = sensor.getTextureID();
     }
 
+    public void setTexture(int shadowCubeMap) {
+        cubeMapTex = shadowCubeMap;
+    }
 }

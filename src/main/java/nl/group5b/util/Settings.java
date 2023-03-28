@@ -5,13 +5,15 @@ public class Settings {
     // Main window
     public static final String WINDOW_TITLE = "Group 5B - Braitenberg Vehicles";
     public static final int REFRESH_RATE = 60;
+    public static final int ANTI_ALIASING_SAMPLES = 4;
 
     // OpenGL
     public static final int VAO_POSITION_ATTR = 0;
     public static final int VAO_NORMAL_ATTR = 2;
 
     // Camera
-    public static final float VIEWPORT_FOV = 55;
+    public static final cameraType DEFAULT_CAMERA = cameraType.TOP_DOWN;
+    public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
 
@@ -19,9 +21,13 @@ public class Settings {
     public static final float AMBIENT_LIGHT = 0.15f;
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
     public static final float SHADOW_BOX_RADIUS = 10;
+    public static float GAMMA_CORRECTION = 1.0f;
 
     // Scene
-    public static final float SUN_BRIGHTNESS = 0.5f;
+    public static float SUN_BRIGHTNESS = 0.5f;
+    public static int SUN_X = 20;
+    public static int SUN_Y = 20;
+    public static int SUN_Z = 0;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
@@ -33,9 +39,12 @@ public class Settings {
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
     public static final float VEHICLE_STEERING_FACTOR = 1.3f;
-    public static final int SENSOR_RESOLUTION = 100;
+    public static final int SENSOR_RESOLUTION = 480;
     public static final float SENSOR_FOV = 25;
 
     // GUI
     public static final int GUI_GRAPH_HISTORY_SIZE = 500;
+    public static final float PANEL_WIDTH_MAIN = 200;
+    public static final float PANEL_WIDTH_SETTINGS = 200;
 }
+
