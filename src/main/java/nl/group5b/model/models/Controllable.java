@@ -7,8 +7,6 @@ import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import java.io.FileNotFoundException;
-
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Controllable extends BraitenbergVehicle implements ControlHandler {
