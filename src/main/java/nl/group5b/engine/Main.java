@@ -23,6 +23,7 @@ import org.lwjgl.glfw.GLFW;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Main {
@@ -156,7 +157,7 @@ public class Main {
 
         // Terminate GLFW and free the error callback
         GLFW.glfwTerminate();
-        GLFW.glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(GLFW.glfwSetErrorCallback(null)).free();
     }
 
 }
