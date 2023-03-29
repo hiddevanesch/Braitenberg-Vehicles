@@ -75,7 +75,7 @@ public class Main {
         thirdPersonCamera.enableMouseTracking(window);
 
         // Create GUI Elements
-        MainPanel mainPanel = new MainPanel();
+        MainPanel mainPanel = new MainPanel(bodies);
         SettingsPanel settingsPanel = new SettingsPanel(topDownCamera, thirdPersonCamera, sun);
 
         // Load GUI Elements into array
