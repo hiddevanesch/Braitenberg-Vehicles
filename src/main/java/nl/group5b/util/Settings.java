@@ -16,12 +16,13 @@ public class Settings {
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
+    public static float VIEWPORT_GAMMA_CORRECTION = 1.0f;
+    public static final float SENSOR_GAMMA_CORRECTION = 1.0f;
 
     // Graphics
     public static final float AMBIENT_LIGHT = 0.15f;
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
     public static final float SHADOW_BOX_RADIUS = 10;
-    public static float GAMMA_CORRECTION = 1.0f;
 
     // Scene
     public static float SUN_BRIGHTNESS = 0.5f;

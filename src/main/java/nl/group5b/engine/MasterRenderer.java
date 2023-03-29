@@ -1,5 +1,6 @@
 package nl.group5b.engine;
 
+import nl.group5b.camera.BodyCamera;
 import nl.group5b.camera.Camera;
 import nl.group5b.camera.Sensor;
 import nl.group5b.gui.GUI;
@@ -8,6 +9,8 @@ import nl.group5b.light.DirectionalShadowMR;
 import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Model;
+import nl.group5b.model.interfaces.ControlHandler;
+import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.model.models.BraitenbergVehicle;
 import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
@@ -25,19 +28,21 @@ public class MasterRenderer {
     private final Renderer renderer;
     private final DirectionalShadowMR directionalShadowRenderer;
 
+    private final List<Body> bodies;
     private final Light[] lights;
-    private final long window;
     private final GUI gui;
+    private final long window;
 
     private final Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
-    public MasterRenderer(Light[] lights, long window, GUI gui) {
+    public MasterRenderer(List<Body> bodies, Light[] lights, GUI gui, long window) {
         this.shader = new RealShader(lights.length);
         this.renderer = new Renderer(shader);
         this.directionalShadowRenderer = new DirectionalShadowMR(lights[0]);
+        this.bodies = bodies;
         this.lights = lights;
-        this.window = window;
         this.gui = gui;
+        this.window = window;
     }
 
     private void prepareShader() {
@@ -56,31 +61,30 @@ public class MasterRenderer {
         directionalShadowRenderer.render(renderMap);
     }
 
-    private void renderSensors(List<Body> bodies) {
+    private void renderSensors() {
+        shader.start();
+        shader.loadGammaCorrection(Settings.SENSOR_GAMMA_CORRECTION);
+        shader.stop();
         for (Body body : bodies) {
             if (body instanceof BraitenbergVehicle braitenbergVehicle) {
-                //
+                renderSensor(braitenbergVehicle.getLeftSensor());
+                renderSensor(braitenbergVehicle.getRightSensor());
             }
         }
     }
 
-    private void renderSensors(Sensor[] sensors) {
+    private void renderSensor(Sensor sensor) {
+        renderer.prepareSensor(sensor);
         shader.start();
-        shader.loadGammaCorrection(1.0f);
+        shader.loadViewMatrix(sensor.getCamera());
+        renderer.render(renderMap);
         shader.stop();
-        for (Sensor sensor : sensors) {
-            renderer.prepareSensor(sensor);
-            shader.start();
-            shader.loadViewMatrix(sensor.getCamera());
-            renderer.render(renderMap);
-            shader.stop();
-            renderer.completeSensor(sensor);
-        }
+        renderer.completeSensor(sensor);
     }
 
     private void renderViewport() {
         shader.start();
-        shader.loadGammaCorrection(Settings.GAMMA_CORRECTION);
+        shader.loadGammaCorrection(Settings.VIEWPORT_GAMMA_CORRECTION);
         shader.loadViewMatrix(gui.getCamera());
 
         // Render all BodyElements in the map
@@ -93,7 +97,7 @@ public class MasterRenderer {
         gui.render();
     }
 
-    public void render(List<Body> bodies, Sensor[] sensors) {
+    public void render() {
         // Process all the bodies
         for (Body body : bodies) {
             processBody(body);
@@ -106,7 +110,7 @@ public class MasterRenderer {
         prepareShader();
 
         // Render all the sensors
-        renderSensors(sensors);
+        renderSensors();
 
         // Enable multisampling
         GL46.glEnable(GL_MULTISAMPLE);
@@ -124,14 +128,28 @@ public class MasterRenderer {
         renderMap.clear();
     }
 
+    public void move() {
+        // If body is "movable", move it
+        for (Body body : bodies) {
+            if (body instanceof ControlHandler) {
+                ((ControlHandler) body).move(window, renderer);
+            } else if (body instanceof DriveHandler) {
+                ((DriveHandler) body).move(renderer);
+            }
+        }
+
+        Camera camera = gui.getCamera();
+
+        // If camera is "movable", move it
+        if (camera instanceof BodyCamera) {
+            ((BodyCamera) camera).move(window);
+        }
+    }
+
     public void cleanUp() {
         shader.cleanUp();
         gui.cleanUp();
         directionalShadowRenderer.cleanUp();
-    }
-
-    public Renderer getRenderer() {
-        return renderer;
     }
 
     private void processBody(Body body) {

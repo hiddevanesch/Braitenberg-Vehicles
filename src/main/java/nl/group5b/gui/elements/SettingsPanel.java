@@ -11,7 +11,6 @@ import nl.group5b.light.Light;
 import nl.group5b.util.Settings;
 import nl.group5b.util.cameraType;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 public class SettingsPanel extends Element {
 
@@ -22,7 +21,7 @@ public class SettingsPanel extends Element {
 
     private float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
     private int[] sunPosition = {Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z};
-    private float[] gamma = {Settings.GAMMA_CORRECTION};
+    private float[] gamma = {Settings.VIEWPORT_GAMMA_CORRECTION};
     private float[] fov = {Settings.VIEWPORT_FOV};
     private int currentCamera;
     private ImInt selectedCamera;
@@ -66,7 +65,7 @@ public class SettingsPanel extends Element {
         ImGui.text("Gamma");
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat("##slider_gamma", gamma, 0, 2.2f, "%.1f")) {
-            Settings.GAMMA_CORRECTION = gamma[0];
+            Settings.VIEWPORT_GAMMA_CORRECTION = gamma[0];
         }
 
         ImGui.text("FOV");

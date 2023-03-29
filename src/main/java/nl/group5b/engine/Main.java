@@ -11,6 +11,7 @@ import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
+import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Controllable;
 import nl.group5b.model.models.Lamp;
@@ -67,12 +68,6 @@ public class Main {
                 colouredLamp.getLight(),
         };
 
-        // TODO improve
-        Sensor[] sensors = {
-                braitenbergVehicle.getLeftSensor(),
-                braitenbergVehicle.getRightSensor()
-        };
-
         // Create Camera instances
         Camera topDownCamera = new Camera(new Vector3f(0, 20, 0), new Vector3f(90, 0, 0));
         BodyCamera thirdPersonCamera = new BodyCamera(braitenbergVehicle, 0.5f);
@@ -93,7 +88,7 @@ public class Main {
         GUI gui = new GUI(window, elements);
 
         // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(lights, window, gui);
+        MasterRenderer renderer = new MasterRenderer(bodies, lights, gui, window);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -110,19 +105,14 @@ public class Main {
             // TODO remove demo code
 //            demo.addVehicleSpeed(braitenbergVehicle.getSpeedLeft(), braitenbergVehicle.getSpeedRight());
 
-            for (Body body : bodies) {
-                if (body instanceof ControlHandler) {
-                    ((ControlHandler) body).move(window, renderer.getRenderer());
-                }
-            }
-
-            thirdPersonCamera.move(window);
+            // Move all engine components that need to be moved (e.g. camera, bodies, etc.)
+            renderer.move();
 
             // Update texture in GUI
             mainPanel.setImages(braitenbergVehicle.getLeftSensor().getTextureID(), braitenbergVehicle.getRightSensor().getTextureID());
 
             // Render scene
-            renderer.render(bodies, sensors);
+            renderer.render();
 
             //System.out.println(sensor.calculateSensorBrightness());
         }
