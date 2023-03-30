@@ -25,7 +25,7 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float leftSensorBrightness = getLeftSensor().calculateSensorBrightness();
         float rightSensorBrightness = getRightSensor().calculateSensorBrightness();
 
-        // multiply brightness by 15, clamp between 0 and 1
+        // multiply brightness by 1, clamp between 0 and 1
         leftSensorBrightness = Math.min(1, leftSensorBrightness * 1);
         rightSensorBrightness = Math.min(1, rightSensorBrightness * 1);
 

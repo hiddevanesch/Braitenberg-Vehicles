@@ -9,13 +9,14 @@ import org.joml.Vector3f;
 import java.io.FileNotFoundException;
 
 /**
- * Love type vehicle:
- * Sensors are connected to the wheel on the same side
+ * Curious type vehicle:
+ * Sensors are connected to the wheel on the opposite side
  * More brightness sensed -> slower wheel speed
  */
-public class LoveVehicle extends BraitenbergVehicle implements DriveHandler {
-    public LoveVehicle(ModelLoader modelLoader, Vector3f position,
-                        Vector3f rotation) throws FileNotFoundException {
+public class CuriousVehicle extends BraitenbergVehicle implements DriveHandler {
+
+    public CuriousVehicle(ModelLoader modelLoader, Vector3f position,
+                       Vector3f rotation) throws FileNotFoundException {
         super(modelLoader, position, rotation);
     }
 
@@ -29,9 +30,8 @@ public class LoveVehicle extends BraitenbergVehicle implements DriveHandler {
         rightSensorBrightness = Math.min(1, rightSensorBrightness * 12);
 
         // Set wheel speed based on sensor brightness
-        leftWheelSpeed = (Settings.VEHICLE_SPEED - (leftSensorBrightness * Settings.VEHICLE_SPEED));
-        rightWheelSpeed = (Settings.VEHICLE_SPEED - (rightSensorBrightness * Settings.VEHICLE_SPEED));
-
+        leftWheelSpeed = (Settings.VEHICLE_SPEED - (rightSensorBrightness * Settings.VEHICLE_SPEED));
+        rightWheelSpeed = (Settings.VEHICLE_SPEED - (leftSensorBrightness * Settings.VEHICLE_SPEED));
 
         // Move the vehicle based on the new wheel speeds
         super.updatePosition(renderer);

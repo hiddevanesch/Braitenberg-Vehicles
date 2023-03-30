@@ -12,10 +12,7 @@ import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.interfaces.DriveHandler;
-import nl.group5b.model.models.Arena;
-import nl.group5b.model.models.Controllable;
-import nl.group5b.model.models.Lamp;
-import nl.group5b.model.models.LoveVehicle;
+import nl.group5b.model.models.*;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -50,30 +47,51 @@ public class Main {
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
-                new Vector3f(4, 0, 0), new Vector3f(0, 0, 0));
+                new Vector3f(-8, 0, 8), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
         Controllable thirdCar = new Controllable(modelLoader,
                 new Vector3f(-5, 0, -1), new Vector3f(0, 45, 0));
         LoveVehicle loveVehicle = new LoveVehicle(modelLoader,
-                new Vector3f(2, 0, -10), new Vector3f(0, 0, 0));
+                new Vector3f(-7.5f, 0, -8.67f), new Vector3f(0, 0, 0));
+        FearVehicle fearVehicle = new FearVehicle(modelLoader,
+                new Vector3f(-2.5f, 0, -8.67f), new Vector3f(0, 0, 0));
+        HateVehicle hateVehicle = new HateVehicle(modelLoader,
+                new Vector3f(2.5f, 0, 8.67f), new Vector3f(0, 180, 0));
+        CuriousVehicle curiousVehicle = new CuriousVehicle(modelLoader,
+                new Vector3f(7.5f, 0, 8.67f), new Vector3f(0, 180, 0));
 
-        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 0.5f, 0),
+        Lamp colouredLamp1 = new Lamp(modelLoader, new Vector3f(-7.5f, 0.5f, 0),
+                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.3f, 0.3f));
+        Lamp colouredLamp2 = new Lamp(modelLoader, new Vector3f(-2.5f, 0.5f, 0),
+                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.3f, 0.3f));
+        Lamp colouredLamp3 = new Lamp(modelLoader, new Vector3f(2.5f, 0.5f, 0),
+                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.3f, 0.3f));
+        Lamp colouredLamp4 = new Lamp(modelLoader, new Vector3f(7.5f, 0.5f, 0),
                 new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.3f, 0.3f));
 
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
                 arena,
                 braitenbergVehicle,
-                colouredLamp,
-                loveVehicle
+                colouredLamp1,
+                colouredLamp2,
+                colouredLamp3,
+                colouredLamp4,
+                loveVehicle,
+                fearVehicle,
+                hateVehicle,
+                curiousVehicle
         ));
 
         // Load lights into array (has to be an array with predefined length)
         // IMPORTANT! Sun HAS to be present at index 0 ======================
         Light[] lights = {
                 sun,
-                colouredLamp.getLight(),
+                colouredLamp1.getLight(),
+                colouredLamp2.getLight(),
+                colouredLamp3.getLight(),
+                colouredLamp4.getLight()
         };
 
         // Create Camera instances
@@ -103,6 +121,9 @@ public class Main {
         secondCar.setBodiesPotentialCollide(bodies);
         thirdCar.setBodiesPotentialCollide(bodies);
         loveVehicle.setBodiesPotentialCollide(bodies);
+        fearVehicle.setBodiesPotentialCollide(bodies);
+        hateVehicle.setBodiesPotentialCollide(bodies);
+        curiousVehicle.setBodiesPotentialCollide(bodies);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

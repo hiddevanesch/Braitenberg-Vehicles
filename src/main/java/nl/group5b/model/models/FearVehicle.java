@@ -9,13 +9,14 @@ import org.joml.Vector3f;
 import java.io.FileNotFoundException;
 
 /**
- * Love type vehicle:
+ * Fear type vehicle:
  * Sensors are connected to the wheel on the same side
- * More brightness sensed -> slower wheel speed
+ * More brightness sensed -> faster wheel speed
  */
-public class LoveVehicle extends BraitenbergVehicle implements DriveHandler {
-    public LoveVehicle(ModelLoader modelLoader, Vector3f position,
-                        Vector3f rotation) throws FileNotFoundException {
+public class FearVehicle extends BraitenbergVehicle implements DriveHandler{
+
+    public FearVehicle(ModelLoader modelLoader, Vector3f position,
+                       Vector3f rotation) throws FileNotFoundException {
         super(modelLoader, position, rotation);
     }
 
@@ -24,14 +25,13 @@ public class LoveVehicle extends BraitenbergVehicle implements DriveHandler {
         float leftSensorBrightness = getLeftSensor().calculateSensorBrightness();
         float rightSensorBrightness = getRightSensor().calculateSensorBrightness();
 
-        // multiply brightness by 12, clamp between 0 and 1
-        leftSensorBrightness = Math.min(1, leftSensorBrightness * 12);
-        rightSensorBrightness = Math.min(1, rightSensorBrightness * 12);
+        // multiply brightness by 20, clamp between 0 and 1
+        leftSensorBrightness = Math.min(1, leftSensorBrightness * 20);
+        rightSensorBrightness = Math.min(1, rightSensorBrightness * 20);
 
         // Set wheel speed based on sensor brightness
-        leftWheelSpeed = (Settings.VEHICLE_SPEED - (leftSensorBrightness * Settings.VEHICLE_SPEED));
-        rightWheelSpeed = (Settings.VEHICLE_SPEED - (rightSensorBrightness * Settings.VEHICLE_SPEED));
-
+        leftWheelSpeed = (leftSensorBrightness * Settings.VEHICLE_SPEED);
+        rightWheelSpeed = (rightSensorBrightness * Settings.VEHICLE_SPEED);
 
         // Move the vehicle based on the new wheel speeds
         super.updatePosition(renderer);
