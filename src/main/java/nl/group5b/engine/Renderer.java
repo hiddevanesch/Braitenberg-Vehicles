@@ -25,8 +25,6 @@ public class Renderer {
 
     private final RealShader shader;
 
-    private List<Body> bodies; // used for hitboxes
-
     public Renderer(RealShader shader) {
         this.shader = shader;
 
@@ -141,9 +139,4 @@ public class Renderer {
         shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
         shader.stop();
     }
-
-    public void setBodies(List<Body> bodies) {
-        this.bodies = bodies;
-    }
-
 }

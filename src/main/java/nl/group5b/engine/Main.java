@@ -122,9 +122,6 @@ public class Main {
             // Update texture in GUI
             mainPanel.setImages(braitenbergVehicle.getLeftSensor().getTextureID(), braitenbergVehicle.getRightSensor().getTextureID());
 
-            // Give bodies to renderer
-            renderer.getRenderer().setBodies(bodies);
-
             // Render scene
             renderer.render();
 
