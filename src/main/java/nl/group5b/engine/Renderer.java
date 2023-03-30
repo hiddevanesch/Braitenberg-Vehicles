@@ -1,13 +1,17 @@
 package nl.group5b.engine;
 
 import nl.group5b.camera.Sensor;
+import nl.group5b.model.Body;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
+import nl.group5b.model.models.Controllable;
 import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL46;
 
@@ -20,6 +24,8 @@ public class Renderer {
     private static float delta;
 
     private final RealShader shader;
+
+    private List<Body> bodies; // used for hitboxes
 
     public Renderer(RealShader shader) {
         this.shader = shader;
@@ -70,7 +76,6 @@ public class Renderer {
             // Iterate over all the BodyElements
             for (BodyElement bodyElement : bodyElements) {
                 prepareInstance(bodyElement);
-
                 // Render the BodyElement by drawing the triangles
                 GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
             }
@@ -136,4 +141,9 @@ public class Renderer {
         shader.loadProjectionMatrix(Algebra.createProjectionMatrix(width, height, fov));
         shader.stop();
     }
+
+    public void setBodies(List<Body> bodies) {
+        this.bodies = bodies;
+    }
+
 }

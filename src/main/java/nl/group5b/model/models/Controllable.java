@@ -6,9 +6,7 @@ import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-
 import java.io.FileNotFoundException;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Controllable extends BraitenbergVehicle implements ControlHandler {
@@ -39,14 +37,16 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
 
-        // Check for collision
-        // If collision is detected, set wheel speeds to 0
-
-        // Move the vehicle when no collision is detected
-        movePosition(deltaPosition);
-
-        // Rotate the wheels
-        rotateWheels(frameTime);
+        // Check if the front of the car is colliding with a body
+        if(isColliding()) {
+            // If collision is detected, set wheel speeds to 0
+            leftWheelSpeed = 0;
+            rightWheelSpeed = 0;
+        }
+        else {
+            movePosition(deltaPosition);
+            rotateWheels(frameTime);
+        }
     }
 
     private void checkInput(long window, Renderer renderer) {
@@ -112,4 +112,5 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
     private void decelerateRightWheel(float frameTime) {
         rightWheelSpeed *= 1 - (frameTime * Settings.VEHICLE_DECELERATION);
     }
+
 }

@@ -2,14 +2,16 @@ package nl.group5b.model.models;
 
 import nl.group5b.camera.Sensor;
 import nl.group5b.model.*;
+import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
-public abstract class BraitenbergVehicle extends Body implements PositionHandler {
+public abstract class BraitenbergVehicle extends Body implements PositionHandler, CollisionHandler {
 
     static final Vector3f carBodyRelativePosition = new Vector3f(0, 0.3f, 0);
     static final Vector3f carLeftWheelRelativePosition = new Vector3f(0.72f, 0.3f, 0);
@@ -22,6 +24,9 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     protected float leftWheelSpeed = 0;
     protected float rightWheelSpeed = 0;
+
+    protected HitBox hitBox;
+    protected List<Body> bodiesPotentialCollide;
 
     private Sensor leftSensor;
     private Sensor rightSensor;
@@ -55,6 +60,13 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         this(modelLoader);
         this.setPosition(position);
         this.setRotation(rotation);
+
+        this.hitBox = new HitBox(
+                new Vector3f(-0.67f, 0, 1.7f),
+                new Vector3f(0.67f, 0, 1.7f),
+                new Vector3f(-0.67f, 0, -0.3f),
+                new Vector3f(0.67f, 0, -0.3f),
+                this.getBodyElements()[0].getEntity());
     }
 
     protected void rotateWheels(float frameTime) {
@@ -163,5 +175,33 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public Sensor getRightSensor() {
         return rightSensor;
+    }
+
+    public void setBodies(List<Body> bodies) {
+        bodiesPotentialCollide = bodies;
+    }
+
+    // Function that goes through all the bodies and checks if the front of the vehicle is colliding with any of them
+    public boolean isColliding() {
+        Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
+        // Loop over all bodies in the list, excluding the vehicle itself
+        for (Body body : bodiesPotentialCollide) {
+            if (body != this && body instanceof CollisionHandler) {
+                // Get the hitbox of the target
+                HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();
+                if (Algebra.hitboxOverlap(hitBoxCoordinates, hitBoxTarget)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public HitBox getHitBox() {
+        return hitBox;
+    }
+
+    public void setBodiesPotentialCollide(List<Body> bodiesPotentialCollide) {
+        this.bodiesPotentialCollide = bodiesPotentialCollide;
     }
 }
