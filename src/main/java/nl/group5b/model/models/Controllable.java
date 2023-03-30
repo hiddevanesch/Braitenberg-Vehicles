@@ -3,6 +3,7 @@ package nl.group5b.model.models;
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
+import nl.group5b.model.models.BraitenbergVehicle;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;

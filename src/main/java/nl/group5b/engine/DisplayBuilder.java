@@ -17,8 +17,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class DisplayBuilder {
     // The window handle
     public static long window;
-    private static int width = 1280;
-    private static int height = 720;
+    private static int width = Settings.DEFAULT_WINDOW_WIDTH;
+    private static int height = Settings.DEFAULT_WINDOW_HEIGHT;
 
     public static void init() {
         // Setup an error callback. The default implementation
@@ -33,7 +33,6 @@ public class DisplayBuilder {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_REFRESH_RATE, Settings.REFRESH_RATE); // Set the refresh rate to REFRESH_RATE
         glfwWindowHint(GLFW_SAMPLES, Settings.ANTI_ALIASING_SAMPLES); // Set the antialiasing to ANTI_ALIASING_SAMPLES
 
         // Create the window
