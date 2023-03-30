@@ -38,7 +38,7 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
 
         // Check if the front of the car is colliding with a body
-        if(isColliding()){
+        if(isColliding()) {
             // If collision is detected, set wheel speeds to 0
             leftWheelSpeed = 0;
             rightWheelSpeed = 0;
