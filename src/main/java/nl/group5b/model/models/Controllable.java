@@ -22,31 +22,23 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
 
     @Override
     public void move(long window, Renderer renderer) {
+        float leftSensorBrightness = getLeftSensor().calculateSensorBrightness();
+        float rightSensorBrightness = getRightSensor().calculateSensorBrightness();
+
+        // multiply brightness by 15, clamp between 0 and 1
+        leftSensorBrightness = Math.min(1, leftSensorBrightness * 1);
+        rightSensorBrightness = Math.min(1, rightSensorBrightness * 1);
+
+        // print sensor brightness
+        System.out.println("Left sensor brightness: " + leftSensorBrightness);
+        System.out.println("Right sensor brightness: " + rightSensorBrightness);
+
+
+        // 'checkInput' sets the wheel speeds based on keyboard input
         checkInput(window, renderer);
 
-        float frameTime = renderer.getFrameTimeSeconds();
-
-        // Compute rotation angle based on wheel speeds
-        float rotationAngle = (rightWheelSpeed - leftWheelSpeed) * frameTime * 180;
-        Vector3f deltaRotation = new Vector3f(0, rotationAngle, 0);
-        moveRotation(deltaRotation);
-
-        // Compute position based on wheel speeds
-        float distance = (leftWheelSpeed + rightWheelSpeed) * frameTime;
-        float dx = (float) (distance * Math.sin(Math.toRadians(getRotation().y)));
-        float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
-        Vector3f deltaPosition = new Vector3f(dx, 0, dz);
-
-        // Check if the front of the car is colliding with a body
-        if(isColliding()) {
-            // If collision is detected, set wheel speeds to 0
-            leftWheelSpeed = 0;
-            rightWheelSpeed = 0;
-        }
-        else {
-            movePosition(deltaPosition);
-            rotateWheels(frameTime);
-        }
+        // Move the vehicle based on the new wheel speeds
+        super.updatePosition(renderer);
     }
 
     private void checkInput(long window, Renderer renderer) {

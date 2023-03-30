@@ -15,6 +15,7 @@ import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.model.models.Arena;
 import nl.group5b.model.models.Controllable;
 import nl.group5b.model.models.Lamp;
+import nl.group5b.model.models.LoveVehicle;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -49,22 +50,23 @@ public class Main {
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
-                new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
+                new Vector3f(4, 0, 0), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
                 new Vector3f(0, 0, -5), new Vector3f(0, -45, 0));
         Controllable thirdCar = new Controllable(modelLoader,
                 new Vector3f(-5, 0, -1), new Vector3f(0, 45, 0));
+        LoveVehicle loveVehicle = new LoveVehicle(modelLoader,
+                new Vector3f(2, 0, -10), new Vector3f(0, 0, 0));
 
-        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 1.5f, 0),
-                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
+        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 0.5f, 0),
+                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.3f, 0.3f));
 
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
                 arena,
                 braitenbergVehicle,
                 colouredLamp,
-                secondCar,
-                thirdCar
+                loveVehicle
         ));
 
         // Load lights into array (has to be an array with predefined length)
@@ -100,6 +102,7 @@ public class Main {
         braitenbergVehicle.setBodiesPotentialCollide(bodies);
         secondCar.setBodiesPotentialCollide(bodies);
         thirdCar.setBodiesPotentialCollide(bodies);
+        loveVehicle.setBodiesPotentialCollide(bodies);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

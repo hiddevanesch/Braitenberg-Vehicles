@@ -1,6 +1,7 @@
 package nl.group5b.model.models;
 
 import nl.group5b.camera.Sensor;
+import nl.group5b.engine.Renderer;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.PositionHandler;
@@ -81,6 +82,39 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Vector3f newRightWheelRotation = Algebra.rotateWheelGivenCurrentAngle(yRotation, rightWheelRotation);
         super.getBodyElements()[1].getEntity().setRotation(newLeftWheelRotation);
         super.getBodyElements()[2].getEntity().setRotation(newRightWheelRotation);
+    }
+
+    // Function that updates the position of the vehicle based on the wheel speeds
+    public void updatePosition(Renderer renderer) {
+        float frameTime = renderer.getFrameTimeSeconds();
+
+        // TODO maybe find another way
+        // Frametime should be lower than 0.5
+        if(frameTime > 0.5f) {
+            return;
+        }
+
+        // Compute rotation angle based on wheel speeds
+        float rotationAngle = (rightWheelSpeed - leftWheelSpeed) * frameTime * 180;
+        Vector3f deltaRotation = new Vector3f(0, rotationAngle, 0);
+        moveRotation(deltaRotation);
+
+        // Compute position based on wheel speeds
+        float distance = (leftWheelSpeed + rightWheelSpeed) * frameTime;
+        float dx = (float) (distance * Math.sin(Math.toRadians(getRotation().y)));
+        float dz = (float) (distance * Math.cos(Math.toRadians(getRotation().y)));
+        Vector3f deltaPosition = new Vector3f(dx, 0, dz);
+
+        // Check if the front of the car is colliding with a body
+        if(isColliding()) {
+            // If collision is detected, set wheel speeds to 0
+            leftWheelSpeed = 0;
+            rightWheelSpeed = 0;
+        }
+        else {
+            movePosition(deltaPosition);
+            rotateWheels(frameTime);
+        }
     }
 
     @Override
