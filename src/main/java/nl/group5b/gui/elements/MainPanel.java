@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,10 @@ public class MainPanel extends Element {
 
     private BraitenbergVehicle selectedVehicle = null;
     private Class<? extends BraitenbergVehicle> selectedVehicleClass = null;
-    private final List<Float> vehicleSpeedsLeft = new ArrayList<>();
-    private final List<Float> vehicleSpeedsRight = new ArrayList<>();
+    private final FloatBuffer vehicleSpeedsLeft = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
+    private final FloatBuffer vehicleSpeedsRight = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
+    private final float[] speeds = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
+    private int vehicleSpeedsIndex = 0;
     private float[] position = {0, 0};
     private float[] rotation = {0};
 
@@ -138,41 +141,73 @@ public class MainPanel extends Element {
         if (selectedVehicle != null) {
             updateVehicleSpeed();
 
-            ImGui.beginTable("##table_vehicle", 3, ImGuiTableFlags.SizingStretchSame);
-
-            float columnWidth = (ImGui.getColumnWidth() - ImGui.getStyle().getWindowPaddingX()) / 3;
-            float graphHeight = columnWidth / 2;
-
-            ImGui.tableSetupColumn("");
-            ImGui.tableSetupColumn("Left");
-            ImGui.tableSetupColumn("Right");
-
-            ImGui.tableHeadersRow();
-
-            ImGui.tableNextRow();
-            ImGui.tableSetColumnIndex(0);
-            ImGui.text("Wheel speeds");
-            ImGui.tableSetColumnIndex(1);
-            ImGui.plotLines("##plot_left_wheel_speed", getVehicleSpeedsLeft(), getVehicleSpeedsLeft().length,
-                    0, "", 0, Settings.VEHICLE_SPEED, columnWidth, graphHeight);
-            ImGui.tableSetColumnIndex(2);
-            ImGui.plotLines("##plot_right_wheel_speed", getVehicleSpeedsRight(), getVehicleSpeedsRight().length,
-                    0, "", 0, Settings.VEHICLE_SPEED, columnWidth, graphHeight);
-
-            ImGui.tableNextRow();
-            ImGui.tableSetColumnIndex(0);
-            ImGui.text("Sensors");
-            ImGui.tableSetColumnIndex(1);
-            ImGui.image(selectedVehicle.getLeftSensor().getTextureID(),
-                    columnWidth, columnWidth, 1, 0, 0, 1);
-            ImGui.tableSetColumnIndex(2);
-            ImGui.image(selectedVehicle.getRightSensor().getTextureID(),
-                    columnWidth, columnWidth, 1, 0, 0, 1);
-
-            ImGui.endTable();
+            renderVehicleData();
         }
 
         ImGui.end();
+    }
+
+    private void renderVehicleData() {
+        ImGui.beginChild("##child_vehicle");
+
+        ImGui.beginTable("##table_vehicle", 3, ImGuiTableFlags.SizingStretchSame);
+
+        float columnWidth = (ImGui.getColumnWidth() - ImGui.getStyle().getWindowPaddingX()) / 3;
+        float graphHeight = columnWidth / 2;
+
+        ImGui.tableSetupColumn("");
+        ImGui.tableSetupColumn("Left");
+        ImGui.tableSetupColumn("Right");
+
+        ImGui.tableHeadersRow();
+
+        ImGui.tableNextRow();
+        ImGui.tableSetColumnIndex(0);
+        ImGui.text("Wheel speed\nhistory");
+        ImGui.tableSetColumnIndex(1);
+        ImGui.plotLines("##plot_left_wheel_speed", getVehicleSpeedsLeft(), getVehicleSpeedsLeft().length,
+                0, "", 0, Settings.VEHICLE_SPEED, columnWidth, graphHeight);
+        ImGui.tableSetColumnIndex(2);
+        ImGui.plotLines("##plot_right_wheel_speed", getVehicleSpeedsRight(), getVehicleSpeedsRight().length,
+                0, "", 0, Settings.VEHICLE_SPEED, columnWidth, graphHeight);
+
+        ImGui.tableNextRow();
+        ImGui.tableSetColumnIndex(0);
+        ImGui.text("Current\nwheel speed");
+        ImGui.tableSetColumnIndex(1);
+        String leftSpeed = String.format("%.2f", selectedVehicle.getSpeedLeft());
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + (ImGui.getContentRegionAvailX() - ImGui.calcTextSize(leftSpeed).x) / 2.0f);
+        ImGui.text(leftSpeed);
+        ImGui.tableSetColumnIndex(2);
+        String rightSpeed = String.format("%.2f", selectedVehicle.getSpeedRight());
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + (ImGui.getContentRegionAvailX() - ImGui.calcTextSize(rightSpeed).x) / 2.0f);
+        ImGui.text(rightSpeed);
+
+        ImGui.tableNextRow();
+        ImGui.tableSetColumnIndex(0);
+        ImGui.text("Sensor views");
+        ImGui.tableSetColumnIndex(1);
+        ImGui.image(selectedVehicle.getLeftSensor().getTextureID(),
+                columnWidth, columnWidth, 1, 0, 0, 1);
+        ImGui.tableSetColumnIndex(2);
+        ImGui.image(selectedVehicle.getRightSensor().getTextureID(),
+                columnWidth, columnWidth, 1, 0, 0, 1);
+
+        ImGui.tableNextRow();
+        ImGui.tableSetColumnIndex(0);
+        ImGui.text("Brightness\nvalues");
+        ImGui.tableSetColumnIndex(1);
+        String leftBrightness = String.format("%.2f", selectedVehicle.getLeftSensor().calculateSensorBrightness());
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + (ImGui.getContentRegionAvailX() - ImGui.calcTextSize(leftBrightness).x) / 2.0f);
+        ImGui.text(leftBrightness);
+        ImGui.tableSetColumnIndex(2);
+        String rightBrightness = String.format("%.2f", selectedVehicle.getRightSensor().calculateSensorBrightness());
+        ImGui.setCursorPosX(ImGui.getCursorPosX() + (ImGui.getContentRegionAvailX() - ImGui.calcTextSize(rightBrightness).x) / 2.0f);
+        ImGui.text(rightBrightness);
+
+        ImGui.endTable();
+
+        ImGui.endChild();
     }
 
     private void renderAddPopup() {
@@ -253,30 +288,23 @@ public class MainPanel extends Element {
     }
 
     private void updateVehicleSpeed() {
-        if (vehicleSpeedsLeft.size() > Settings.GUI_GRAPH_HISTORY_SIZE) {
-            vehicleSpeedsLeft.remove(0);
-        }
-        vehicleSpeedsLeft.add(selectedVehicle.getSpeedLeft());
-        if (vehicleSpeedsRight.size() > Settings.GUI_GRAPH_HISTORY_SIZE) {
-            vehicleSpeedsRight.remove(0);
-        }
-        vehicleSpeedsRight.add(selectedVehicle.getSpeedRight());
+        vehicleSpeedsLeft.put(vehicleSpeedsIndex, selectedVehicle.getSpeedLeft());
+        vehicleSpeedsRight.put(vehicleSpeedsIndex, selectedVehicle.getSpeedRight());
+        vehicleSpeedsIndex = (vehicleSpeedsIndex + 1) % Settings.GUI_GRAPH_HISTORY_SIZE;
     }
 
     private float[] getVehicleSpeedsLeft() {
-        // TODO improve performance?
-        float[] speeds = new float[vehicleSpeedsLeft.size()];
-        for (int i = 0; i < vehicleSpeedsLeft.size(); i++) {
-            speeds[i] = vehicleSpeedsLeft.get(i);
+        // Copy the contents of the buffer into the float array
+        for (int i = 0; i < Settings.GUI_GRAPH_HISTORY_SIZE; i++) {
+            speeds[i] = vehicleSpeedsLeft.get((vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE);
         }
         return speeds;
     }
 
     private float[] getVehicleSpeedsRight() {
-        // TODO improve performance?
-        float[] speeds = new float[vehicleSpeedsRight.size()];
-        for (int i = 0; i < vehicleSpeedsRight.size(); i++) {
-            speeds[i] = vehicleSpeedsRight.get(i);
+        // Copy the contents of the buffer into the float array
+        for (int i = 0; i < Settings.GUI_GRAPH_HISTORY_SIZE; i++) {
+            speeds[i] = vehicleSpeedsRight.get((vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE);
         }
         return speeds;
     }
