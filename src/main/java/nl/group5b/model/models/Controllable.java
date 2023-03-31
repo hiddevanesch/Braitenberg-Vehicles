@@ -29,9 +29,9 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
         leftSensorBrightness = Math.min(1, leftSensorBrightness * 1);
         rightSensorBrightness = Math.min(1, rightSensorBrightness * 1);
 
-        // print sensor brightness
-        System.out.println("Left sensor brightness: " + leftSensorBrightness);
-        System.out.println("Right sensor brightness: " + rightSensorBrightness);
+//        // print sensor brightness
+//        System.out.println("Left sensor brightness: " + leftSensorBrightness);
+//        System.out.println("Right sensor brightness: " + rightSensorBrightness);
 
 
         // 'checkInput' sets the wheel speeds based on keyboard input

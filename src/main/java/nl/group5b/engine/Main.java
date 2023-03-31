@@ -46,6 +46,7 @@ public class Main {
 
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
+        Wall wall = new Wall(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
                 new Vector3f(-8, 0, 8), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
@@ -73,6 +74,7 @@ public class Main {
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
                 arena,
+                wall,
                 braitenbergVehicle,
                 colouredLamp1,
                 colouredLamp2,
@@ -95,7 +97,7 @@ public class Main {
         };
 
         // Create Camera instances
-        Camera topDownCamera = new Camera(new Vector3f(0, 20, 0), new Vector3f(90, 0, 0));
+        Camera topDownCamera = new Camera(new Vector3f(0, 25, 0), new Vector3f(90, 0, 0));
         BodyCamera thirdPersonCamera = new BodyCamera(braitenbergVehicle, 0.5f);
         thirdPersonCamera.enableZoom(window);
         thirdPersonCamera.enableMouseTracking(window);
