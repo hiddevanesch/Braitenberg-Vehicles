@@ -1,11 +1,10 @@
 package nl.group5b.gui.elements;
 
 import imgui.ImGui;
-import imgui.flag.ImGuiComboFlags;
-import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiTableFlags;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import imgui.type.ImBoolean;
+import nl.group5b.camera.BodyCamera;
+import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
 import nl.group5b.gui.Element;
 import nl.group5b.model.Body;
@@ -28,6 +27,10 @@ public class MainPanel extends Element {
     private final List<Body> bodies;
     List<Class<? extends BraitenbergVehicle>> vehicleClasses = new ArrayList<>();
 
+    private Camera camera;
+    private final BodyCamera thirdPersonCamera = new BodyCamera();
+    private final Camera topDownCamera = new Camera(new Vector3f(0, 20, 0), new Vector3f(90, 0, 0));
+
     private BraitenbergVehicle selectedVehicle = null;
     private Class<? extends BraitenbergVehicle> selectedVehicleClass = null;
     private final FloatBuffer vehicleSpeedsLeft = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
@@ -37,9 +40,14 @@ public class MainPanel extends Element {
     private float[] position = {0, 0};
     private float[] rotation = {0};
 
-    public MainPanel(ModelLoader modelLoader, List<Body> bodies) {
+    public MainPanel(long window, ModelLoader modelLoader, List<Body> bodies) {
         this.modelLoader = modelLoader;
         this.bodies = bodies;
+
+        thirdPersonCamera.enableZoom(window);
+        thirdPersonCamera.enableMouseTracking(window);
+
+        camera = topDownCamera;
 
         // Add vehicle classes
         getVehicleTypes();
@@ -93,6 +101,28 @@ public class MainPanel extends Element {
 
         float contentWidth = ImGui.getContentRegionAvailX();
 
+        ImGui.pushStyleVar(ImGuiStyleVar.TabRounding, 0);
+
+        ImGui.beginTabBar("##tab_bar_main");
+
+        if (ImGui.beginTabItem("Vehicles")) {
+            renderVehiclesTab(contentWidth);
+            ImGui.endTabItem();
+        }
+
+        if (ImGui.beginTabItem("Lights")) {
+            renderLightsTab(contentWidth);
+            ImGui.endTabItem();
+        }
+
+        ImGui.endTabBar();
+
+        ImGui.popStyleVar();
+
+        ImGui.end();
+    }
+
+    private void renderVehiclesTab(float contentWidth) {
         float buttonWidth = 30;
         float selectorWidth = contentWidth - 2 * buttonWidth - 2 * ImGui.getStyle().getItemSpacingX();
 
@@ -107,7 +137,6 @@ public class MainPanel extends Element {
         String selectedVehicleName = selectedVehicle != null ? selectedVehicle.getName() : "Select vehicle";
 
         // Render vehicle selector
-        ImGui.text("Vehicles");
         ImGui.setNextItemWidth(selectorWidth);
         if (ImGui.beginCombo("##combo_vehicles", selectedVehicleName)){
             for (Body body : bodies) {
@@ -116,6 +145,10 @@ public class MainPanel extends Element {
                         selectedVehicle = braitenbergVehicle;
                         vehicleSpeedsLeft.clear();
                         vehicleSpeedsRight.clear();
+                        if (camera == thirdPersonCamera) {
+                            thirdPersonCamera.resetView();
+                            thirdPersonCamera.setBody(selectedVehicle);
+                        }
                     }
                 }
             }
@@ -125,6 +158,10 @@ public class MainPanel extends Element {
         // Render vehicle remove button
         ImGui.sameLine();
         if (ImGui.button("-", buttonWidth, 0)) {
+            if (camera == thirdPersonCamera) {
+                camera = topDownCamera;
+                thirdPersonCamera.unbind();
+            }
             bodies.remove(selectedVehicle);
         }
 
@@ -143,12 +180,21 @@ public class MainPanel extends Element {
 
             renderVehicleData();
         }
-
-        ImGui.end();
     }
 
     private void renderVehicleData() {
         ImGui.beginChild("##child_vehicle");
+
+        if (ImGui.checkbox("Third person camera", camera == thirdPersonCamera)) {
+            if (camera == topDownCamera) {
+                thirdPersonCamera.resetView();
+                thirdPersonCamera.setBody(selectedVehicle);
+                camera = thirdPersonCamera;
+            } else {
+                camera = topDownCamera;
+                thirdPersonCamera.unbind();
+            }
+        }
 
         ImGui.beginTable("##table_vehicle", 3, ImGuiTableFlags.SizingStretchSame);
 
@@ -287,6 +333,9 @@ public class MainPanel extends Element {
         }
     }
 
+    private void renderLightsTab(float contentWidth) {
+    }
+
     private void updateVehicleSpeed() {
         vehicleSpeedsLeft.put(vehicleSpeedsIndex, selectedVehicle.getSpeedLeft());
         vehicleSpeedsRight.put(vehicleSpeedsIndex, selectedVehicle.getSpeedRight());
@@ -307,5 +356,9 @@ public class MainPanel extends Element {
             speeds[i] = vehicleSpeedsRight.get((vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE);
         }
         return speeds;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 }

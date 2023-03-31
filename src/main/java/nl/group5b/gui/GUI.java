@@ -4,6 +4,7 @@ import imgui.ImGui;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import nl.group5b.camera.Camera;
+import nl.group5b.gui.elements.MainPanel;
 import nl.group5b.gui.elements.SettingsPanel;
 import nl.group5b.util.Settings;
 
@@ -42,8 +43,8 @@ public class GUI {
     public Camera getCamera() {
         // TODO improve
         for (Element element : elements) {
-            if (element instanceof SettingsPanel) {
-                return ((SettingsPanel) element).getCamera();
+            if (element instanceof MainPanel mainPanel) {
+                return mainPanel.getCamera();
             }
         }
         return null;

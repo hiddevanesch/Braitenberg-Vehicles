@@ -2,43 +2,22 @@ package nl.group5b.gui.elements;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImInt;
-import nl.group5b.camera.BodyCamera;
-import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
 import nl.group5b.gui.Element;
 import nl.group5b.light.Light;
 import nl.group5b.util.Settings;
-import nl.group5b.util.cameraType;
 import org.joml.Vector3f;
 
 public class SettingsPanel extends Element {
 
-    private Camera camera;
-    private BodyCamera thirdPersonCamera;
-    private Camera topDownCamera;
     private Light sun;
 
     private float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
     private int[] sunPosition = {Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z};
     private float[] gamma = {Settings.VIEWPORT_GAMMA_CORRECTION};
     private float[] fov = {Settings.VIEWPORT_FOV};
-    private int currentCamera;
-    private ImInt selectedCamera;
 
-    public SettingsPanel(Camera topDownCamera, BodyCamera thirdPersonCamera, Light sun) {
-        if (Settings.DEFAULT_CAMERA == cameraType.TOP_DOWN) {
-            this.camera = topDownCamera;
-            this.currentCamera = 1;
-            this.selectedCamera = new ImInt(1);
-        } else if (Settings.DEFAULT_CAMERA == cameraType.THIRD_PERSON) {
-            this.camera = thirdPersonCamera;
-            this.currentCamera = 0;
-            this.selectedCamera = new ImInt(0);
-        }
-
-        this.topDownCamera = topDownCamera;
-        this.thirdPersonCamera = thirdPersonCamera;
+    public SettingsPanel(Light sun) {
         this.sun = sun;
     }
 
@@ -74,26 +53,6 @@ public class SettingsPanel extends Element {
             Settings.VIEWPORT_FOV = fov[0];
         }
 
-        ImGui.text("Camera");
-        ImGui.setNextItemWidth(contentWidth);
-        if (ImGui.combo("##combo_camera", selectedCamera, new String[]{"Third Person", "Top Down"})) {
-            // If the selected camera has changed, update the camera
-            if (selectedCamera.get() != currentCamera) {
-                currentCamera = selectedCamera.get();
-                if (currentCamera == 0) {
-                    thirdPersonCamera.setIsActivate(true);
-                    camera = thirdPersonCamera;
-                } else {
-                    thirdPersonCamera.setIsActivate(false);
-                    camera = topDownCamera;
-                }
-            }
-        }
-
         ImGui.end();
-    }
-
-    public Camera getCamera() {
-        return camera;
     }
 }

@@ -14,6 +14,7 @@ public class Settings {
 
     // Camera
     public static final cameraType DEFAULT_CAMERA = cameraType.TOP_DOWN;
+    public static final float CAMERA_3P_HEIGHT_OFFSET = 0.5f;
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
@@ -49,7 +50,6 @@ public class Settings {
     public static final float PANEL_WIDTH_MAIN = 300;
     public static final float PANEL_WIDTH_SETTINGS = 200;
     public static final float POPUP_WIDTH = 300;
-    public static final float POPUP_HEIGHT = 200;
 
 }
 
