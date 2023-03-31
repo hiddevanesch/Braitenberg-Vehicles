@@ -33,12 +33,14 @@ public class MainPanel extends Element {
 
     private BraitenbergVehicle selectedVehicle = null;
     private Class<? extends BraitenbergVehicle> selectedVehicleClass = null;
+    private float[] currentVehiclePosition = {0, 0};
+    private float[] currentVehicleRotation = {0};
     private final FloatBuffer vehicleSpeedsLeft = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
     private final FloatBuffer vehicleSpeedsRight = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
     private final float[] speeds = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private int vehicleSpeedsIndex = 0;
-    private float[] position = {0, 0};
-    private float[] rotation = {0};
+    private float[] spawnPosition = {0, 0};
+    private float[] spawnRotation = {0};
 
     public MainPanel(long window, ModelLoader modelLoader, List<Body> bodies) {
         this.modelLoader = modelLoader;
@@ -178,11 +180,11 @@ public class MainPanel extends Element {
         if (selectedVehicle != null) {
             updateVehicleSpeed();
 
-            renderVehicleData();
+            renderVehicleData(contentWidth);
         }
     }
 
-    private void renderVehicleData() {
+    private void renderVehicleData(float contentWidth) {
         ImGui.beginChild("##child_vehicle");
 
         if (ImGui.checkbox("Third person camera", camera == thirdPersonCamera)) {
@@ -195,6 +197,32 @@ public class MainPanel extends Element {
                 thirdPersonCamera.unbind();
             }
         }
+
+        ImGui.spacing();
+
+        updateVehiclePosition();
+
+        ImGui.text("Position (x, z)");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.sliderFloat2("##slider_vehicle_position", currentVehiclePosition,
+                -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.0f")) {
+            selectedVehicle.setPosition(new Vector3f(
+                    currentVehiclePosition[0],
+                    0,
+                    currentVehiclePosition[1]
+            ));
+        }
+
+        updateVehicleRotation();
+
+        ImGui.text("Rotation");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.sliderFloat("##slider_vehicle_rotation", currentVehicleRotation,
+                0, 360, "%.0f")) {
+            selectedVehicle.setRotation(new Vector3f(0, currentVehicleRotation[0], 0));
+        }
+
+        ImGui.spacing();
 
         ImGui.beginTable("##table_vehicle", 3, ImGuiTableFlags.SizingStretchSame);
 
@@ -219,7 +247,7 @@ public class MainPanel extends Element {
 
         ImGui.tableNextRow();
         ImGui.tableSetColumnIndex(0);
-        ImGui.text("Current\nwheel speed");
+        ImGui.text("Current\nwheel speed\n\u00A0");
         ImGui.tableSetColumnIndex(1);
         String leftSpeed = String.format("%.2f", selectedVehicle.getSpeedLeft());
         ImGui.setCursorPosX(ImGui.getCursorPosX() + (ImGui.getContentRegionAvailX() - ImGui.calcTextSize(leftSpeed).x) / 2.0f);
@@ -241,7 +269,7 @@ public class MainPanel extends Element {
 
         ImGui.tableNextRow();
         ImGui.tableSetColumnIndex(0);
-        ImGui.text("Brightness\nvalues");
+        ImGui.text("Brightness\nvalues\n\u00A0");
         ImGui.tableSetColumnIndex(1);
         String leftBrightness = String.format("%.2f", selectedVehicle.getLeftSensor().calculateSensorBrightness());
         ImGui.setCursorPosX(ImGui.getCursorPosX() + (ImGui.getContentRegionAvailX() - ImGui.calcTextSize(leftBrightness).x) / 2.0f);
@@ -287,13 +315,13 @@ public class MainPanel extends Element {
             // Render position sliders
             ImGui.text("Position (x, z)");
             ImGui.setNextItemWidth(contentWidth);
-            ImGui.sliderFloat2("##slider_coordinates", position,
-                    -Settings.ARENA_RADIUS, Settings.ARENA_RADIUS, "%.0f");
+            ImGui.sliderFloat2("##slider_coordinates", spawnPosition,
+                    -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.0f");
 
             // Render rotation slider
             ImGui.text("Rotation (degrees)");
             ImGui.setNextItemWidth(contentWidth);
-            ImGui.sliderFloat("##slider_rotation", rotation, 0, 360, "%.0f");
+            ImGui.sliderFloat("##slider_rotation", spawnRotation, 0, 360, "%.0f");
 
             ImGui.separator();
 
@@ -309,8 +337,8 @@ public class MainPanel extends Element {
 
                     ImGui.closeCurrentPopup();
                     try {
-                        Vector3f positionVector = new Vector3f(position[0], 0, position[1]);
-                        Vector3f rotationVector = new Vector3f(0, rotation[0], 0);
+                        Vector3f positionVector = new Vector3f(spawnPosition[0], 0, spawnPosition[1]);
+                        Vector3f rotationVector = new Vector3f(0, spawnRotation[0], 0);
                         BraitenbergVehicle vehicle = selectedVehicleClass.
                                 getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class).
                                 newInstance(modelLoader, positionVector, rotationVector);
@@ -320,8 +348,8 @@ public class MainPanel extends Element {
                         e.printStackTrace();
                     }
                     selectedVehicleClass = null;
-                    position = new float[]{0, 0};
-                    rotation = new float[]{0};
+                    spawnPosition = new float[]{0, 0};
+                    spawnRotation = new float[]{0};
 
             }
 
@@ -334,6 +362,15 @@ public class MainPanel extends Element {
     }
 
     private void renderLightsTab(float contentWidth) {
+    }
+
+    private void updateVehiclePosition() {
+        currentVehiclePosition[0] = selectedVehicle.getPosition().x();
+        currentVehiclePosition[1] = selectedVehicle.getPosition().z();
+    }
+
+    private void updateVehicleRotation() {
+        currentVehicleRotation[0] = selectedVehicle.getRotation().y() % 360;
     }
 
     private void updateVehicleSpeed() {
