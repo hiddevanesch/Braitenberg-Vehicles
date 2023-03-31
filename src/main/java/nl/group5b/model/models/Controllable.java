@@ -1,6 +1,7 @@
 package nl.group5b.model.models;
 
 import nl.group5b.engine.Renderer;
+import nl.group5b.model.Material;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.util.Settings;
@@ -11,29 +12,16 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Controllable extends BraitenbergVehicle implements ControlHandler {
 
-    public Controllable(ModelLoader modelLoader) throws FileNotFoundException {
-        super(modelLoader);
-    }
+    // Brown body material
+    static private final Material bodyMaterial = new Material(0.45f, 0.30f, 0.2f, 10, 0.5f);
 
     public Controllable(ModelLoader modelLoader, Vector3f position,
                         Vector3f rotation) throws FileNotFoundException {
-        super(modelLoader, position, rotation);
+        super(modelLoader, bodyMaterial, position, rotation);
     }
 
     @Override
     public void move(long window, Renderer renderer) {
-        float leftSensorBrightness = getLeftSensor().calculateSensorBrightness();
-        float rightSensorBrightness = getRightSensor().calculateSensorBrightness();
-
-        // multiply brightness by 1, clamp between 0 and 1
-        leftSensorBrightness = Math.min(1, leftSensorBrightness * 1);
-        rightSensorBrightness = Math.min(1, rightSensorBrightness * 1);
-
-//        // print sensor brightness
-//        System.out.println("Left sensor brightness: " + leftSensorBrightness);
-//        System.out.println("Right sensor brightness: " + rightSensorBrightness);
-
-
         // 'checkInput' sets the wheel speeds based on keyboard input
         checkInput(window, renderer);
 
@@ -76,14 +64,12 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
             // Slow down
             if (leftWheelSpeed < Settings.VEHICLE_CLAMP_SPEED) {
                 leftWheelSpeed = 0;
-            }
-            else {
+            } else {
                 decelerateLeftWheel(frameTime);
             }
             if (rightWheelSpeed < Settings.VEHICLE_CLAMP_SPEED) {
                 rightWheelSpeed = 0;
-            }
-            else {
+            } else {
                 decelerateRightWheel(frameTime);
             }
         }

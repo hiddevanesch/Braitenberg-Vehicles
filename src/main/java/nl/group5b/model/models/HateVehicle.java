@@ -1,6 +1,7 @@
 package nl.group5b.model.models;
 
 import nl.group5b.engine.Renderer;
+import nl.group5b.model.Material;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.util.Settings;
@@ -13,11 +14,14 @@ import java.io.FileNotFoundException;
  * Sensors are connected to the wheel on the opposite side
  * More brightness sensed -> faster wheel speed
  */
-public class HateVehicle extends BraitenbergVehicle implements DriveHandler{
+public class HateVehicle extends BraitenbergVehicle implements DriveHandler {
+
+    // Purple body material
+    static private final Material bodyMaterial = new Material(0.541f, 0.004f, 0.004f, 10, 0.5f);
 
     public HateVehicle(ModelLoader modelLoader, Vector3f position,
                        Vector3f rotation) throws FileNotFoundException {
-        super(modelLoader, position, rotation);
+        super(modelLoader, bodyMaterial, position, rotation);
     }
 
     @Override

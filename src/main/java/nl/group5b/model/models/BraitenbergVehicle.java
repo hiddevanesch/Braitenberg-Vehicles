@@ -29,22 +29,22 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected HitBox hitBox;
     protected List<Body> bodiesCollision;
 
-    private Sensor leftSensor;
-    private Sensor rightSensor;
+    private final Sensor leftSensor;
+    private final Sensor rightSensor;
 
-    public BraitenbergVehicle(ModelLoader modelLoader) throws FileNotFoundException {
+    public BraitenbergVehicle(ModelLoader modelLoader, Material bodyMaterial) throws FileNotFoundException {
         Model carBody = OBJLoader.loadOBJ("carbody", modelLoader);
         Model carWheel = OBJLoader.loadOBJ("carwheel", modelLoader);
         Model sensorCamera = OBJLoader.loadOBJ("camera", modelLoader);
 
-        Material brownMaterial = new Material(0.45f, 0.30f, 0.2f, 10, 0.5f);
+
         Material blackMaterial = new Material(0.2f, 0.2f, 0.2f, 10, 0.1f);
         Material greyMaterial = new Material(0.5f, 0.5f, 0.5f, 10, 0.1f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
         Model[] loadedModels = {carBody, carWheel, carWheel, sensorCamera, sensorCamera};
-        Material[] materialSets = {brownMaterial, blackMaterial, blackMaterial, greyMaterial, greyMaterial};
+        Material[] materialSets = {bodyMaterial, blackMaterial, blackMaterial, greyMaterial, greyMaterial};
         Vector3f[] startingPositions = {carBodyRelativePosition, carLeftWheelRelativePosition,
                 carRightWheelRelativePosition, carLeftSensorRelativePosition, carRightSensorRelativePosition};
         Vector3f[] startingRotations = {defaultRotation, defaultRotation, defaultRotation, defaultRotation, defaultRotation};
@@ -56,9 +56,9 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
     }
 
-    public BraitenbergVehicle(ModelLoader modelLoader, Vector3f position,
+    public BraitenbergVehicle(ModelLoader modelLoader, Material bodyMaterial, Vector3f position,
                               Vector3f rotation) throws FileNotFoundException {
-        this(modelLoader);
+        this(modelLoader, bodyMaterial);
         this.setPosition(position);
         this.setRotation(rotation);
 
@@ -90,7 +90,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
         // TODO maybe find another way
         // Frametime should be lower than 0.5
-        if(frameTime > 0.5f) {
+        if (frameTime > 0.5f) {
             return;
         }
 
@@ -106,7 +106,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Vector3f deltaPosition = new Vector3f(dx, 0, dz);
 
         // Check if the front of the car is colliding with a body
-        if(isColliding()) {
+        if (isColliding()) {
             // If collision is detected, set wheel speeds to 0
             leftWheelSpeed = 0;
             rightWheelSpeed = 0;
@@ -233,6 +233,15 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
                 }
             }
         }
+
+        // Check if the vehicle is outside of the arena boundaries
+        for (Vector3f coordinate : hitBoxCoordinates) {
+            if (coordinate.x < -Settings.ARENA_RADIUS || coordinate.x > Settings.ARENA_RADIUS ||
+                    coordinate.z < -Settings.ARENA_RADIUS || coordinate.z > Settings.ARENA_RADIUS) {
+                return true;
+            }
+        }
+
         return false;
     }
 

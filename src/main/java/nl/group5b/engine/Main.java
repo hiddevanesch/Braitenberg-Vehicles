@@ -46,7 +46,6 @@ public class Main {
 
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
-        Wall wall = new Wall(modelLoader);
         Controllable braitenbergVehicle = new Controllable(modelLoader,
                 new Vector3f(-8, 0, 8), new Vector3f(0, 0, 0));
         Controllable secondCar = new Controllable(modelLoader,
@@ -74,7 +73,6 @@ public class Main {
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
                 arena,
-                wall,
                 braitenbergVehicle,
                 colouredLamp1,
                 colouredLamp2,
@@ -119,29 +117,17 @@ public class Main {
         MasterRenderer renderer = new MasterRenderer(bodies, lights, gui, window);
 
         // set the bodies that the braitenberg vehicles can collide with
-        braitenbergVehicle.setBodiesPotentialCollide(bodies);
-        secondCar.setBodiesPotentialCollide(bodies);
-        thirdCar.setBodiesPotentialCollide(bodies);
-        loveVehicle.setBodiesPotentialCollide(bodies);
-        fearVehicle.setBodiesPotentialCollide(bodies);
-        hateVehicle.setBodiesPotentialCollide(bodies);
-        curiousVehicle.setBodiesPotentialCollide(bodies);
+        braitenbergVehicle.setBodies(bodies);
+        secondCar.setBodies(bodies);
+        thirdCar.setBodies(bodies);
+        loveVehicle.setBodies(bodies);
+        fearVehicle.setBodies(bodies);
+        hateVehicle.setBodies(bodies);
+        curiousVehicle.setBodies(bodies);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
-            // TODO remove demo code
-//            if (demo.getSpawnSecondCar().get()) {
-//                if (!bodies.contains(secondCar)) {
-//                    bodies.add(secondCar);
-//                }
-//            } else {
-//                bodies.remove(secondCar);
-//            }
-
-            // TODO remove demo code
-//            demo.addVehicleSpeed(braitenbergVehicle.getSpeedLeft(), braitenbergVehicle.getSpeedRight());
-
             // Move all engine components that need to be moved (e.g. camera, bodies, etc.)
             renderer.move();
 

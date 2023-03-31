@@ -1,6 +1,7 @@
 package nl.group5b.model.models;
 
 import nl.group5b.engine.Renderer;
+import nl.group5b.model.Material;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.util.Settings;
@@ -15,9 +16,12 @@ import java.io.FileNotFoundException;
  */
 public class CuriousVehicle extends BraitenbergVehicle implements DriveHandler {
 
+    // Yellow body material
+    static private final Material bodyMaterial = new Material(1f, 1f, 0f, 10, 0.5f);
+
     public CuriousVehicle(ModelLoader modelLoader, Vector3f position,
                        Vector3f rotation) throws FileNotFoundException {
-        super(modelLoader, position, rotation);
+        super(modelLoader, bodyMaterial, position, rotation);
     }
 
     @Override
