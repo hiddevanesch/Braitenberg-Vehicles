@@ -27,7 +27,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected float rightWheelSpeed = 0;
 
     protected HitBox hitBox;
-    protected List<Body> bodiesPotentialCollide;
+    protected List<Body> bodiesCollision;
 
     private Sensor leftSensor;
     private Sensor rightSensor;
@@ -211,15 +211,20 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         return rightSensor;
     }
 
+    // Get the name of the vehicle
+    public String getName() {
+        return this.getClass().getSimpleName() + " " + System.identityHashCode(this);
+    }
+
     public void setBodies(List<Body> bodies) {
-        bodiesPotentialCollide = bodies;
+        bodiesCollision = bodies;
     }
 
     // Function that goes through all the bodies and checks if the front of the vehicle is colliding with any of them
     public boolean isColliding() {
         Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
         // Loop over all bodies in the list, excluding the vehicle itself
-        for (Body body : bodiesPotentialCollide) {
+        for (Body body : bodiesCollision) {
             if (body != this && body instanceof CollisionHandler) {
                 // Get the hitbox of the target
                 HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();
@@ -235,7 +240,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         return hitBox;
     }
 
-    public void setBodiesPotentialCollide(List<Body> bodiesPotentialCollide) {
-        this.bodiesPotentialCollide = bodiesPotentialCollide;
+    public void setCollisionBodies(List<Body> bodiesPotentialCollide) {
+        this.bodiesCollision = bodiesPotentialCollide;
     }
 }

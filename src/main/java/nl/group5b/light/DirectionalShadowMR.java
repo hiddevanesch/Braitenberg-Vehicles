@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class DirectionalShadowMR {
 
-	private static final float SHADOW_BOX_MIN_X = -Settings.SHADOW_BOX_RADIUS;
-	private static final float SHADOW_BOX_MAX_X = Settings.SHADOW_BOX_RADIUS;
-	private static final float SHADOW_BOX_MIN_Y = -Settings.SHADOW_BOX_RADIUS;
-	private static final float SHADOW_BOX_MAX_Y = Settings.SHADOW_BOX_RADIUS;
-	private static final float SHADOW_BOX_MIN_Z = -Settings.SHADOW_BOX_RADIUS;
-	private static final float SHADOW_BOX_MAX_Z = Settings.SHADOW_BOX_RADIUS;
+	private static final float SHADOW_BOX_MIN_X = -Settings.ARENA_RADIUS;
+	private static final float SHADOW_BOX_MAX_X = Settings.ARENA_RADIUS;
+	private static final float SHADOW_BOX_MIN_Y = -Settings.ARENA_RADIUS;
+	private static final float SHADOW_BOX_MAX_Y = Settings.ARENA_RADIUS;
+	private static final float SHADOW_BOX_MIN_Z = -Settings.ARENA_RADIUS;
+	private static final float SHADOW_BOX_MAX_Z = Settings.ARENA_RADIUS;
 
 	private final DirectionalShadowFBO shadowFbo;
 	private final DirectionalShadowShader shader;

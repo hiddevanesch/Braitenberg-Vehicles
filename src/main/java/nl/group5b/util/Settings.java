@@ -4,8 +4,9 @@ public class Settings {
 
     // Main window
     public static final String WINDOW_TITLE = "Group 5B - Braitenberg Vehicles";
-    public static final int REFRESH_RATE = 60;
     public static final int ANTI_ALIASING_SAMPLES = 4;
+    public static final int DEFAULT_WINDOW_WIDTH = 1600;
+    public static final int DEFAULT_WINDOW_HEIGHT = 720;
 
     // OpenGL
     public static final int VAO_POSITION_ATTR = 0;
@@ -22,13 +23,13 @@ public class Settings {
     // Graphics
     public static final float AMBIENT_LIGHT = 0.15f;
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
-    public static final float SHADOW_BOX_RADIUS = 10;
 
     // Scene
     public static float SUN_BRIGHTNESS = 0.0f;
     public static int SUN_X = 20;
     public static int SUN_Y = 20;
     public static int SUN_Z = 0;
+    public static final float ARENA_RADIUS = 10;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
@@ -45,7 +46,10 @@ public class Settings {
 
     // GUI
     public static final int GUI_GRAPH_HISTORY_SIZE = 500;
-    public static final float PANEL_WIDTH_MAIN = 200;
+    public static final float PANEL_WIDTH_MAIN = 300;
     public static final float PANEL_WIDTH_SETTINGS = 200;
+    public static final float POPUP_WIDTH = 300;
+    public static final float POPUP_HEIGHT = 200;
+
 }
 

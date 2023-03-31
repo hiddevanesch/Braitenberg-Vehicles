@@ -6,7 +6,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import nl.group5b.model.HitBox;
 
-
 import java.nio.FloatBuffer;
 import java.util.Vector;
 

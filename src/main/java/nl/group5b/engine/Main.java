@@ -103,7 +103,7 @@ public class Main {
         thirdPersonCamera.enableMouseTracking(window);
 
         // Create GUI Elements
-        MainPanel mainPanel = new MainPanel(bodies);
+        MainPanel mainPanel = new MainPanel(modelLoader, bodies);
         SettingsPanel settingsPanel = new SettingsPanel(topDownCamera, thirdPersonCamera, sun);
 
         // Load GUI Elements into array
@@ -145,13 +145,8 @@ public class Main {
             // Move all engine components that need to be moved (e.g. camera, bodies, etc.)
             renderer.move();
 
-            // Update texture in GUI
-            mainPanel.setImages(braitenbergVehicle.getLeftSensor().getTextureID(), braitenbergVehicle.getRightSensor().getTextureID());
-
             // Render scene
             renderer.render();
-
-            //System.out.println(sensor.calculateSensorBrightness());
         }
 
         // Clean up renderer
