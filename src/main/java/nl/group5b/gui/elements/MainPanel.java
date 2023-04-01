@@ -33,10 +33,10 @@ public class MainPanel extends Element {
 
     private BraitenbergVehicle selectedVehicle = null;
     private Class<? extends BraitenbergVehicle> selectedVehicleClass = null;
-    private float[] currentVehiclePosition = {0, 0};
-    private float[] currentVehicleRotation = {0};
-    private final FloatBuffer vehicleSpeedsLeft = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
-    private final FloatBuffer vehicleSpeedsRight = FloatBuffer.allocate(Settings.GUI_GRAPH_HISTORY_SIZE);
+    private final float[] currentVehiclePosition = {0, 0};
+    private final float[] currentVehicleRotation = {0};
+    private final float[] vehicleSpeedsLeft = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
+    private final float[] vehicleSpeedsRight = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private final float[] speeds = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private int vehicleSpeedsIndex = 0;
     private float[] spawnPosition = {0, 0};
@@ -145,8 +145,7 @@ public class MainPanel extends Element {
                 if (body instanceof BraitenbergVehicle braitenbergVehicle) {
                     if (ImGui.selectable(braitenbergVehicle.getName(), selectedVehicle == braitenbergVehicle)) {
                         selectedVehicle = braitenbergVehicle;
-                        vehicleSpeedsLeft.clear();
-                        vehicleSpeedsRight.clear();
+                        clearVehicleSpeeds();
                         if (camera == thirdPersonCamera) {
                             thirdPersonCamera.resetView();
                             thirdPersonCamera.setBody(selectedVehicle);
@@ -370,19 +369,23 @@ public class MainPanel extends Element {
     }
 
     private void updateVehicleRotation() {
-        currentVehicleRotation[0] = selectedVehicle.getRotation().y() % 360;
+        float rotation = selectedVehicle.getRotation().y() % 360;
+        if (rotation < 0) {
+            rotation += 360;
+        }
+        currentVehicleRotation[0] = rotation;
     }
 
     private void updateVehicleSpeed() {
-        vehicleSpeedsLeft.put(vehicleSpeedsIndex, selectedVehicle.getSpeedLeft());
-        vehicleSpeedsRight.put(vehicleSpeedsIndex, selectedVehicle.getSpeedRight());
+        vehicleSpeedsLeft[vehicleSpeedsIndex] = selectedVehicle.getSpeedLeft();
+        vehicleSpeedsRight[vehicleSpeedsIndex] = selectedVehicle.getSpeedRight();
         vehicleSpeedsIndex = (vehicleSpeedsIndex + 1) % Settings.GUI_GRAPH_HISTORY_SIZE;
     }
 
     private float[] getVehicleSpeedsLeft() {
         // Copy the contents of the buffer into the float array
         for (int i = 0; i < Settings.GUI_GRAPH_HISTORY_SIZE; i++) {
-            speeds[i] = vehicleSpeedsLeft.get((vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE);
+            speeds[i] = vehicleSpeedsLeft[(vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE];
         }
         return speeds;
     }
@@ -390,9 +393,17 @@ public class MainPanel extends Element {
     private float[] getVehicleSpeedsRight() {
         // Copy the contents of the buffer into the float array
         for (int i = 0; i < Settings.GUI_GRAPH_HISTORY_SIZE; i++) {
-            speeds[i] = vehicleSpeedsRight.get((vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE);
+            speeds[i] = vehicleSpeedsRight[(vehicleSpeedsIndex + i) % Settings.GUI_GRAPH_HISTORY_SIZE];
         }
         return speeds;
+    }
+
+    private void clearVehicleSpeeds() {
+        for (int i = 0; i < Settings.GUI_GRAPH_HISTORY_SIZE; i++) {
+            vehicleSpeedsLeft[i] = 0;
+            vehicleSpeedsRight[i] = 0;
+        }
+        vehicleSpeedsIndex = 0;
     }
 
     public Camera getCamera() {
