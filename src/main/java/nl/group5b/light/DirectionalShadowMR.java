@@ -84,8 +84,11 @@ public class DirectionalShadowMR {
 		newCenter.negate();
 
 		float pitch = (float) Math.acos(new Vector2f(newDirection.x, newDirection.z).length());
-        float yaw = (float) Math.toDegrees(((float) Math.atan(newDirection.x / newDirection.z)));
-        yaw = newDirection.z > 0 ? yaw - 180 : yaw;
+		float yaw = (float) Math.toDegrees(Math.atan2(newDirection.x, newDirection.z));
+		yaw += 180f;
+		if (yaw < 0) {
+			yaw += 360f;
+		}
 
         lightViewMatrix.identity();
         lightViewMatrix.rotate(pitch, new Vector3f(1, 0, 0));

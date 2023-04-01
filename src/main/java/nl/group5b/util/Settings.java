@@ -26,8 +26,8 @@ public class Settings {
 
     // Scene
     public static float SUN_BRIGHTNESS = 0.5f;
-    public static int SUN_X = 20;
-    public static int SUN_Y = 20;
+    public static int SUN_X = 0;
+    public static int SUN_Y = 1;
     public static int SUN_Z = 0;
     public static final float ARENA_RADIUS = 10;
     public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
