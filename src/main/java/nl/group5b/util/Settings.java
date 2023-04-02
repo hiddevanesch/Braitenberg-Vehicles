@@ -23,7 +23,7 @@ public class Settings {
     public static final float SENSOR_GAMMA_CORRECTION = 1.0f;
 
     // Graphics
-    public static final float AMBIENT_LIGHT = 0.15f;
+    public static float AMBIENT_LIGHT = 0.15f;
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
 
     // Scene

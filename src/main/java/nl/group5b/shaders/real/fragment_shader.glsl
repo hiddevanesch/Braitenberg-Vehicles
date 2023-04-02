@@ -2,8 +2,6 @@
 
 #define LIGHT_COUNT 1 // Will be overwritten upon compilation
 
-#define AMBIENT_LIGHT 0.15 // Will be overwritten upon compilation
-
 #define SHADOW_FACE_OFFSET 0.0011
 #define SHADOW_MAP_SIZE 4096 // Will be overwritten upon compilation
 #define TEXEL_SIZE (1.0 / SHADOW_MAP_SIZE)
@@ -29,6 +27,7 @@ uniform bool isEmissive;
 uniform float damping;
 uniform float shininess;
 uniform float gammaCorrection;
+uniform float ambientLight;
 
 void main(void) {
     if (isEmissive) {
@@ -88,7 +87,7 @@ void main(void) {
         }
 
         // Add ambient light
-        totalDiffuse = max(totalDiffuse, AMBIENT_LIGHT * colour);
+        totalDiffuse = max(totalDiffuse, ambientLight * colour);
 
         // Compute out colour
         outColour = vec4(pow(totalDiffuse + totalSpecular, vec3(1.0/gammaCorrection)), 1.0);

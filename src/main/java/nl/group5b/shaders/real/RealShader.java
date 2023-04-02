@@ -7,6 +7,7 @@ import nl.group5b.shaders.ShaderProgram;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 
 public class RealShader extends ShaderProgram {
@@ -24,6 +25,7 @@ public class RealShader extends ShaderProgram {
     private int toShadowMapSpaceLocation;
     private int shadowMapLocation;
     private int gammaCorrectionLocation;
+    private int ambientLightLocation;
 
     private int[] lightPositionLocations;
     private int[] lightColourLocations;
@@ -52,6 +54,7 @@ public class RealShader extends ShaderProgram {
         toShadowMapSpaceLocation = super.getUniformLocation("toShadowMapSpace");
         shadowMapLocation = super.getUniformLocation("shadowMap");
         gammaCorrectionLocation = super.getUniformLocation("gammaCorrection");
+        ambientLightLocation = super.getUniformLocation("ambientLight");
 
         int lightCount = super.getLightCount();
 
@@ -83,6 +86,10 @@ public class RealShader extends ShaderProgram {
 
     public void loadGammaCorrection(float gammaCorrection) {
         super.loadFloat(gammaCorrectionLocation, gammaCorrection);
+    }
+
+    public void loadAmbientLight(float ambientLight) {
+        super.loadFloat(ambientLightLocation, ambientLight);
     }
 
     public void loadProjectionMatrix(Matrix4f matrix) {

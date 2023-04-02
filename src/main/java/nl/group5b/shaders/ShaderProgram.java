@@ -111,10 +111,6 @@ public abstract class ShaderProgram {
                     String[] split = line.split(" ");
                     split[2] = String.valueOf(lightCount);
                     line = String.join(" ", split);
-                } else if (line.startsWith("#define AMBIENT_LIGHT")) {
-                    String[] split = line.split(" ");
-                    split[2] = String.valueOf(Settings.AMBIENT_LIGHT);
-                    line = String.join(" ", split);
                 } else if (line.startsWith("#define SHADOW_MAP_SIZE")) {
                     String[] split = line.split(" ");
                     split[2] = String.valueOf(Settings.SHADOW_MAP_RESOLUTION);

@@ -53,6 +53,7 @@ public class MasterRenderer {
         // Load lights (should be done every frame, because the lights can move)
         shader.start();
         shader.loadLights(lights);
+        shader.loadAmbientLight(Settings.AMBIENT_LIGHT);
         shader.loadToShadowMapSpaceMatrix(directionalShadowRenderer.getToShadowMapSpaceMatrix());
         shader.stop();
     }

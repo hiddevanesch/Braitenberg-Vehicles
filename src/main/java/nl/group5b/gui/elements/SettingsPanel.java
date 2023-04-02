@@ -13,6 +13,7 @@ public class SettingsPanel extends Element {
     private final Light sun;
 
     private final float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
+    private final float[] ambientLight = {Settings.AMBIENT_LIGHT};
     private final float[] sunPosition = {
             Settings.SUN_DEFAULT_POSITION.x(),
             Settings.SUN_DEFAULT_POSITION.y(),
@@ -37,6 +38,12 @@ public class SettingsPanel extends Element {
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat("##slider_sun_brightness", sunBrightness, 0, 1, "%.2f")) {
             sun.setColour(new Vector3f(sunBrightness[0], sunBrightness[0], sunBrightness[0]));
+        }
+
+        ImGui.text("Ambient light");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.sliderFloat("##slider_ambient_light", ambientLight, 0, 1, "%.2f")) {
+            Settings.AMBIENT_LIGHT = ambientLight[0];
         }
 
 //        ImGui.text("Sun position");
