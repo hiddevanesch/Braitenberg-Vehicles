@@ -9,14 +9,15 @@ import nl.group5b.engine.DisplayBuilder;
 import nl.group5b.gui.Element;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
+import nl.group5b.model.models.AttachableLamp;
 import nl.group5b.model.models.BraitenbergVehicle;
+import nl.group5b.model.models.Lamp;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class MainPanel extends Element {
     private final ModelLoader modelLoader;
 
     private final List<Body> bodies;
+    private final Lamp[] lamps;
     List<Class<? extends BraitenbergVehicle>> vehicleClasses = new ArrayList<>();
 
     private Camera camera;
@@ -42,9 +44,15 @@ public class MainPanel extends Element {
     private float[] spawnPosition = {0, 0};
     private float[] spawnRotation = {0};
 
-    public MainPanel(long window, ModelLoader modelLoader, List<Body> bodies) {
+    private Lamp selectedLamp = null;
+    private final float[] currentLampPosition = {0, 0, 0};
+    private final float[] currentLampColour = {0, 0, 0};
+    private final float[] currentLampAttenuation = {0, 0, 0};
+
+    public MainPanel(long window, ModelLoader modelLoader, List<Body> bodies, Lamp[] lamps) {
         this.modelLoader = modelLoader;
         this.bodies = bodies;
+        this.lamps = lamps;
 
         thirdPersonCamera.enableZoom(window);
         thirdPersonCamera.enableMouseTracking(window);
@@ -361,6 +369,101 @@ public class MainPanel extends Element {
     }
 
     private void renderLightsTab(float contentWidth) {
+        // Get selected vehicle name
+        String selectedLampName = selectedLamp != null ? selectedLamp.getName() : "Select lamp";
+
+        // Render vehicle selector
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.beginCombo("##combo_vehicles", selectedLampName)){
+            for (Lamp lamp : lamps) {
+                if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
+                    selectedLamp = lamp;
+
+                    Vector3f lampPosition = lamp.getPosition();
+                    currentLampPosition[0] = lampPosition.x();
+                    currentLampPosition[1] = lampPosition.y();
+                    currentLampPosition[2] = lampPosition.z();
+
+                    Vector3f lampColour = lamp.getColour();
+                    currentLampColour[0] = lampColour.x();
+                    currentLampColour[1] = lampColour.y();
+                    currentLampColour[2] = lampColour.z();
+
+                    Vector3f lampAttenuation = lamp.getAttenuation();
+                    currentLampAttenuation[0] = lampAttenuation.x();
+                    currentLampAttenuation[1] = lampAttenuation.y();
+                    currentLampAttenuation[2] = lampAttenuation.z();
+
+                }
+            }
+            ImGui.endCombo();
+        }
+
+        ImGui.separator(); // =======================================================================================
+
+        if (selectedLamp != null) {
+            renderLampData(contentWidth);
+        }
+    }
+
+    private void renderLampData(float contentWidth) {
+        if (selectedLamp instanceof AttachableLamp attachableLamp) {
+
+            boolean disabled = selectedVehicle == null;
+
+            if (disabled) {
+                ImGui.beginDisabled();
+            }
+
+            boolean selectedVehicleHasLamp = false;
+
+            if (!disabled) {
+                selectedVehicleHasLamp = selectedVehicle.hasLamp();
+            }
+
+            // Only when selected vehicle is not null and attachbleLamp is selected
+            if (ImGui.checkbox("Attach to selected vehicle", selectedVehicleHasLamp)) {
+                if (selectedVehicle.hasLamp()) {
+                    bodies.remove(attachableLamp);
+                    selectedVehicle.removeLamp();
+                } else {
+                    selectedVehicle.attachLamp(attachableLamp);
+                    bodies.add(attachableLamp);
+                }
+            }
+
+            if (disabled) {
+                ImGui.endDisabled();
+            }
+
+        } else {
+            if (ImGui.checkbox("Enabled", selectedLamp.isEnabled())) {
+                if (selectedLamp.isEnabled()) {
+                    selectedLamp.disable();
+                } else {
+                    selectedLamp.enable();
+                }
+            }
+
+            ImGui.text("Position (x, y, z)");
+            ImGui.setNextItemWidth(contentWidth);
+            if (ImGui.sliderFloat3("##slider_position", currentLampPosition, -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.0f")) {
+                selectedLamp.setPosition(new Vector3f(currentLampPosition[0], currentLampPosition[1], currentLampPosition[2]));
+            }
+        }
+
+        ImGui.text("Color (r, g, b)");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.colorEdit3("##color_button", currentLampColour)) {
+            selectedLamp.setColour(new Vector3f(currentLampColour[0], currentLampColour[1], currentLampColour[2]));
+        }
+
+        ImGui.text("Attenuation (c, l, q)");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.sliderFloat3("##slider_attenuation", currentLampAttenuation, 0.2f, 1, "%.1f")) {
+            selectedLamp.getLight().setAttenuation(new Vector3f(currentLampAttenuation[0], currentLampAttenuation[1], currentLampAttenuation[2]));
+        }
+
     }
 
     private void updateVehiclePosition() {

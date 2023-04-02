@@ -11,14 +11,15 @@ import java.io.FileNotFoundException;
 public class Lamp extends Body implements PositionHandler {
 
     private final Light light;
+    private boolean isEnabled = false;
 
     public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f colour,
                 Vector3f attenuation) throws FileNotFoundException {
         Model lamp = OBJLoader.loadOBJ("lamp", modelLoader);
         Model lampBase = OBJLoader.loadOBJ("lampbase", modelLoader);
 
-        Material lampMaterial = new Material(colour.x, colour.y, colour.z, true);
-        Material metalMaterial = new Material(0.5f, 0.5f, 0.5f, 2, 0.5f);
+        Material lampMaterial = new Material(colour, true);
+        Material metalMaterial = new Material(new Vector3f(0.5f, 0.5f, 0.5f), 2, 0.5f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
@@ -28,30 +29,33 @@ public class Lamp extends Body implements PositionHandler {
         Vector3f[] startingRotations = {defaultRotation, defaultRotation};
         float[] scales = {1, 1};
 
-        this.light = new Light(new Vector4f(position, 1), colour, attenuation);
+        this.light = new Light(new Vector4f(position, 1), colour, attenuation, isEnabled);
 
         super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
     }
 
     @Override
     public void setPosition(Vector3f position) {
-        super.getBodyElements()[0].getEntity().setPosition(position);
+        super.getBodyElements()[0].getEntity().setPosition(new Vector3f(position));
+        super.getBodyElements()[1].getEntity().setPosition(new Vector3f(position));
         this.light.setPosition(new Vector4f(position, 1));
     }
 
     @Override
     public void setRotation(Vector3f rotation) {
-        super.getBodyElements()[0].getEntity().setRotation(rotation);
+        // Lamp does not have to rotate
     }
 
     @Override
     public void movePosition(Vector3f position) {
-        // TODO implement
+        super.getBodyElements()[0].getEntity().move(position);
+        super.getBodyElements()[1].getEntity().move(position);
+        this.light.getPosition().add(new Vector4f(position, 1));
     }
 
     @Override
     public void moveRotation(Vector3f rotation) {
-        // TODO implement
+        // Lamp does not have to rotate
     }
 
     @Override
@@ -66,5 +70,37 @@ public class Lamp extends Body implements PositionHandler {
 
     public Light getLight() {
         return light;
+    }
+
+    // Get the name of the lamp
+    public String getName() {
+        return this.getClass().getSimpleName() + " " + System.identityHashCode(this);
+    }
+
+    public Vector3f getColour() {
+        return this.light.getColour();
+    }
+
+    public void setColour(Vector3f colour) {
+        this.light.setColour(colour);
+        this.getBodyElements()[0].getMaterial().setColour(colour);
+    }
+
+    public Vector3f getAttenuation() {
+        return this.light.getAttenuation();
+    }
+
+    public void enable() {
+        this.isEnabled = true;
+        this.light.enable();
+    }
+
+    public void disable() {
+        this.isEnabled = false;
+        this.light.disable();
+    }
+
+    public boolean isEnabled() {
+        return this.isEnabled;
     }
 }

@@ -18,6 +18,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     static final Vector3f carRightWheelRelativePosition = new Vector3f(-0.72f, 0.3f, 0);
     static final Vector3f carLeftSensorRelativePosition = new Vector3f(0.6f, 0.5f, 1.75f);
     static final Vector3f carRightSensorRelativePosition = new Vector3f(-0.6f, 0.5f, 1.75f);
+    static final Vector3f carLampRelativePosition = new Vector3f(0, 0.79f, 0);
 
     protected float leftWheelRotation = 0;
     protected float rightWheelRotation = 0;
@@ -28,17 +29,19 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected HitBox hitBox;
     protected List<Body> bodiesCollision;
 
-    private Sensor leftSensor;
-    private Sensor rightSensor;
+    private final Sensor leftSensor;
+    private final Sensor rightSensor;
+
+    private AttachableLamp lamp = null;
 
     public BraitenbergVehicle(ModelLoader modelLoader) throws FileNotFoundException {
         Model carBody = OBJLoader.loadOBJ("carbody", modelLoader);
         Model carWheel = OBJLoader.loadOBJ("carwheel", modelLoader);
         Model sensorCamera = OBJLoader.loadOBJ("camera", modelLoader);
 
-        Material brownMaterial = new Material(0.45f, 0.30f, 0.2f, 10, 0.5f);
-        Material blackMaterial = new Material(0.2f, 0.2f, 0.2f, 10, 0.1f);
-        Material greyMaterial = new Material(0.5f, 0.5f, 0.5f, 10, 0.1f);
+        Material brownMaterial = new Material(new Vector3f(0.45f, 0.30f, 0.2f), 10, 0.5f);
+        Material blackMaterial = new Material(new Vector3f(0.2f, 0.2f, 0.2f), 10, 0.1f);
+        Material greyMaterial = new Material(new Vector3f(0.5f, 0.5f, 0.5f), 10, 0.1f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
@@ -98,6 +101,11 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         super.getBodyElements()[4].getEntity().setPosition(rightSensorPosition);
         this.leftSensor.setPosition(leftSensorPosition);
         this.rightSensor.setPosition(rightSensorPosition);
+
+        if (lamp != null) {
+            Vector3f lampPosition = new Vector3f(position).add(carLampRelativePosition);
+            lamp.setPosition(lampPosition);
+        }
     }
 
     @Override
@@ -140,8 +148,14 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         super.getBodyElements()[2].getEntity().move(position);
         super.getBodyElements()[3].getEntity().move(position);
         super.getBodyElements()[4].getEntity().move(position);
-        this.leftSensor.getPosition().add(position);
-        this.rightSensor.getPosition().add(position);
+
+        // We do not want to move the sensors here, this causes rubber banding
+        //this.leftSensor.getPosition().add(position);
+        //this.rightSensor.getPosition().add(position);
+
+        if (this.lamp != null) {
+            this.lamp.movePosition(position);
+        }
     }
 
     @Override
@@ -153,7 +167,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     @Override
     public Vector3f getPosition() {
-        return super.getBodyElements()[0].getEntity().getPosition();
+        Vector3f position = super.getBodyElements()[0].getEntity().getPosition();
+        return new Vector3f(position.x(), 0, position.z());
     }
 
     @Override
@@ -208,5 +223,18 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public void setCollisionBodies(List<Body> bodiesPotentialCollide) {
         this.bodiesCollision = bodiesPotentialCollide;
+    }
+
+    public void attachLamp(AttachableLamp lamp) {
+        this.lamp = lamp;
+        this.lamp.setPosition(new Vector3f(getPosition()).add(carLampRelativePosition));
+    }
+
+    public boolean hasLamp() {
+        return lamp != null;
+    }
+
+    public void removeLamp() {
+        lamp = null;
     }
 }

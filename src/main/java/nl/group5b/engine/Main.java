@@ -1,7 +1,5 @@
 package nl.group5b.engine;
 
-import nl.group5b.camera.BodyCamera;
-import nl.group5b.camera.Camera;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.MainPanel;
@@ -9,9 +7,7 @@ import nl.group5b.gui.elements.SettingsPanel;
 import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
-import nl.group5b.model.models.Arena;
-import nl.group5b.model.models.Controllable;
-import nl.group5b.model.models.Lamp;
+import nl.group5b.model.models.*;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -46,24 +42,39 @@ public class Main {
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
 
-        Lamp colouredLamp = new Lamp(modelLoader, new Vector3f(0, 1.5f, 0),
+        ControllableLamp controllableLamp = new ControllableLamp(modelLoader, new Vector3f(0, 0, 0),
+                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
+
+        AttachableLamp attachableLamp = new AttachableLamp(modelLoader, new Vector3f(0, 0, 0),
                 new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
 
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
-                arena,
-                colouredLamp
+                arena
         ));
 
         // Load lights into array (has to be an array with predefined length)
         // IMPORTANT! Sun HAS to be present at index 0 ======================
-        Light[] lights = {
-                sun,
-                colouredLamp.getLight(),
-        };
+        Light[] lights = new Light[3 + Settings.DYNAMIC_LIGHT_COUNT];
+        lights[0] = sun;
+        lights[1] = attachableLamp.getLight();
+        lights[2] = controllableLamp.getLight();
+
+        // Create an array of all lamps
+        Lamp[] lamps = new Lamp[2 + Settings.DYNAMIC_LIGHT_COUNT];
+        lamps[0] = attachableLamp;
+        lamps[1] = controllableLamp;
+
+        // Add the rest of the lamps (we start at i = 3 because the first 3 lamps are already added)
+        for (int i = 3; i < 3 + Settings.DYNAMIC_LIGHT_COUNT; i++) {
+            Lamp lamp = new Lamp(modelLoader, new Vector3f(0, 1.5f, 0),
+                    new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
+            lamps[i-1] = lamp;
+            lights[i] = lamp.getLight();
+        }
 
         // Create GUI Elements
-        MainPanel mainPanel = new MainPanel(window, modelLoader, bodies);
+        MainPanel mainPanel = new MainPanel(window, modelLoader, bodies, lamps);
         SettingsPanel settingsPanel = new SettingsPanel(sun);
 
         // Load GUI Elements into array

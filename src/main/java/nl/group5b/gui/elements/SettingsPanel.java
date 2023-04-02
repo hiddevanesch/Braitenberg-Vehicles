@@ -10,12 +10,12 @@ import org.joml.Vector3f;
 
 public class SettingsPanel extends Element {
 
-    private Light sun;
+    private final Light sun;
 
-    private float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
-    private int[] sunPosition = {Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z};
-    private float[] gamma = {Settings.VIEWPORT_GAMMA_CORRECTION};
-    private float[] fov = {Settings.VIEWPORT_FOV};
+    private final float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
+    private final int[] sunPosition = {Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z};
+    private final float[] gamma = {Settings.VIEWPORT_GAMMA_CORRECTION};
+    private final float[] fov = {Settings.VIEWPORT_FOV};
 
     public SettingsPanel(Light sun) {
         this.sun = sun;

@@ -13,7 +13,7 @@ public class Settings {
     public static final int VAO_NORMAL_ATTR = 2;
 
     // Camera
-    public static final float CAMERA_3P_HEIGHT_OFFSET = 0.5f;
+    public static final float CAMERA_3P_HEIGHT_OFFSET = 0.8f;
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
@@ -29,6 +29,7 @@ public class Settings {
     public static int SUN_X = 0;
     public static int SUN_Y = 1;
     public static int SUN_Z = 0;
+    public static final int DYNAMIC_LIGHT_COUNT = 5;
     public static final float ARENA_RADIUS = 10;
     public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
 

@@ -9,6 +9,7 @@ public class Light {
     private Vector4f position; // w = 0 -> directional light, w = 1 -> point light
     private Vector3f colour;
     private Vector3f attenuation = new Vector3f(1, 0, 0);
+    private boolean isEnabled = true;
 
     public Light(Vector4f position, Vector3f colour) {
         this.position = position;
@@ -19,6 +20,11 @@ public class Light {
         this.position = position;
         this.colour = colour;
         this.attenuation = attenuation;
+    }
+
+    public Light(Vector4f position, Vector3f colour, Vector3f attenuation, boolean isEnabled) {
+        this(position, colour, attenuation);
+        this.isEnabled = isEnabled;
     }
 
     public Vector4f getPosition() {
@@ -43,5 +49,13 @@ public class Light {
 
     public void setAttenuation(Vector3f attenuation) {
         this.attenuation = attenuation;
+    }
+
+    public void enable() {
+        this.isEnabled = true;
+    }
+
+    public void disable() {
+        this.isEnabled = false;
     }
 }
