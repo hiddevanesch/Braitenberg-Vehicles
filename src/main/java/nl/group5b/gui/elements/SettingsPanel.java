@@ -13,7 +13,11 @@ public class SettingsPanel extends Element {
     private final Light sun;
 
     private final float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
-    private final int[] sunPosition = {Settings.SUN_X, Settings.SUN_Y, Settings.SUN_Z};
+    private final float[] sunPosition = {
+            Settings.SUN_DEFAULT_POSITION.x(),
+            Settings.SUN_DEFAULT_POSITION.y(),
+            Settings.SUN_DEFAULT_POSITION.z()
+    };
     private final float[] gamma = {Settings.VIEWPORT_GAMMA_CORRECTION};
     private final float[] fov = {Settings.VIEWPORT_FOV};
 

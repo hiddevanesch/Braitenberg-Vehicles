@@ -23,6 +23,7 @@ uniform sampler2D shadowMap;
 
 uniform vec3 lightColour[LIGHT_COUNT];
 uniform vec3 lightAttenuation[LIGHT_COUNT];
+uniform bool lightIsEnabled[LIGHT_COUNT];
 uniform vec3 colour;
 uniform bool isEmissive;
 uniform float damping;
@@ -55,6 +56,9 @@ void main(void) {
         vec3 totalSpecular = vec3(0.0, 0.0, 0.0);
 
         for (int i = 0; i < LIGHT_COUNT; i++) {
+            if (!lightIsEnabled[i]) {
+                continue;
+            }
             float distanceToLight = length(toLight[i]);
             float attenuationFactor = lightAttenuation[i].x + lightAttenuation[i].y * distanceToLight
             + lightAttenuation[i].z * distanceToLight * distanceToLight;

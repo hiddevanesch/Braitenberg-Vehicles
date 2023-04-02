@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 public class Lamp extends Body implements PositionHandler {
 
     private final Light light;
-    private boolean isEnabled = false;
+    private boolean enabled = false;
 
     public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f colour,
                 Vector3f attenuation) throws FileNotFoundException {
@@ -23,13 +23,16 @@ public class Lamp extends Body implements PositionHandler {
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
+        Vector3f bulbPosition = new Vector3f(position);
+        Vector3f basePosition = new Vector3f(position);
+
         Model[] loadedModels = {lamp, lampBase};
         Material[] materialSets = {lampMaterial, metalMaterial};
-        Vector3f[] startingPositions = {position, position};
+        Vector3f[] startingPositions = {bulbPosition, basePosition};
         Vector3f[] startingRotations = {defaultRotation, defaultRotation};
         float[] scales = {1, 1};
 
-        this.light = new Light(new Vector4f(position, 1), colour, attenuation, isEnabled);
+        this.light = new Light(new Vector4f(position, 1), colour, attenuation, enabled);
 
         super.setBody(loadedModels, materialSets, startingPositions, startingRotations, scales);
     }
@@ -91,16 +94,16 @@ public class Lamp extends Body implements PositionHandler {
     }
 
     public void enable() {
-        this.isEnabled = true;
+        this.enabled = true;
         this.light.enable();
     }
 
     public void disable() {
-        this.isEnabled = false;
+        this.enabled = false;
         this.light.disable();
     }
 
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 }

@@ -351,6 +351,7 @@ public class MainPanel extends Element {
                                 newInstance(modelLoader, positionVector, rotationVector);
                         bodies.add(vehicle);
                         vehicle.setBodies(bodies);
+                        selectedVehicle = vehicle;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -379,10 +380,7 @@ public class MainPanel extends Element {
                 if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
                     selectedLamp = lamp;
 
-                    Vector3f lampPosition = lamp.getPosition();
-                    currentLampPosition[0] = lampPosition.x();
-                    currentLampPosition[1] = lampPosition.y();
-                    currentLampPosition[2] = lampPosition.z();
+                    // The position is updated every frame (because the ControllableLamp can move)
 
                     Vector3f lampColour = lamp.getColour();
                     currentLampColour[0] = lampColour.x();
@@ -421,14 +419,22 @@ public class MainPanel extends Element {
                 selectedVehicleHasLamp = selectedVehicle.hasLamp();
             }
 
-            // Only when selected vehicle is not null and attachbleLamp is selected
             if (ImGui.checkbox("Attach to selected vehicle", selectedVehicleHasLamp)) {
                 if (selectedVehicle.hasLamp()) {
                     bodies.remove(attachableLamp);
+                    selectedLamp.disable();
+                    attachableLamp.removeVehicle();
                     selectedVehicle.removeLamp();
                 } else {
                     selectedVehicle.attachLamp(attachableLamp);
-                    bodies.add(attachableLamp);
+                    // Check if the light is already attached to another vehicle
+                    if (attachableLamp.getVehicle() != null) {
+                        attachableLamp.getVehicle().removeLamp();
+                    } else {
+                        selectedLamp.enable();
+                        bodies.add(attachableLamp);
+                    }
+                    attachableLamp.setVehicle(selectedVehicle);
                 }
             }
 
@@ -439,16 +445,26 @@ public class MainPanel extends Element {
         } else {
             if (ImGui.checkbox("Enabled", selectedLamp.isEnabled())) {
                 if (selectedLamp.isEnabled()) {
+                    bodies.remove(selectedLamp);
                     selectedLamp.disable();
                 } else {
                     selectedLamp.enable();
+                    bodies.add(selectedLamp);
                 }
             }
 
+            Vector3f lampPosition = selectedLamp.getPosition();
+            currentLampPosition[0] = lampPosition.x();
+            currentLampPosition[1] = lampPosition.y();
+            currentLampPosition[2] = lampPosition.z();
+
             ImGui.text("Position (x, y, z)");
             ImGui.setNextItemWidth(contentWidth);
-            if (ImGui.sliderFloat3("##slider_position", currentLampPosition, -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.0f")) {
-                selectedLamp.setPosition(new Vector3f(currentLampPosition[0], currentLampPosition[1], currentLampPosition[2]));
+            if (ImGui.sliderFloat3("##slider_position", currentLampPosition,
+                    -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.1f")) {
+                selectedLamp.setPosition(
+                        new Vector3f(currentLampPosition[0], currentLampPosition[1], currentLampPosition[2])
+                );
             }
         }
 
@@ -461,7 +477,9 @@ public class MainPanel extends Element {
         ImGui.text("Attenuation (c, l, q)");
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat3("##slider_attenuation", currentLampAttenuation, 0.2f, 1, "%.1f")) {
-            selectedLamp.getLight().setAttenuation(new Vector3f(currentLampAttenuation[0], currentLampAttenuation[1], currentLampAttenuation[2]));
+            selectedLamp.getLight().setAttenuation(
+                    new Vector3f(currentLampAttenuation[0], currentLampAttenuation[1], currentLampAttenuation[2])
+            );
         }
 
     }

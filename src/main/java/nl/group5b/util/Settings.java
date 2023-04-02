@@ -1,5 +1,7 @@
 package nl.group5b.util;
 
+import org.joml.Vector3f;
+
 public class Settings {
 
     // Main window
@@ -26,15 +28,15 @@ public class Settings {
 
     // Scene
     public static float SUN_BRIGHTNESS = 0.5f;
-    public static int SUN_X = 0;
-    public static int SUN_Y = 1;
-    public static int SUN_Z = 0;
+    public static Vector3f SUN_DEFAULT_POSITION = new Vector3f(0, 1, 0);
+    public static Vector3f LAMP_DEFAULT_POSITION = new Vector3f(0, 1, 0);
     public static final int DYNAMIC_LIGHT_COUNT = 5;
     public static final float ARENA_RADIUS = 10;
     public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
+    public static final float LAMP_MOVEMENT_SPEED = 5f;
 
     // Vehicle
     public static final float VEHICLE_SPEED = 1.5f;

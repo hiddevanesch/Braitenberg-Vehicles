@@ -28,6 +28,7 @@ public class RealShader extends ShaderProgram {
     private int[] lightPositionLocations;
     private int[] lightColourLocations;
     private int[] lightAttenuationLocations;
+    private int[] lightIsEnabledLocations;
 
     public RealShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
@@ -57,11 +58,13 @@ public class RealShader extends ShaderProgram {
         lightPositionLocations = new int[lightCount];
         lightColourLocations = new int[lightCount];
         lightAttenuationLocations = new int[lightCount];
+        lightIsEnabledLocations = new int[lightCount];
 
         for (int i = 0; i < lightCount; i++) {
             lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
             lightColourLocations[i] = super.getUniformLocation("lightColour[" + i + "]");
             lightAttenuationLocations[i] = super.getUniformLocation("lightAttenuation[" + i + "]");
+            lightIsEnabledLocations[i] = super.getUniformLocation("lightIsEnabled[" + i + "]");
         }
     }
 
@@ -91,6 +94,7 @@ public class RealShader extends ShaderProgram {
             super.loadVector4f(lightPositionLocations[i], lights[i].getPosition());
             super.loadVector3f(lightColourLocations[i], lights[i].getColour());
             super.loadVector3f(lightAttenuationLocations[i], lights[i].getAttenuation());
+            super.loadBoolean(lightIsEnabledLocations[i], lights[i].isEnabled());
         }
     }
 
