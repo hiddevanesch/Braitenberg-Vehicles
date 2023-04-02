@@ -8,6 +8,8 @@ import nl.group5b.gui.elements.MainPanel;
 import nl.group5b.gui.elements.SettingsPanel;
 import nl.group5b.util.Settings;
 
+import java.io.FileNotFoundException;
+
 public class GUI {
 
     private final ImGuiImplGlfw glfwGui = new ImGuiImplGlfw();
@@ -22,7 +24,7 @@ public class GUI {
         this.elements = elements;
     }
 
-    public void render() {
+    public void render() throws FileNotFoundException {
         glfwGui.newFrame();
         ImGui.newFrame();
 

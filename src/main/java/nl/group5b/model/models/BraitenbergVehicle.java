@@ -237,4 +237,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     public void removeLamp() {
         lamp = null;
     }
+
+    public AttachableLamp getLamp() {
+        return lamp;
+    }
 }

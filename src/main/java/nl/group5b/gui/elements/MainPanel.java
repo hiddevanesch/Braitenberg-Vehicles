@@ -7,15 +7,18 @@ import nl.group5b.camera.BodyCamera;
 import nl.group5b.camera.Camera;
 import nl.group5b.engine.DisplayBuilder;
 import nl.group5b.gui.Element;
+import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.models.AttachableLamp;
 import nl.group5b.model.models.BraitenbergVehicle;
 import nl.group5b.model.models.Lamp;
+import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,8 +29,10 @@ public class MainPanel extends Element {
     private final ModelLoader modelLoader;
 
     private final List<Body> bodies;
-    private final Lamp[] lamps;
+    private final List<Light> lights;
+    private final RealShader shader;
     List<Class<? extends BraitenbergVehicle>> vehicleClasses = new ArrayList<>();
+    List<Class<? extends Lamp>> lampClasses = new ArrayList<>();
 
     private Camera camera;
     private final BodyCamera thirdPersonCamera = new BodyCamera();
@@ -41,18 +46,20 @@ public class MainPanel extends Element {
     private final float[] vehicleSpeedsRight = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private final float[] speeds = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private int vehicleSpeedsIndex = 0;
-    private float[] spawnPosition = {0, 0};
-    private float[] spawnRotation = {0};
+    private float[] vehicleSpawnPosition = {0, 0};
+    private float[] vehicleSpawnRotation = {0};
 
     private Lamp selectedLamp = null;
+    private Class<? extends Lamp> selectedLampClass = null;
     private final float[] currentLampPosition = {0, 0, 0};
     private final float[] currentLampColour = {0, 0, 0};
     private final float[] currentLampAttenuation = {0, 0, 0};
 
-    public MainPanel(long window, ModelLoader modelLoader, List<Body> bodies, Lamp[] lamps) {
+    public MainPanel(long window, ModelLoader modelLoader, RealShader shader, List<Body> bodies, List<Light> lights) {
         this.modelLoader = modelLoader;
         this.bodies = bodies;
-        this.lamps = lamps;
+        this.shader = shader;
+        this.lights = lights;
 
         thirdPersonCamera.enableZoom(window);
         thirdPersonCamera.enableMouseTracking(window);
@@ -61,6 +68,9 @@ public class MainPanel extends Element {
 
         // Add vehicle classes
         getVehicleTypes();
+
+        // Add lamp classes
+        getLampTypes();
     }
 
     private void getVehicleTypes() {
@@ -103,8 +113,47 @@ public class MainPanel extends Element {
         }
     }
 
+    private void getLampTypes() {
+        // Get lamp package
+        String lampPackage = Lamp.class.getPackageName();
+
+        // Get the URL of the package directory
+        URL packageUrl = Thread.currentThread().getContextClassLoader().getResource(
+                lampPackage.replace(".", "/")
+        );
+
+        if (packageUrl != null && packageUrl.getProtocol().equals("file")) {
+            try {
+                // Convert the URL to a file path and get the package directory
+                File packageDir = new File(packageUrl.toURI());
+
+                // Get all the files in the package directory
+                File[] files = packageDir.listFiles();
+
+                // Iterate over all the files in the package directory
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isFile() && file.getName().endsWith(".class")) {
+                            // Convert the file name to a class name and load the class
+                            String className = lampPackage + "." +
+                                    file.getName().substring(0, file.getName().length() - 6);
+                            Class<?> cls = Class.forName(className);
+
+                            // Check if the class is a subtype of Lamp (or Lamp itself), but not AttachableLamp
+                            if (Lamp.class.isAssignableFrom(cls) && !AttachableLamp.class.isAssignableFrom(cls)) {
+                                lampClasses.add(cls.asSubclass(Lamp.class));
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
-    public void render() {
+    public void render() throws FileNotFoundException {
         ImGui.setNextWindowPos(0, 0);
         ImGui.setNextWindowSize(Settings.PANEL_WIDTH_MAIN, DisplayBuilder.getHeight());
         ImGui.begin("Main", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize);
@@ -132,7 +181,7 @@ public class MainPanel extends Element {
         ImGui.end();
     }
 
-    private void renderVehiclesTab(float contentWidth) {
+    private void renderVehiclesTab(float contentWidth) throws FileNotFoundException {
         float buttonWidth = 30;
         float selectorWidth = contentWidth - 2 * buttonWidth - 2 * ImGui.getStyle().getItemSpacingX();
 
@@ -167,10 +216,21 @@ public class MainPanel extends Element {
         // Render vehicle remove button
         ImGui.sameLine();
         if (ImGui.button("-", buttonWidth, 0)) {
+            AttachableLamp attachableLamp = selectedVehicle.getLamp();
+            if (attachableLamp != null) {
+                if (selectedLamp == attachableLamp) {
+                    selectedLamp = null;
+                }
+                bodies.remove(attachableLamp);
+                lights.remove(attachableLamp.getLight());
+                shader.recompile(lights.size());
+            }
+
             if (camera == thirdPersonCamera) {
                 camera = topDownCamera;
                 thirdPersonCamera.unbind();
             }
+
             bodies.remove(selectedVehicle);
         }
 
@@ -180,7 +240,7 @@ public class MainPanel extends Element {
             ImGui.openPopup("Add vehicle");
         }
 
-        renderAddPopup();
+        renderAddVehiclePopup();
 
         ImGui.separator(); // =======================================================================================
 
@@ -191,7 +251,7 @@ public class MainPanel extends Element {
         }
     }
 
-    private void renderVehicleData(float contentWidth) {
+    private void renderVehicleData(float contentWidth) throws FileNotFoundException {
         ImGui.beginChild("##child_vehicle");
 
         if (ImGui.checkbox("Third person camera", camera == thirdPersonCamera)) {
@@ -288,10 +348,33 @@ public class MainPanel extends Element {
 
         ImGui.endTable();
 
+        boolean selectedVehicleHasLamp = selectedVehicle.hasLamp();
+
+        String lampText = "Attach lamp\n" + (selectedVehicleHasLamp ? "(" + selectedVehicle.getLamp().getName() + ")" : "\u00A0");
+
+        if (ImGui.checkbox(lampText, selectedVehicleHasLamp)) {
+            if (selectedVehicleHasLamp) {
+                Lamp attachableLamp = selectedVehicle.getLamp();
+                selectedVehicle.removeLamp();
+                bodies.remove(attachableLamp);
+                lights.remove(attachableLamp.getLight());
+                shader.recompile(lights.size());
+            } else {
+                AttachableLamp attachableLamp = new AttachableLamp(
+                        modelLoader, new Vector3f(Settings.LAMP_DEFAULT_POSITION),
+                        new Vector3f(Settings.LAMP_DEFAULT_COLOUR), new Vector3f(Settings.LAMP_DEFAULT_ATTENUATION));
+                attachableLamp.setVehicle(selectedVehicle);
+                selectedVehicle.attachLamp(attachableLamp);
+                bodies.add(attachableLamp);
+                lights.add(attachableLamp.getLight());
+                shader.recompile(lights.size());
+            }
+        }
+
         ImGui.endChild();
     }
 
-    private void renderAddPopup() {
+    private void renderAddVehiclePopup() {
         // Add vehicle popup
         ImGui.setNextWindowPos(
                 (float) DisplayBuilder.getWidth() / 2,
@@ -310,7 +393,7 @@ public class MainPanel extends Element {
             // Render vehicle type selector
             ImGui.text("Vehicle type");
             ImGui.setNextItemWidth(contentWidth);
-            if (ImGui.beginCombo("##combo_vehicle_type", selectedVehicleClassName, ImGuiComboFlags.NoArrowButton)) {
+            if (ImGui.beginCombo("##combo_vehicle_type", selectedVehicleClassName)) {
                 for (Class<? extends BraitenbergVehicle> vehicleClass : vehicleClasses) {
                     if (ImGui.selectable(vehicleClass.getSimpleName(), selectedVehicleClass == vehicleClass)) {
                         selectedVehicleClass = vehicleClass;
@@ -322,13 +405,13 @@ public class MainPanel extends Element {
             // Render position sliders
             ImGui.text("Position (x, z)");
             ImGui.setNextItemWidth(contentWidth);
-            ImGui.sliderFloat2("##slider_coordinates", spawnPosition,
+            ImGui.sliderFloat2("##slider_vehicle_spawn_coordinates", vehicleSpawnPosition,
                     -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.0f");
 
             // Render rotation slider
             ImGui.text("Rotation (degrees)");
             ImGui.setNextItemWidth(contentWidth);
-            ImGui.sliderFloat("##slider_rotation", spawnRotation, 0, 360, "%.0f");
+            ImGui.sliderFloat("##slider_vehicle_spawn_rotation", vehicleSpawnRotation, 0, 360, "%.0f");
 
             ImGui.separator();
 
@@ -344,8 +427,8 @@ public class MainPanel extends Element {
 
                     ImGui.closeCurrentPopup();
                     try {
-                        Vector3f positionVector = new Vector3f(spawnPosition[0], 0, spawnPosition[1]);
-                        Vector3f rotationVector = new Vector3f(0, spawnRotation[0], 0);
+                        Vector3f positionVector = new Vector3f(vehicleSpawnPosition[0], 0, vehicleSpawnPosition[1]);
+                        Vector3f rotationVector = new Vector3f(0, vehicleSpawnRotation[0], 0);
                         BraitenbergVehicle vehicle = selectedVehicleClass.
                                 getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class).
                                 newInstance(modelLoader, positionVector, rotationVector);
@@ -356,8 +439,8 @@ public class MainPanel extends Element {
                         e.printStackTrace();
                     }
                     selectedVehicleClass = null;
-                    spawnPosition = new float[]{0, 0};
-                    spawnRotation = new float[]{0};
+                    vehicleSpawnPosition = new float[]{0, 0};
+                    vehicleSpawnRotation = new float[]{0};
 
             }
 
@@ -370,32 +453,47 @@ public class MainPanel extends Element {
     }
 
     private void renderLightsTab(float contentWidth) {
-        // Get selected vehicle name
+        float buttonWidth = 30;
+        float selectorWidth = contentWidth - 2 * buttonWidth - 2 * ImGui.getStyle().getItemSpacingX();
+
+        // Get selected lamp name
         String selectedLampName = selectedLamp != null ? selectedLamp.getName() : "Select lamp";
 
-        // Render vehicle selector
-        ImGui.setNextItemWidth(contentWidth);
-        if (ImGui.beginCombo("##combo_vehicles", selectedLampName)){
-            for (Lamp lamp : lamps) {
-                if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
-                    selectedLamp = lamp;
+        // Render lamp selector
+        ImGui.setNextItemWidth(selectorWidth);
+        if (ImGui.beginCombo("##combo_lamps", selectedLampName)){
+            for (Body body : bodies) {
+                if (body instanceof Lamp lamp) {
+                    if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
+                        setSelectedLamp(lamp);
 
-                    // The position is updated every frame (because the ControllableLamp can move)
-
-                    Vector3f lampColour = lamp.getColour();
-                    currentLampColour[0] = lampColour.x();
-                    currentLampColour[1] = lampColour.y();
-                    currentLampColour[2] = lampColour.z();
-
-                    Vector3f lampAttenuation = lamp.getAttenuation();
-                    currentLampAttenuation[0] = lampAttenuation.x();
-                    currentLampAttenuation[1] = lampAttenuation.y();
-                    currentLampAttenuation[2] = lampAttenuation.z();
-
+                    }
                 }
             }
             ImGui.endCombo();
         }
+
+        // Render lamp remove button
+        ImGui.sameLine();
+        if (ImGui.button("-", buttonWidth, 0)) {
+            bodies.remove(selectedLamp);
+            lights.remove(selectedLamp.getLight());
+            shader.recompile(lights.size());
+            if (selectedLamp instanceof AttachableLamp attachableLamp) {
+                if (attachableLamp.getVehicle() != null) {
+                    attachableLamp.getVehicle().removeLamp();
+                }
+            }
+            selectedLamp = null;
+        }
+
+        // Render lamp add button
+        ImGui.sameLine();
+        if (ImGui.button("+", buttonWidth, 0)) {
+            ImGui.openPopup("Add lamp");
+        }
+
+        renderAddLampPopup();
 
         ImGui.separator(); // =======================================================================================
 
@@ -404,55 +502,76 @@ public class MainPanel extends Element {
         }
     }
 
-    private void renderLampData(float contentWidth) {
-        if (selectedLamp instanceof AttachableLamp attachableLamp) {
+    private void renderAddLampPopup() {
+        // Add vehicle popup
+        ImGui.setNextWindowPos(
+                (float) DisplayBuilder.getWidth() / 2,
+                (float) DisplayBuilder.getHeight() / 2,
+                ImGuiCond.None, 0.5f, 0.5f);
+        ImGui.setNextWindowSize(Settings.POPUP_WIDTH, 0);
+        if (ImGui.beginPopupModal("Add lamp", new ImBoolean(true), ImGuiWindowFlags.NoResize)) {
 
-            boolean disabled = selectedVehicle == null;
+            // Get available window width
+            float contentWidth = ImGui.getContentRegionAvailX();
 
+            // Get selected vehicle class name
+            String selectedLampClassName = selectedLampClass != null ?
+                    selectedLampClass.getSimpleName() : "Select lamp type";
+
+            // Render vehicle type selector
+            ImGui.text("Lamp type");
+            ImGui.setNextItemWidth(contentWidth);
+            if (ImGui.beginCombo("##combo_lamp_type", selectedLampClassName)) {
+                for (Class<? extends Lamp> lampClass : lampClasses) {
+                    if (ImGui.selectable(lampClass.getSimpleName(), selectedLampClass == lampClass)) {
+                        selectedLampClass = lampClass;
+                    }
+                }
+                ImGui.endCombo();
+            }
+
+            ImGui.separator();
+
+            boolean disabled = selectedLampClass == null;
+
+            // Disable add button if no vehicle type is selected
             if (disabled) {
                 ImGui.beginDisabled();
             }
 
-            boolean selectedVehicleHasLamp = false;
+            // Render add button
+            if (ImGui.button("Add", contentWidth, 0)) {
 
-            if (!disabled) {
-                selectedVehicleHasLamp = selectedVehicle.hasLamp();
-            }
-
-            if (ImGui.checkbox("Attach to selected vehicle", selectedVehicleHasLamp)) {
-                if (selectedVehicle.hasLamp()) {
-                    bodies.remove(attachableLamp);
-                    selectedLamp.disable();
-                    attachableLamp.removeVehicle();
-                    selectedVehicle.removeLamp();
-                } else {
-                    selectedVehicle.attachLamp(attachableLamp);
-                    // Check if the light is already attached to another vehicle
-                    if (attachableLamp.getVehicle() != null) {
-                        attachableLamp.getVehicle().removeLamp();
-                    } else {
-                        selectedLamp.enable();
-                        bodies.add(attachableLamp);
-                    }
-                    attachableLamp.setVehicle(selectedVehicle);
+                ImGui.closeCurrentPopup();
+                try {
+                    Lamp lamp = selectedLampClass.
+                            getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class, Vector3f.class).
+                            newInstance(
+                                    modelLoader,
+                                    new Vector3f(Settings.LAMP_DEFAULT_POSITION),
+                                    new Vector3f(Settings.LAMP_DEFAULT_COLOUR),
+                                    new Vector3f(Settings.LAMP_DEFAULT_ATTENUATION)
+                            );
+                    bodies.add(lamp);
+                    lights.add(lamp.getLight());
+                    shader.recompile(lights.size());
+                    setSelectedLamp(lamp);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                selectedLampClass = null;
             }
 
             if (disabled) {
                 ImGui.endDisabled();
             }
 
-        } else {
-            if (ImGui.checkbox("Enabled", selectedLamp.isEnabled())) {
-                if (selectedLamp.isEnabled()) {
-                    bodies.remove(selectedLamp);
-                    selectedLamp.disable();
-                } else {
-                    selectedLamp.enable();
-                    bodies.add(selectedLamp);
-                }
-            }
+            ImGui.endPopup();
+        }
+    }
 
+    private void renderLampData(float contentWidth) {
+        if (!(selectedLamp instanceof AttachableLamp)) {
             Vector3f lampPosition = selectedLamp.getPosition();
             currentLampPosition[0] = lampPosition.x();
             currentLampPosition[1] = lampPosition.y();
@@ -525,6 +644,22 @@ public class MainPanel extends Element {
             vehicleSpeedsRight[i] = 0;
         }
         vehicleSpeedsIndex = 0;
+    }
+
+    private void setSelectedLamp(Lamp lamp) {
+        selectedLamp = lamp;
+
+        // The position is updated every frame (because the ControllableLamp can move)
+
+        Vector3f lampColour = lamp.getColour();
+        currentLampColour[0] = lampColour.x();
+        currentLampColour[1] = lampColour.y();
+        currentLampColour[2] = lampColour.z();
+
+        Vector3f lampAttenuation = lamp.getAttenuation();
+        currentLampAttenuation[0] = lampAttenuation.x();
+        currentLampAttenuation[1] = lampAttenuation.y();
+        currentLampAttenuation[2] = lampAttenuation.z();
     }
 
     public Camera getCamera() {

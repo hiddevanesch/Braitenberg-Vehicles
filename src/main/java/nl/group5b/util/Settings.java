@@ -16,6 +16,7 @@ public class Settings {
 
     // Camera
     public static final float CAMERA_3P_HEIGHT_OFFSET = 0.8f;
+
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
@@ -30,7 +31,8 @@ public class Settings {
     public static float SUN_BRIGHTNESS = 0.5f;
     public static Vector3f SUN_DEFAULT_POSITION = new Vector3f(0, 1, 0);
     public static Vector3f LAMP_DEFAULT_POSITION = new Vector3f(0, 1, 0);
-    public static final int DYNAMIC_LIGHT_COUNT = 5;
+    public static final Vector3f LAMP_DEFAULT_COLOUR = new Vector3f(1, 1, 0.5f);
+    public static final Vector3f LAMP_DEFAULT_ATTENUATION = new Vector3f(1, 0.75f, 0.75f);
     public static final float ARENA_RADIUS = 10;
     public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
 

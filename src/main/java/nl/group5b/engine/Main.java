@@ -8,6 +8,7 @@ import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.models.*;
+import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -42,41 +43,23 @@ public class Main {
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
 
-        ControllableLamp controllableLamp = new ControllableLamp(
-                modelLoader, new Vector3f(Settings.LAMP_DEFAULT_POSITION),
-                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
-
-        AttachableLamp attachableLamp = new AttachableLamp(
-                modelLoader, new Vector3f(Settings.LAMP_DEFAULT_POSITION),
-                new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
-
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
                 arena
         ));
 
-        // Load lights into array (has to be an array with predefined length)
-        // IMPORTANT! Sun HAS to be present at index 0 ======================
-        Light[] lights = new Light[3 + Settings.DYNAMIC_LIGHT_COUNT];
-        lights[0] = sun;
-        lights[1] = attachableLamp.getLight();
-        lights[2] = controllableLamp.getLight();
+        // Load sun into list
+        // IMPORTANT! Sun HAS to be present at index 0 at build time ======================
+        List<Light> lights = new ArrayList<>(List.of(
+                sun
+        ));
 
-        // Create an array of all lamps
-        Lamp[] lamps = new Lamp[2 + Settings.DYNAMIC_LIGHT_COUNT];
-        lamps[0] = attachableLamp;
-        lamps[1] = controllableLamp;
-
-        // Add the rest of the lamps (we start at i = 3 because the first 3 lamps are already added)
-        for (int i = 3; i < 3 + Settings.DYNAMIC_LIGHT_COUNT; i++) {
-            Lamp lamp = new Lamp(modelLoader, new Vector3f(0, 1.5f, 0),
-                    new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.75f, 0.75f));
-            lamps[i-1] = lamp;
-            lights[i] = lamp.getLight();
-        }
+        // Create a RealShader instance
+        // (This is necessary, because both the GUI and the renderer need access to the same shader)
+        RealShader realShader = new RealShader(lights.size());
 
         // Create GUI Elements
-        MainPanel mainPanel = new MainPanel(window, modelLoader, bodies, lamps);
+        MainPanel mainPanel = new MainPanel(window, modelLoader, realShader, bodies, lights);
         SettingsPanel settingsPanel = new SettingsPanel(sun);
 
         // Load GUI Elements into array
@@ -89,7 +72,7 @@ public class Main {
         GUI gui = new GUI(window, elements);
 
         // Create MasterRenderer instance
-        MasterRenderer renderer = new MasterRenderer(bodies, lights, gui, window);
+        MasterRenderer renderer = new MasterRenderer(bodies, lights, gui, window, realShader);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

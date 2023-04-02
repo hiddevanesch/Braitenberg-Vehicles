@@ -7,7 +7,8 @@ import nl.group5b.shaders.ShaderProgram;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+
+import java.util.List;
 
 
 public class RealShader extends ShaderProgram {
@@ -30,10 +31,13 @@ public class RealShader extends ShaderProgram {
     private int[] lightPositionLocations;
     private int[] lightColourLocations;
     private int[] lightAttenuationLocations;
-    private int[] lightIsEnabledLocations;
 
     public RealShader(int lightCount) {
         super(VERTEX_FILE, FRAGMENT_FILE, lightCount);
+    }
+
+    public void recompile(int lightCount) {
+        super.recompile(VERTEX_FILE, FRAGMENT_FILE, lightCount);
     }
 
     @Override
@@ -61,13 +65,11 @@ public class RealShader extends ShaderProgram {
         lightPositionLocations = new int[lightCount];
         lightColourLocations = new int[lightCount];
         lightAttenuationLocations = new int[lightCount];
-        lightIsEnabledLocations = new int[lightCount];
 
         for (int i = 0; i < lightCount; i++) {
             lightPositionLocations[i] = super.getUniformLocation("lightPosition[" + i + "]");
             lightColourLocations[i] = super.getUniformLocation("lightColour[" + i + "]");
             lightAttenuationLocations[i] = super.getUniformLocation("lightAttenuation[" + i + "]");
-            lightIsEnabledLocations[i] = super.getUniformLocation("lightIsEnabled[" + i + "]");
         }
     }
 
@@ -96,12 +98,11 @@ public class RealShader extends ShaderProgram {
         super.loadMatrix(projectionMatrixLocation, matrix);
     }
 
-    public void loadLights(Light[] lights) {
+    public void loadLights(List<Light> lights) {
         for (int i = 0; i < super.getLightCount(); i++) {
-            super.loadVector4f(lightPositionLocations[i], lights[i].getPosition());
-            super.loadVector3f(lightColourLocations[i], lights[i].getColour());
-            super.loadVector3f(lightAttenuationLocations[i], lights[i].getAttenuation());
-            super.loadBoolean(lightIsEnabledLocations[i], lights[i].isEnabled());
+            super.loadVector4f(lightPositionLocations[i], lights.get(i).getPosition());
+            super.loadVector3f(lightColourLocations[i], lights.get(i).getColour());
+            super.loadVector3f(lightAttenuationLocations[i], lights.get(i).getAttenuation());
         }
     }
 
