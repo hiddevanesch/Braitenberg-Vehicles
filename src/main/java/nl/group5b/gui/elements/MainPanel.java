@@ -272,7 +272,7 @@ public class MainPanel extends Element {
         ImGui.text("Position (x, z)");
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat2("##slider_vehicle_position", currentVehiclePosition,
-                -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.0f")) {
+                -Settings.ARENA_SPAWN_RADIUS, Settings.ARENA_SPAWN_RADIUS, "%.1f")) {
             selectedVehicle.setPosition(new Vector3f(
                     currentVehiclePosition[0],
                     0,
