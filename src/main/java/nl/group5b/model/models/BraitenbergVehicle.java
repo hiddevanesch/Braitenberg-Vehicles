@@ -11,6 +11,7 @@ import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Vector;
 
 public abstract class BraitenbergVehicle extends Body implements PositionHandler, CollisionHandler {
 
@@ -20,6 +21,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     static final Vector3f carLeftSensorRelativePosition = new Vector3f(0.6f, 0.5f, 1.75f);
     static final Vector3f carRightSensorRelativePosition = new Vector3f(-0.6f, 0.5f, 1.75f);
     static final Vector3f carLampRelativePosition = new Vector3f(0, 0.79f, 0);
+    static final Vector3f carCameraBarsRelativePosition = new Vector3f(0, 0, 0);
 
     protected float leftWheelRotation = 0;
     protected float rightWheelRotation = 0;
@@ -40,19 +42,21 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Model carBody = OBJLoader.loadOBJ("carbody", modelLoader);
         Model carWheel = OBJLoader.loadOBJ("carwheel", modelLoader);
         Model sensorCamera = OBJLoader.loadOBJ("camera", modelLoader);
+        Model cameraBars = OBJLoader.loadOBJ("cameraBars", modelLoader);
 
 
         Material blackMaterial = new Material(new Vector3f(0.02f, 0.02f, 0.02f), 10, 0.1f);
         Material greyMaterial = new Material(new Vector3f(0.2f, 0.2f, 0.2f), 10, 0.1f);
+        Material shinyMetalMaterial = new Material(new Vector3f(0.666f, 0.662f, 0.678f), 5, 1f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
-        Model[] loadedModels = {carBody, carWheel, carWheel, sensorCamera, sensorCamera};
-        Material[] materialSets = {bodyMaterial, blackMaterial, blackMaterial, greyMaterial, greyMaterial};
+        Model[] loadedModels = {carBody, carWheel, carWheel, sensorCamera, sensorCamera, cameraBars};
+        Material[] materialSets = {bodyMaterial, blackMaterial, blackMaterial, greyMaterial, greyMaterial, shinyMetalMaterial};
         Vector3f[] startingPositions = {carBodyRelativePosition, carLeftWheelRelativePosition,
-                carRightWheelRelativePosition, carLeftSensorRelativePosition, carRightSensorRelativePosition};
-        Vector3f[] startingRotations = {defaultRotation, defaultRotation, defaultRotation, defaultRotation, defaultRotation};
-        float[] scales = {1, 1, 1, 1, 1};
+                carRightWheelRelativePosition, carLeftSensorRelativePosition, carRightSensorRelativePosition, carCameraBarsRelativePosition};
+        Vector3f[] startingRotations = {defaultRotation, defaultRotation, defaultRotation, defaultRotation, defaultRotation, defaultRotation};
+        float[] scales = {1, 1, 1, 1, 1, 1};
 
         this.leftSensor = new Sensor(carLeftSensorRelativePosition, defaultRotation, Settings.SENSOR_RESOLUTION);
         this.rightSensor = new Sensor(carRightSensorRelativePosition, defaultRotation, Settings.SENSOR_RESOLUTION);
@@ -128,12 +132,14 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Vector3f rightWheelPosition = new Vector3f(position).add(carRightWheelRelativePosition);
         Vector3f leftSensorPosition = new Vector3f(position).add(carLeftSensorRelativePosition);
         Vector3f rightSensorPosition = new Vector3f(position).add(carRightSensorRelativePosition);
+        Vector3f cameraBarsPosition = new Vector3f(position).add(carCameraBarsRelativePosition);
 
         super.getBodyElements()[0].getEntity().setPosition(bodyPosition);
         super.getBodyElements()[1].getEntity().setPosition(leftWheelPosition);
         super.getBodyElements()[2].getEntity().setPosition(rightWheelPosition);
         super.getBodyElements()[3].getEntity().setPosition(leftSensorPosition);
         super.getBodyElements()[4].getEntity().setPosition(rightSensorPosition);
+        super.getBodyElements()[5].getEntity().setPosition(cameraBarsPosition);
         this.leftSensor.setPosition(leftSensorPosition);
         this.rightSensor.setPosition(rightSensorPosition);
 
@@ -150,6 +156,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         super.getBodyElements()[2].getEntity().setRotation(rotation);
         super.getBodyElements()[3].getEntity().setRotation(rotation);
         super.getBodyElements()[4].getEntity().setRotation(rotation);
+        super.getBodyElements()[5].getEntity().setRotation(rotation);
 
         Vector3f sensorRotation = new Vector3f(rotation).add(0, 180, 180); /////////
 
@@ -168,10 +175,13 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
                 bodyPosition, rotation.y);
         Vector3f rightSensorPosition = Algebra.rotatePointAroundPivot(carRightSensorRelativePosition,
                 bodyPosition, rotation.y);
+        Vector3f cameraBarsPosition = Algebra.rotatePointAroundPivot(carCameraBarsRelativePosition,
+                bodyPosition, rotation.y);
         super.getBodyElements()[1].getEntity().setPosition(leftWheelPosition);
         super.getBodyElements()[2].getEntity().setPosition(rightWheelPosition);
         super.getBodyElements()[3].getEntity().setPosition(leftSensorPosition);
         super.getBodyElements()[4].getEntity().setPosition(rightSensorPosition);
+        super.getBodyElements()[5].getEntity().setPosition(cameraBarsPosition);
         this.leftSensor.setPosition(leftSensorPosition);
         this.rightSensor.setPosition(rightSensorPosition);
     }
@@ -183,6 +193,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         super.getBodyElements()[2].getEntity().move(position);
         super.getBodyElements()[3].getEntity().move(position);
         super.getBodyElements()[4].getEntity().move(position);
+        super.getBodyElements()[5].getEntity().move(position);
 
         // We do not want to move the sensors here, this causes rubber banding
         //this.leftSensor.getPosition().add(position);
