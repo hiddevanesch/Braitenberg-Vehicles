@@ -30,6 +30,7 @@ public class Settings {
     public static int SUN_Y = 20;
     public static int SUN_Z = 0;
     public static final float ARENA_RADIUS = 25;
+    public static final float ARENA_WALL_OFFSET = 0.2f;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;

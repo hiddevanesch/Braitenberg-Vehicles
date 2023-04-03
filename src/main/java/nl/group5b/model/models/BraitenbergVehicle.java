@@ -27,7 +27,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     protected float rightWheelSpeed = 0;
 
     protected HitBox hitBox;
-    protected List<Body> bodiesCollision;
+    protected List<Body> collisionBodies;
 
     private final Sensor leftSensor;
     private final Sensor rightSensor;
@@ -38,8 +38,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Model sensorCamera = OBJLoader.loadOBJ("camera", modelLoader);
 
 
-        Material blackMaterial = new Material(0.2f, 0.2f, 0.2f, 10, 0.1f);
-        Material greyMaterial = new Material(0.5f, 0.5f, 0.5f, 10, 0.1f);
+        Material blackMaterial = new Material(0.02f, 0.02f, 0.02f, 10, 0.1f);
+        Material greyMaterial = new Material(0.2f, 0.2f, 0.2f, 10, 0.1f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
@@ -216,15 +216,15 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         return this.getClass().getSimpleName() + " " + System.identityHashCode(this);
     }
 
-    public void setBodies(List<Body> bodies) {
-        bodiesCollision = bodies;
+    public void setCollisionBodies(List<Body> bodies) {
+        this.collisionBodies = bodies;
     }
 
     // Function that goes through all the bodies and checks if the front of the vehicle is colliding with any of them
     public boolean isColliding() {
         Vector3f[] hitBoxCoordinates = hitBox.getCoordinates();
         // Loop over all bodies in the list, excluding the vehicle itself
-        for (Body body : bodiesCollision) {
+        for (Body body : collisionBodies) {
             if (body != this && body instanceof CollisionHandler) {
                 // Get the hitbox of the target
                 HitBox hitBoxTarget = ((CollisionHandler) body).getHitBox();
@@ -236,8 +236,10 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
         // Check if the vehicle is outside of the arena boundaries
         for (Vector3f coordinate : hitBoxCoordinates) {
-            if (coordinate.x < -Settings.ARENA_RADIUS || coordinate.x > Settings.ARENA_RADIUS ||
-                    coordinate.z < -Settings.ARENA_RADIUS || coordinate.z > Settings.ARENA_RADIUS) {
+            if (coordinate.x <= -Settings.ARENA_RADIUS + Settings.ARENA_WALL_OFFSET ||
+                    coordinate.x >= Settings.ARENA_RADIUS - Settings.ARENA_WALL_OFFSET ||
+                    coordinate.z <= -Settings.ARENA_RADIUS + Settings.ARENA_WALL_OFFSET ||
+                    coordinate.z >= Settings.ARENA_RADIUS - Settings.ARENA_WALL_OFFSET) {
                 return true;
             }
         }
@@ -247,9 +249,5 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public HitBox getHitBox() {
         return hitBox;
-    }
-
-    public void setCollisionBodies(List<Body> bodiesPotentialCollide) {
-        this.bodiesCollision = bodiesPotentialCollide;
     }
 }

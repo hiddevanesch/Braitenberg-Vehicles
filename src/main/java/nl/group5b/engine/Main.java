@@ -2,7 +2,6 @@ package nl.group5b.engine;
 
 import nl.group5b.camera.BodyCamera;
 import nl.group5b.camera.Camera;
-import nl.group5b.camera.Sensor;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.MainPanel;
@@ -10,8 +9,6 @@ import nl.group5b.gui.elements.SettingsPanel;
 import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
-import nl.group5b.model.interfaces.ControlHandler;
-import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.model.models.*;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
@@ -70,6 +67,13 @@ public class Main {
         Lamp colouredLamp4 = new Lamp(modelLoader, new Vector3f(7.5f, 0.5f, 0),
                 new Vector3f(1, 1, 0.5f), new Vector3f(1, 0.3f, 0.3f));
 
+        Wall backWall = new Wall(modelLoader, new Vector3f(0, 0, 24.9f), new Vector3f(0, 0, 0) );
+        Wall leftWall = new Wall(modelLoader, new Vector3f(-24.9f, 0, 0), new Vector3f(0, -90, 0) );
+        Wall rightWall = new Wall(modelLoader, new Vector3f(24.9f, 0, 0), new Vector3f(0, 90, 0) );
+        Wall frontWall = new Wall(modelLoader, new Vector3f(0, 0, -24.9f), new Vector3f(0, 180, 0) );
+
+        Cloud cloud = new Cloud(modelLoader, new Vector3f(10, 10, 10), new Vector3f(0, 0, 0));
+
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
                 arena,
@@ -81,7 +85,12 @@ public class Main {
                 loveVehicle,
                 fearVehicle,
                 hateVehicle,
-                curiousVehicle
+                curiousVehicle,
+                backWall,
+                leftWall,
+                rightWall,
+                frontWall,
+                cloud
         ));
 
         // Load lights into array (has to be an array with predefined length)
@@ -117,13 +126,13 @@ public class Main {
         MasterRenderer renderer = new MasterRenderer(bodies, lights, gui, window);
 
         // set the bodies that the braitenberg vehicles can collide with
-        braitenbergVehicle.setBodies(bodies);
-        secondCar.setBodies(bodies);
-        thirdCar.setBodies(bodies);
-        loveVehicle.setBodies(bodies);
-        fearVehicle.setBodies(bodies);
-        hateVehicle.setBodies(bodies);
-        curiousVehicle.setBodies(bodies);
+        braitenbergVehicle.setCollisionBodies(bodies);
+        secondCar.setCollisionBodies(bodies);
+        thirdCar.setCollisionBodies(bodies);
+        loveVehicle.setCollisionBodies(bodies);
+        fearVehicle.setCollisionBodies(bodies);
+        hateVehicle.setCollisionBodies(bodies);
+        curiousVehicle.setCollisionBodies(bodies);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.

@@ -269,7 +269,7 @@ public class MainPanel extends Element {
                                 getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class).
                                 newInstance(modelLoader, positionVector, rotationVector);
                         bodies.add(vehicle);
-                        vehicle.setBodies(bodies);
+                        vehicle.setCollisionBodies(bodies);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
