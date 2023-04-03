@@ -1,5 +1,6 @@
 package nl.group5b.camera;
 
+import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -14,6 +15,7 @@ public class Sensor {
     private final int frameBufferID;
     private final int textureID;
     private final Camera camera;
+    private float fov = Settings.SENSOR_FOV;
 
     public Sensor(Vector3f position, Vector3f rotation, int resolution) {
         this.width = resolution;
@@ -113,5 +115,13 @@ public class Sensor {
         }
 
         return brightness / totalPixels;
+    }
+
+    public float getFov() {
+        return fov;
+    }
+
+    public void setFov(float fov) {
+        this.fov = fov;
     }
 }
