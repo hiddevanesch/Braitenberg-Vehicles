@@ -21,7 +21,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     static final Vector3f carLeftSensorRelativePosition = new Vector3f(0.6f, 0.5f, 1.75f);
     static final Vector3f carRightSensorRelativePosition = new Vector3f(-0.6f, 0.5f, 1.75f);
     static final Vector3f carLampRelativePosition = new Vector3f(0, 0.79f, 0);
-    static final Vector3f carCameraBarsRelativePosition = new Vector3f(0, 0, 0);
+    static final Vector3f carCameraBarsRelativePosition = new Vector3f(0, 0.3f, 0.75f);
 
     protected float leftWheelRotation = 0;
     protected float rightWheelRotation = 0;
