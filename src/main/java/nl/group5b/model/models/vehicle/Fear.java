@@ -1,4 +1,4 @@
-package nl.group5b.model.models;
+package nl.group5b.model.models.vehicle;
 
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.Material;
@@ -14,13 +14,13 @@ import java.io.FileNotFoundException;
  * Sensors are connected to the wheel on the same side
  * More brightness sensed -> faster wheel speed
  */
-public class FearVehicle extends BraitenbergVehicle implements DriveHandler{
+public class Fear extends BraitenbergVehicle implements DriveHandler{
 
     // Black body material
     static private final Material bodyMaterial = new Material(new Vector3f(0f, 0f, 0f), 10, 0.5f);
 
-    public FearVehicle(ModelLoader modelLoader, Vector3f position,
-                       Vector3f rotation) throws FileNotFoundException {
+    public Fear(ModelLoader modelLoader, Vector3f position,
+                Vector3f rotation) throws FileNotFoundException {
         super(modelLoader, bodyMaterial, position, rotation);
     }
 

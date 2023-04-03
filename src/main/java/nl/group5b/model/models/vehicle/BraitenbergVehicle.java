@@ -1,17 +1,17 @@
-package nl.group5b.model.models;
+package nl.group5b.model.models.vehicle;
 
 import nl.group5b.camera.Sensor;
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.*;
 import nl.group5b.model.interfaces.CollisionHandler;
 import nl.group5b.model.interfaces.PositionHandler;
+import nl.group5b.model.models.lamp.Attachable;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Vector;
 
 public abstract class BraitenbergVehicle extends Body implements PositionHandler, CollisionHandler {
 
@@ -36,7 +36,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
     private final Sensor rightSensor;
     private float sensorFov = Settings.SENSOR_FOV;
 
-    private AttachableLamp lamp = null;
+    private Attachable lamp = null;
 
     public BraitenbergVehicle(ModelLoader modelLoader, Material bodyMaterial) throws FileNotFoundException {
         Model carBody = OBJLoader.loadOBJ("carbody", modelLoader);
@@ -288,7 +288,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         rightSensor.setFov(sensorFieldOfView);
     }
 
-    public void attachLamp(AttachableLamp lamp) {
+    public void attachLamp(Attachable lamp) {
         this.lamp = lamp;
         this.lamp.setPosition(new Vector3f(getPosition()).add(carLampRelativePosition));
     }
@@ -301,7 +301,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         lamp = null;
     }
 
-    public AttachableLamp getLamp() {
+    public Attachable getLamp() {
         return lamp;
     }
 }

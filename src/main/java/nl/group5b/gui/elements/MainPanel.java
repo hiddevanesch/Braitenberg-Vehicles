@@ -10,9 +10,9 @@ import nl.group5b.gui.Element;
 import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
-import nl.group5b.model.models.AttachableLamp;
-import nl.group5b.model.models.BraitenbergVehicle;
-import nl.group5b.model.models.StaticLamp;
+import nl.group5b.model.models.lamp.Attachable;
+import nl.group5b.model.models.vehicle.BraitenbergVehicle;
+import nl.group5b.model.models.lamp.Lamp;
 import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
@@ -32,7 +32,7 @@ public class MainPanel extends Element {
     private final List<Light> lights;
     private final RealShader shader;
     List<Class<? extends BraitenbergVehicle>> vehicleClasses = new ArrayList<>();
-    List<Class<? extends StaticLamp>> lampClasses = new ArrayList<>();
+    List<Class<? extends Lamp>> lampClasses = new ArrayList<>();
 
     private Camera camera;
     private final BodyCamera thirdPersonCamera = new BodyCamera();
@@ -50,8 +50,8 @@ public class MainPanel extends Element {
     private float[] vehicleSpawnPosition = {0, 0};
     private float[] vehicleSpawnRotation = {0};
 
-    private StaticLamp selectedLamp = null;
-    private Class<? extends StaticLamp> selectedLampClass = null;
+    private Lamp selectedLamp = null;
+    private Class<? extends Lamp> selectedLampClass = null;
     private final float[] currentLampPosition = {0, 0, 0};
     private final float[] currentLampColour = {0, 0, 0};
     private final float[] currentLampAttenuation = {0, 0, 0};
@@ -116,7 +116,7 @@ public class MainPanel extends Element {
 
     private void getLampTypes() {
         // Get lamp package
-        String lampPackage = StaticLamp.class.getPackageName();
+        String lampPackage = Lamp.class.getPackageName();
 
         // Get the URL of the package directory
         URL packageUrl = Thread.currentThread().getContextClassLoader().getResource(
@@ -141,8 +141,10 @@ public class MainPanel extends Element {
                             Class<?> cls = Class.forName(className);
 
                             // Check if the class is a subtype of Lamp (or Lamp itself), but not AttachableLamp
-                            if (StaticLamp.class.isAssignableFrom(cls) && !AttachableLamp.class.isAssignableFrom(cls)) {
-                                lampClasses.add(cls.asSubclass(StaticLamp.class));
+                            // and not abstract
+                            if (Lamp.class.isAssignableFrom(cls) && !Attachable.class.isAssignableFrom(cls) &&
+                                    !Modifier.isAbstract(cls.getModifiers())) {
+                                lampClasses.add(cls.asSubclass(Lamp.class));
                             }
                         }
                     }
@@ -218,13 +220,13 @@ public class MainPanel extends Element {
         ImGui.sameLine();
         if (ImGui.button("-", buttonWidth, 0)) {
             if (selectedVehicle != null) {
-                AttachableLamp attachableLamp = selectedVehicle.getLamp();
-                if (attachableLamp != null) {
-                    if (selectedLamp == attachableLamp) {
+                Attachable attachable = selectedVehicle.getLamp();
+                if (attachable != null) {
+                    if (selectedLamp == attachable) {
                         selectedLamp = null;
                     }
-                    bodies.remove(attachableLamp);
-                    lights.remove(attachableLamp.getLight());
+                    bodies.remove(attachable);
+                    lights.remove(attachable.getLight());
                     shader.recompile(lights.size());
                 }
 
@@ -370,19 +372,19 @@ public class MainPanel extends Element {
 
         if (ImGui.checkbox(lampText, selectedVehicleHasLamp)) {
             if (selectedVehicleHasLamp) {
-                StaticLamp attachableLamp = selectedVehicle.getLamp();
+                Lamp attachableLamp = selectedVehicle.getLamp();
                 selectedVehicle.removeLamp();
                 bodies.remove(attachableLamp);
                 lights.remove(attachableLamp.getLight());
                 shader.recompile(lights.size());
             } else {
-                AttachableLamp attachableLamp = new AttachableLamp(
+                Attachable attachable = new Attachable(
                         modelLoader, new Vector3f(Settings.LAMP_DEFAULT_POSITION),
                         new Vector3f(Settings.LAMP_DEFAULT_COLOUR), new Vector3f(Settings.LAMP_DEFAULT_ATTENUATION));
-                attachableLamp.setVehicle(selectedVehicle);
-                selectedVehicle.attachLamp(attachableLamp);
-                bodies.add(attachableLamp);
-                lights.add(attachableLamp.getLight());
+                attachable.setVehicle(selectedVehicle);
+                selectedVehicle.attachLamp(attachable);
+                bodies.add(attachable);
+                lights.add(attachable.getLight());
                 shader.recompile(lights.size());
             }
         }
@@ -454,6 +456,7 @@ public class MainPanel extends Element {
                                 newInstance(modelLoader, positionVector, rotationVector);
                         bodies.add(vehicle);
                         vehicle.setCollisionBodies(bodies);
+                        selectedVehicle = vehicle;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -482,7 +485,7 @@ public class MainPanel extends Element {
         ImGui.setNextItemWidth(selectorWidth);
         if (ImGui.beginCombo("##combo_lamps", selectedLampName)){
             for (Body body : bodies) {
-                if (body instanceof StaticLamp lamp) {
+                if (body instanceof Lamp lamp) {
                     if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
                         setSelectedLamp(lamp);
 
@@ -499,9 +502,9 @@ public class MainPanel extends Element {
                 bodies.remove(selectedLamp);
                 lights.remove(selectedLamp.getLight());
                 shader.recompile(lights.size());
-                if (selectedLamp instanceof AttachableLamp attachableLamp) {
-                    if (attachableLamp.getVehicle() != null) {
-                        attachableLamp.getVehicle().removeLamp();
+                if (selectedLamp instanceof Attachable attachable) {
+                    if (attachable.getVehicle() != null) {
+                        attachable.getVehicle().removeLamp();
                     }
                 }
                 selectedLamp = null;
@@ -543,7 +546,7 @@ public class MainPanel extends Element {
             ImGui.text("Lamp type");
             ImGui.setNextItemWidth(contentWidth);
             if (ImGui.beginCombo("##combo_lamp_type", selectedLampClassName)) {
-                for (Class<? extends StaticLamp> lampClass : lampClasses) {
+                for (Class<? extends Lamp> lampClass : lampClasses) {
                     if (ImGui.selectable(lampClass.getSimpleName(), selectedLampClass == lampClass)) {
                         selectedLampClass = lampClass;
                     }
@@ -565,7 +568,7 @@ public class MainPanel extends Element {
 
                 ImGui.closeCurrentPopup();
                 try {
-                    StaticLamp lamp = selectedLampClass.
+                    Lamp lamp = selectedLampClass.
                             getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class, Vector3f.class).
                             newInstance(
                                     modelLoader,
@@ -594,7 +597,7 @@ public class MainPanel extends Element {
     private void renderLampData(float contentWidth) {
         ImGui.dummy(0, 5);
 
-        if (!(selectedLamp instanceof AttachableLamp)) {
+        if (!(selectedLamp instanceof Attachable)) {
             Vector3f lampPosition = selectedLamp.getPosition();
             currentLampPosition[0] = lampPosition.x();
             currentLampPosition[1] = lampPosition.y();
@@ -669,7 +672,7 @@ public class MainPanel extends Element {
         vehicleSpeedsIndex = 0;
     }
 
-    private void setSelectedLamp(StaticLamp lamp) {
+    private void setSelectedLamp(Lamp lamp) {
         selectedLamp = lamp;
 
         // The position is updated every frame (because the ControllableLamp can move)

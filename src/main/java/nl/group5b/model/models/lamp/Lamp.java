@@ -1,4 +1,4 @@
-package nl.group5b.model.models;
+package nl.group5b.model.models.lamp;
 
 import nl.group5b.light.Light;
 import nl.group5b.model.*;
@@ -8,12 +8,12 @@ import org.joml.Vector4f;
 
 import java.io.FileNotFoundException;
 
-public class StaticLamp extends Body implements PositionHandler {
+public abstract class Lamp extends Body implements PositionHandler {
 
     private final Light light;
 
-    public StaticLamp(ModelLoader modelLoader, Vector3f position, Vector3f colour,
-                      Vector3f attenuation) throws FileNotFoundException {
+    public Lamp(ModelLoader modelLoader, Vector3f position, Vector3f colour,
+                Vector3f attenuation) throws FileNotFoundException {
         Model lamp = OBJLoader.loadOBJ("lamp", modelLoader);
         Model lampBase = OBJLoader.loadOBJ("lampbase", modelLoader);
 

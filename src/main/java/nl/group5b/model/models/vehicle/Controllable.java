@@ -1,4 +1,4 @@
-package nl.group5b.model.models;
+package nl.group5b.model.models.vehicle;
 
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.Material;
