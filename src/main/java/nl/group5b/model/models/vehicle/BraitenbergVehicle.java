@@ -42,7 +42,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Model carBody = OBJLoader.loadOBJ("carbody", modelLoader);
         Model carWheel = OBJLoader.loadOBJ("carwheel", modelLoader);
         Model sensorCamera = OBJLoader.loadOBJ("camera", modelLoader);
-        Model cameraBars = OBJLoader.loadOBJ("cameraBars", modelLoader);
+        Model cameraBars = OBJLoader.loadOBJ("bars", modelLoader);
 
 
         Material blackMaterial = new Material(new Vector3f(0.02f, 0.02f, 0.02f), 10, 0.1f);
