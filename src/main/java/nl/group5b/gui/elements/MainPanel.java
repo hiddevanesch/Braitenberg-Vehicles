@@ -346,8 +346,7 @@ public class MainPanel extends Element {
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat("##slider_sensor_fov", currentSensorFov,
                 10, 90, "%.0f")) {
-            selectedVehicle.getLeftSensor().setFov(currentSensorFov[0]);
-            selectedVehicle.getRightSensor().setFov(currentSensorFov[0]);
+            selectedVehicle.setSensorsFov(currentSensorFov[0]);
         }
 
         ImGui.dummy(0, 10);
