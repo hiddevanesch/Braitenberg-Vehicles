@@ -21,3 +21,7 @@ This Braitenberg vehicle simulation includes:
 * Different camera perspectives
   * Top down
   * Third person (movable using the mouse while holding middle mouse button)
+
+## Acknowledgements
+Special thanks to:
+* @TheThinMatrix for his [YouTube playlist](https://www.youtube.com/watch?v=VS8wlS9hF8E&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP) on creating an OpenGL engine using LWJGL.
