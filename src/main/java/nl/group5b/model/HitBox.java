@@ -4,11 +4,11 @@ import org.joml.Vector3f;
 
 
 public class HitBox {
-    private Vector3f frontLeftOffset;
-    private Vector3f frontRightOffset;
-    private Vector3f backLeftOffset;
-    private Vector3f backRightOffset;
-    private Entity entity;
+    private final Vector3f frontLeftOffset;
+    private final Vector3f frontRightOffset;
+    private final Vector3f backLeftOffset;
+    private final Vector3f backRightOffset;
+    private final Entity entity;
 
     public HitBox(Vector3f frontLeftOffset, Vector3f frontRightOffset, Vector3f backLeftOffset, Vector3f backRightOffset, Entity entity) {
         this.frontLeftOffset = frontLeftOffset;
@@ -35,25 +35,25 @@ public class HitBox {
         // Position of the front left corner
         coordinates[0] = new Vector3f(
                 (float) (positionX + (frontLeftOffset.x * Math.cos(rotationY) - frontLeftOffset.z * Math.sin(rotationY))),
-                (float) (position.y + frontLeftOffset.y),
+                position.y + frontLeftOffset.y,
                 (float) (position.z + (frontLeftOffset.x * Math.sin(rotationY) + frontLeftOffset.z * Math.cos(rotationY)))
         );
         // Position of the front right corner
         coordinates[1] = new Vector3f(
                 (float) (positionX + (frontRightOffset.x * Math.cos(rotationY) - frontRightOffset.z * Math.sin(rotationY))),
-                (float) (position.y + frontRightOffset.y),
+                position.y + frontRightOffset.y,
                 (float) (position.z + (frontRightOffset.x * Math.sin(rotationY) + frontRightOffset.z * Math.cos(rotationY)))
         );
         // Position of the back left corner
         coordinates[2] = new Vector3f(
                 (float) (positionX + (backLeftOffset.x * Math.cos(rotationY) - backLeftOffset.z * Math.sin(rotationY))),
-                (float) (position.y + backLeftOffset.y),
+                position.y + backLeftOffset.y,
                 (float) (position.z + (backLeftOffset.x * Math.sin(rotationY) + backLeftOffset.z * Math.cos(rotationY)))
         );
         // Position of the back right corner
         coordinates[3] = new Vector3f(
                 (float) (positionX + (backRightOffset.x * Math.cos(rotationY) - backRightOffset.z * Math.sin(rotationY))),
-                (float) (position.y + backRightOffset.y),
+                position.y + backRightOffset.y,
                 (float) (position.z + (backRightOffset.x * Math.sin(rotationY) + backRightOffset.z * Math.cos(rotationY)))
         );
         return coordinates;

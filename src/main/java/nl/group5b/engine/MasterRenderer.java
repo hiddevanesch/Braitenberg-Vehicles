@@ -16,6 +16,7 @@ import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
 import org.lwjgl.opengl.GL46;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,20 +30,20 @@ public class MasterRenderer {
     private final DirectionalShadowMR directionalShadowRenderer;
 
     private final List<Body> bodies;
-    private final Light[] lights;
+    private final List<Light> lights;
     private final GUI gui;
     private final long window;
 
     private final Map<Model, List<BodyElement>> renderMap = new java.util.HashMap<>();
 
-    public MasterRenderer(List<Body> bodies, Light[] lights, GUI gui, long window) {
-        this.shader = new RealShader(lights.length);
+    public MasterRenderer(List<Body> bodies, List<Light> lights, GUI gui, long window, RealShader shader) {
         this.renderer = new Renderer(shader);
-        this.directionalShadowRenderer = new DirectionalShadowMR(lights[0]);
+        this.directionalShadowRenderer = new DirectionalShadowMR(lights.get(0)); // At build time, sun should be at index 0
         this.bodies = bodies;
         this.lights = lights;
         this.gui = gui;
         this.window = window;
+        this.shader = shader;
     }
 
     private void prepareShader() {
@@ -53,6 +54,7 @@ public class MasterRenderer {
         // Load lights (should be done every frame, because the lights can move)
         shader.start();
         shader.loadLights(lights);
+        shader.loadAmbientLight(Settings.AMBIENT_LIGHT);
         shader.loadToShadowMapSpaceMatrix(directionalShadowRenderer.getToShadowMapSpaceMatrix());
         shader.stop();
     }
@@ -93,11 +95,11 @@ public class MasterRenderer {
         shader.stop();
     }
 
-    private void renderGUI() {
+    private void renderGUI() throws FileNotFoundException {
         gui.render();
     }
 
-    public void render() {
+    public void render() throws FileNotFoundException {
         // Process all the bodies
         for (Body body : bodies) {
             processBody(body);

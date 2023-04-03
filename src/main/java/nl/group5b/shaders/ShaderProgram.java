@@ -15,15 +15,29 @@ import java.nio.FloatBuffer;
 
 public abstract class ShaderProgram {
 
-    private final int programID;
-    private final int vertexShaderID;
-    private final int fragmentShaderID;
+    private int programID;
+    private int vertexShaderID;
+    private int fragmentShaderID;
 
-    private final int lightCount;
+    private int lightCount;
 
     private static final FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public ShaderProgram(String vertexFile, String fragmentFile, int lightCount) {
+        this.lightCount = lightCount;
+        vertexShaderID = loadShader(vertexFile, GL46.GL_VERTEX_SHADER);
+        fragmentShaderID = loadShader(fragmentFile, GL46.GL_FRAGMENT_SHADER);
+        programID = GL46.glCreateProgram();
+        GL46.glAttachShader(programID, vertexShaderID);
+        GL46.glAttachShader(programID, fragmentShaderID);
+        bindAttributes();
+        GL46.glLinkProgram(programID);
+        GL46.glValidateProgram(programID);
+        getAllUniformLocations();
+    }
+
+    public void recompile(String vertexFile, String fragmentFile, int lightCount) {
+        cleanUp();
         this.lightCount = lightCount;
         vertexShaderID = loadShader(vertexFile, GL46.GL_VERTEX_SHADER);
         fragmentShaderID = loadShader(fragmentFile, GL46.GL_FRAGMENT_SHADER);
@@ -110,10 +124,6 @@ public abstract class ShaderProgram {
                 if (line.startsWith("#define LIGHT_COUNT")) {
                     String[] split = line.split(" ");
                     split[2] = String.valueOf(lightCount);
-                    line = String.join(" ", split);
-                } else if (line.startsWith("#define AMBIENT_LIGHT")) {
-                    String[] split = line.split(" ");
-                    split[2] = String.valueOf(Settings.AMBIENT_LIGHT);
                     line = String.join(" ", split);
                 } else if (line.startsWith("#define SHADOW_MAP_SIZE")) {
                     String[] split = line.split(" ");

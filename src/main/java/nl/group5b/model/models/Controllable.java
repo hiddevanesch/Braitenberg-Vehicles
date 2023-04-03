@@ -37,7 +37,11 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
                 if (rightWheelSpeed > Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR) {
                     decelerateRightWheel(frameTime);
                 } else {
-                    accelerateRightWheel(frameTime);
+                    if (rightWheelSpeed > (Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR) * 0.9) {
+                        rightWheelSpeed = (Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR);
+                    } else {
+                        accelerateRightWheel(frameTime);
+                    }
                 }
                 accelerateLeftWheel(frameTime);
             } else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
@@ -45,7 +49,11 @@ public class Controllable extends BraitenbergVehicle implements ControlHandler {
                 if (leftWheelSpeed > Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR) {
                     decelerateLeftWheel(frameTime);
                 } else {
-                    accelerateLeftWheel(frameTime);
+                    if (leftWheelSpeed > (Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR) * 0.9) {
+                        leftWheelSpeed = (Settings.VEHICLE_SPEED / Settings.VEHICLE_STEERING_FACTOR);
+                    } else {
+                        accelerateLeftWheel(frameTime);
+                    }
                 }
                 accelerateRightWheel(frameTime);
             } else {

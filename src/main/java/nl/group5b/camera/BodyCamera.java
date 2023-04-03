@@ -2,7 +2,6 @@ package nl.group5b.camera;
 
 import nl.group5b.model.interfaces.PositionHandler;
 import nl.group5b.util.Settings;
-import nl.group5b.util.cameraType;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -10,11 +9,8 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 
-
 public class BodyCamera extends Camera {
-    private PositionHandler body;
-
-    private final float heightOffset;
+    private PositionHandler body = null;
 
     private float distance = 4;
     private float bodyPitch = 15;
@@ -24,21 +20,27 @@ public class BodyCamera extends Camera {
     private float previousMouseY;
     private float mouseDX;
     private float mouseDY;
-    private boolean isActivate = (Settings.DEFAULT_CAMERA == cameraType.THIRD_PERSON);
 
-    // require Body that implements MoveHandler
-    public BodyCamera(PositionHandler body, float heightOffset) {
+    public BodyCamera() {
         super(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
-        this.body = body;
-        this.heightOffset = heightOffset; // TODO change to body height / 2
     }
 
-    public void changeBody(PositionHandler body) {
+    public void setBody(PositionHandler body) {
         this.body = body;
+    }
+
+    public void unbind() {
+        this.body = null;
+    }
+
+    public void resetView() {
+        this.distance = 4;
+        this.bodyPitch = 15;
+        this.angle = 0;
     }
 
     public void move(long window) {
-        if (isActivate) {
+        if (body != null) {
             computePitch(window);
             computeAngle(window);
             float horizontalDistance = computeHorizontalDistance();
@@ -70,7 +72,7 @@ public class BodyCamera extends Camera {
         float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
         position.x = bodyPosition.x - offsetX;
-        position.y = bodyPosition.y + heightOffset + verticalDistance;
+        position.y = bodyPosition.y + Settings.CAMERA_3P_HEIGHT_OFFSET + verticalDistance;
         position.z = bodyPosition.z - offsetZ;
         rotation.x = bodyPitch;
         rotation.y = 180 - (bodyRotation.y + angle);
@@ -88,7 +90,7 @@ public class BodyCamera extends Camera {
         GLFW.glfwSetScrollCallback(window, new GLFWScrollCallback() {
             @Override
             public void invoke(long win, double dx, double dy) {
-                if (isActivate) {
+                if (body != null) {
                     float zoomLevel = (float) dy * distance * Settings.CAMERA_MOUSE_SENSITIVITY;
                     distance -= zoomLevel;
                 }
@@ -100,7 +102,7 @@ public class BodyCamera extends Camera {
         GLFW.glfwSetCursorPosCallback(window, new GLFWCursorPosCallback() {
             @Override
             public void invoke(long win, double newX, double newY) {
-                if (isActivate) {
+                if (body != null) {
                     mouseDX = ((float) newX - previousMouseX);
                     mouseDY = ((float) newY - previousMouseY);
                     previousMouseX = (float) newX;
@@ -108,9 +110,5 @@ public class BodyCamera extends Camera {
                 }
             }
         });
-    }
-
-    public void setIsActivate(boolean isActivate) {
-        this.isActivate = isActivate;
     }
 }

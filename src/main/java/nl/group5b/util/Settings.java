@@ -1,5 +1,7 @@
 package nl.group5b.util;
 
+import org.joml.Vector3f;
+
 public class Settings {
 
     // Main window
@@ -13,7 +15,7 @@ public class Settings {
     public static final int VAO_NORMAL_ATTR = 2;
 
     // Camera
-    public static final cameraType DEFAULT_CAMERA = cameraType.TOP_DOWN;
+    public static final float CAMERA_3P_HEIGHT_OFFSET = 0.8f;
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
@@ -21,19 +23,22 @@ public class Settings {
     public static final float SENSOR_GAMMA_CORRECTION = 0.5f;
 
     // Graphics
-    public static final float AMBIENT_LIGHT = 0.15f;
+    public static float AMBIENT_LIGHT = 0.15f;
     public static final int SHADOW_MAP_RESOLUTION = 1024*16; // WARNING! If changed, this also changes in the shadow vertex shader!
 
     // Scene
-    public static float SUN_BRIGHTNESS = 0.0f;
-    public static int SUN_X = 20;
-    public static int SUN_Y = 20;
-    public static int SUN_Z = 0;
+    public static float SUN_BRIGHTNESS = 0.5f;
+    public static Vector3f SUN_DEFAULT_POSITION = new Vector3f(0, 1, 0);
+    public static Vector3f LAMP_DEFAULT_POSITION = new Vector3f(0, 1, 0);
+    public static final Vector3f LAMP_DEFAULT_COLOUR = new Vector3f(1, 1, 0.5f);
+    public static final Vector3f LAMP_DEFAULT_ATTENUATION = new Vector3f(1, 0.75f, 0.75f);
     public static final float ARENA_RADIUS = 25;
+    public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
     public static final float ARENA_WALL_OFFSET = 0.2f;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
+    public static final float LAMP_MOVEMENT_SPEED = 5f;
 
     // Vehicle
     public static final float VEHICLE_SPEED = 1.5f;
@@ -41,7 +46,7 @@ public class Settings {
     public static final float VEHICLE_ACCELERATION = 0.5f;
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
-    public static final float VEHICLE_STEERING_FACTOR = 1.7f;
+    public static final float VEHICLE_STEERING_FACTOR = 1.3f;
     public static final int SENSOR_RESOLUTION = 480;
     public static final float SENSOR_FOV = 90;
 
@@ -50,7 +55,6 @@ public class Settings {
     public static final float PANEL_WIDTH_MAIN = 300;
     public static final float PANEL_WIDTH_SETTINGS = 200;
     public static final float POPUP_WIDTH = 300;
-    public static final float POPUP_HEIGHT = 200;
 
 }
 
