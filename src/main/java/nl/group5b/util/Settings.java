@@ -43,11 +43,12 @@ public class Settings {
 
     // Vehicle
     public static final float VEHICLE_SPEED = 1.5f;
+    public static final float CONTROLLABLE_VEHICLE_SPEED = 1.5f * VEHICLE_SPEED;
     public static final float WHEEL_ROTATION_SPEED = VEHICLE_SPEED * 200;
-    public static final float VEHICLE_ACCELERATION = 0.5f;
+    public static final float VEHICLE_ACCELERATION = 0.01f;
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
-    public static final float VEHICLE_STEERING_FACTOR = 1.3f;
+    public static final float VEHICLE_STEERING_FACTOR = 2 * 1.3f;
     public static final int SENSOR_RESOLUTION = 480;
     public static final float SENSOR_FOV = 90;
 
