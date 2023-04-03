@@ -47,7 +47,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
         Material blackMaterial = new Material(new Vector3f(0.02f, 0.02f, 0.02f), 10, 0.1f);
         Material greyMaterial = new Material(new Vector3f(0.2f, 0.2f, 0.2f), 10, 0.1f);
-        Material shinyMetalMaterial = new Material(new Vector3f(0.666f, 0.662f, 0.678f), 5, 1f);
+        Material shinyMetalMaterial = new Material(new Vector3f(0.666f, 0.662f, 0.678f), 40f, 5f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 
