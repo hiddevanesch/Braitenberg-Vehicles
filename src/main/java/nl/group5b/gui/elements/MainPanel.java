@@ -46,6 +46,7 @@ public class MainPanel extends Element {
     private final float[] vehicleSpeedsRight = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private final float[] speeds = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private int vehicleSpeedsIndex = 0;
+    private final float[] currentSensorFov = {Settings.SENSOR_FOV};
     private float[] vehicleSpawnPosition = {0, 0};
     private float[] vehicleSpawnRotation = {0};
 
@@ -216,22 +217,24 @@ public class MainPanel extends Element {
         // Render vehicle remove button
         ImGui.sameLine();
         if (ImGui.button("-", buttonWidth, 0)) {
-            AttachableLamp attachableLamp = selectedVehicle.getLamp();
-            if (attachableLamp != null) {
-                if (selectedLamp == attachableLamp) {
-                    selectedLamp = null;
+            if (selectedVehicle != null) {
+                AttachableLamp attachableLamp = selectedVehicle.getLamp();
+                if (attachableLamp != null) {
+                    if (selectedLamp == attachableLamp) {
+                        selectedLamp = null;
+                    }
+                    bodies.remove(attachableLamp);
+                    lights.remove(attachableLamp.getLight());
+                    shader.recompile(lights.size());
                 }
-                bodies.remove(attachableLamp);
-                lights.remove(attachableLamp.getLight());
-                shader.recompile(lights.size());
-            }
 
-            if (camera == thirdPersonCamera) {
-                camera = topDownCamera;
-                thirdPersonCamera.unbind();
-            }
+                if (camera == thirdPersonCamera) {
+                    camera = topDownCamera;
+                    thirdPersonCamera.unbind();
+                }
 
-            bodies.remove(selectedVehicle);
+                bodies.remove(selectedVehicle);
+            }
         }
 
         // Render vehicle add button
@@ -254,18 +257,7 @@ public class MainPanel extends Element {
     private void renderVehicleData(float contentWidth) throws FileNotFoundException {
         ImGui.beginChild("##child_vehicle");
 
-        if (ImGui.checkbox("Third person camera", camera == thirdPersonCamera)) {
-            if (camera == topDownCamera) {
-                thirdPersonCamera.resetView();
-                thirdPersonCamera.setBody(selectedVehicle);
-                camera = thirdPersonCamera;
-            } else {
-                camera = topDownCamera;
-                thirdPersonCamera.unbind();
-            }
-        }
-
-        ImGui.spacing();
+        ImGui.dummy(0, 5);
 
         updateVehiclePosition();
 
@@ -289,7 +281,7 @@ public class MainPanel extends Element {
             selectedVehicle.setRotation(new Vector3f(0, currentVehicleRotation[0], 0));
         }
 
-        ImGui.spacing();
+        ImGui.dummy(0, 10);
 
         ImGui.beginTable("##table_vehicle", 3, ImGuiTableFlags.SizingStretchSame);
 
@@ -348,6 +340,31 @@ public class MainPanel extends Element {
 
         ImGui.endTable();
 
+        updateVehicleSensorFov();
+
+        ImGui.text("Sensor FOV");
+        ImGui.setNextItemWidth(contentWidth);
+        if (ImGui.sliderFloat("##slider_sensor_fov", currentSensorFov,
+                10, 90, "%.0f")) {
+            selectedVehicle.getLeftSensor().setFov(currentSensorFov[0]);
+            selectedVehicle.getRightSensor().setFov(currentSensorFov[0]);
+        }
+
+        ImGui.dummy(0, 10);
+
+        if (ImGui.checkbox("Third person camera", camera == thirdPersonCamera)) {
+            if (camera == topDownCamera) {
+                thirdPersonCamera.resetView();
+                thirdPersonCamera.setBody(selectedVehicle);
+                camera = thirdPersonCamera;
+            } else {
+                camera = topDownCamera;
+                thirdPersonCamera.unbind();
+            }
+        }
+
+        ImGui.dummy(0, 10);
+
         boolean selectedVehicleHasLamp = selectedVehicle.hasLamp();
 
         String lampText = "Attach lamp\n" + (selectedVehicleHasLamp ? "(" + selectedVehicle.getLamp().getName() + ")" : "\u00A0");
@@ -372,6 +389,10 @@ public class MainPanel extends Element {
         }
 
         ImGui.endChild();
+    }
+
+    private void updateVehicleSensorFov() {
+        currentSensorFov[0] = selectedVehicle.getSensorFov();
     }
 
     private void renderAddVehiclePopup() {
@@ -476,15 +497,17 @@ public class MainPanel extends Element {
         // Render lamp remove button
         ImGui.sameLine();
         if (ImGui.button("-", buttonWidth, 0)) {
-            bodies.remove(selectedLamp);
-            lights.remove(selectedLamp.getLight());
-            shader.recompile(lights.size());
-            if (selectedLamp instanceof AttachableLamp attachableLamp) {
-                if (attachableLamp.getVehicle() != null) {
-                    attachableLamp.getVehicle().removeLamp();
+            if (selectedLamp != null) {
+                bodies.remove(selectedLamp);
+                lights.remove(selectedLamp.getLight());
+                shader.recompile(lights.size());
+                if (selectedLamp instanceof AttachableLamp attachableLamp) {
+                    if (attachableLamp.getVehicle() != null) {
+                        attachableLamp.getVehicle().removeLamp();
+                    }
                 }
+                selectedLamp = null;
             }
-            selectedLamp = null;
         }
 
         // Render lamp add button
@@ -571,6 +594,8 @@ public class MainPanel extends Element {
     }
 
     private void renderLampData(float contentWidth) {
+        ImGui.dummy(0, 5);
+
         if (!(selectedLamp instanceof AttachableLamp)) {
             Vector3f lampPosition = selectedLamp.getPosition();
             currentLampPosition[0] = lampPosition.x();

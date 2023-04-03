@@ -35,7 +35,7 @@ public class Renderer {
         // Update screen size
         int width = sensor.getWidth();
         int height = sensor.getHeight();
-        updateProjectionMatrix(width, height, Settings.SENSOR_FOV);
+        updateProjectionMatrix(width, height, sensor.getFov());
 
         // Bind the framebuffer
         sensor.bind();

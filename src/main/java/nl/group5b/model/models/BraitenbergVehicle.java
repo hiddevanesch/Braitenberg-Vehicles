@@ -31,6 +31,7 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     private final Sensor leftSensor;
     private final Sensor rightSensor;
+    private float sensorFov = Settings.SENSOR_FOV;
 
     private AttachableLamp lamp = null;
 
@@ -223,6 +224,16 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
 
     public void setCollisionBodies(List<Body> bodiesPotentialCollide) {
         this.bodiesCollision = bodiesPotentialCollide;
+    }
+
+    public float getSensorFov() {
+        return sensorFov;
+    }
+
+    public void setSensorsFov(float sensorFieldOfView) {
+        this.sensorFov = sensorFieldOfView;
+        leftSensor.setFov(sensorFieldOfView);
+        rightSensor.setFov(sensorFieldOfView);
     }
 
     public void attachLamp(AttachableLamp lamp) {
