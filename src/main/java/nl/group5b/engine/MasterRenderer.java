@@ -12,7 +12,6 @@ import nl.group5b.model.Model;
 import nl.group5b.model.interfaces.ControlHandler;
 import nl.group5b.model.interfaces.DriveHandler;
 import nl.group5b.model.models.BraitenbergVehicle;
-import nl.group5b.model.models.Lamp;
 import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
 import org.lwjgl.opengl.GL46;

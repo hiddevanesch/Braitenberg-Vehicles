@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 
 import java.io.FileNotFoundException;
 
-public class AttachableLamp extends Lamp {
+public class AttachableLamp extends StaticLamp {
     private BraitenbergVehicle vehicle = null;
 
     public AttachableLamp(ModelLoader modelLoader, Vector3f position, Vector3f colour, Vector3f attenuation) throws FileNotFoundException {

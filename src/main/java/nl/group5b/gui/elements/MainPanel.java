@@ -12,7 +12,7 @@ import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.models.AttachableLamp;
 import nl.group5b.model.models.BraitenbergVehicle;
-import nl.group5b.model.models.Lamp;
+import nl.group5b.model.models.StaticLamp;
 import nl.group5b.shaders.real.RealShader;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
@@ -32,7 +32,7 @@ public class MainPanel extends Element {
     private final List<Light> lights;
     private final RealShader shader;
     List<Class<? extends BraitenbergVehicle>> vehicleClasses = new ArrayList<>();
-    List<Class<? extends Lamp>> lampClasses = new ArrayList<>();
+    List<Class<? extends StaticLamp>> lampClasses = new ArrayList<>();
 
     private Camera camera;
     private final BodyCamera thirdPersonCamera = new BodyCamera();
@@ -49,8 +49,8 @@ public class MainPanel extends Element {
     private float[] vehicleSpawnPosition = {0, 0};
     private float[] vehicleSpawnRotation = {0};
 
-    private Lamp selectedLamp = null;
-    private Class<? extends Lamp> selectedLampClass = null;
+    private StaticLamp selectedLamp = null;
+    private Class<? extends StaticLamp> selectedLampClass = null;
     private final float[] currentLampPosition = {0, 0, 0};
     private final float[] currentLampColour = {0, 0, 0};
     private final float[] currentLampAttenuation = {0, 0, 0};
@@ -115,7 +115,7 @@ public class MainPanel extends Element {
 
     private void getLampTypes() {
         // Get lamp package
-        String lampPackage = Lamp.class.getPackageName();
+        String lampPackage = StaticLamp.class.getPackageName();
 
         // Get the URL of the package directory
         URL packageUrl = Thread.currentThread().getContextClassLoader().getResource(
@@ -140,8 +140,8 @@ public class MainPanel extends Element {
                             Class<?> cls = Class.forName(className);
 
                             // Check if the class is a subtype of Lamp (or Lamp itself), but not AttachableLamp
-                            if (Lamp.class.isAssignableFrom(cls) && !AttachableLamp.class.isAssignableFrom(cls)) {
-                                lampClasses.add(cls.asSubclass(Lamp.class));
+                            if (StaticLamp.class.isAssignableFrom(cls) && !AttachableLamp.class.isAssignableFrom(cls)) {
+                                lampClasses.add(cls.asSubclass(StaticLamp.class));
                             }
                         }
                     }
@@ -354,7 +354,7 @@ public class MainPanel extends Element {
 
         if (ImGui.checkbox(lampText, selectedVehicleHasLamp)) {
             if (selectedVehicleHasLamp) {
-                Lamp attachableLamp = selectedVehicle.getLamp();
+                StaticLamp attachableLamp = selectedVehicle.getLamp();
                 selectedVehicle.removeLamp();
                 bodies.remove(attachableLamp);
                 lights.remove(attachableLamp.getLight());
@@ -463,7 +463,7 @@ public class MainPanel extends Element {
         ImGui.setNextItemWidth(selectorWidth);
         if (ImGui.beginCombo("##combo_lamps", selectedLampName)){
             for (Body body : bodies) {
-                if (body instanceof Lamp lamp) {
+                if (body instanceof StaticLamp lamp) {
                     if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
                         setSelectedLamp(lamp);
 
@@ -522,7 +522,7 @@ public class MainPanel extends Element {
             ImGui.text("Lamp type");
             ImGui.setNextItemWidth(contentWidth);
             if (ImGui.beginCombo("##combo_lamp_type", selectedLampClassName)) {
-                for (Class<? extends Lamp> lampClass : lampClasses) {
+                for (Class<? extends StaticLamp> lampClass : lampClasses) {
                     if (ImGui.selectable(lampClass.getSimpleName(), selectedLampClass == lampClass)) {
                         selectedLampClass = lampClass;
                     }
@@ -544,7 +544,7 @@ public class MainPanel extends Element {
 
                 ImGui.closeCurrentPopup();
                 try {
-                    Lamp lamp = selectedLampClass.
+                    StaticLamp lamp = selectedLampClass.
                             getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class, Vector3f.class).
                             newInstance(
                                     modelLoader,
@@ -646,7 +646,7 @@ public class MainPanel extends Element {
         vehicleSpeedsIndex = 0;
     }
 
-    private void setSelectedLamp(Lamp lamp) {
+    private void setSelectedLamp(StaticLamp lamp) {
         selectedLamp = lamp;
 
         // The position is updated every frame (because the ControllableLamp can move)

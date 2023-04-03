@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class ControllableLamp extends Lamp implements ControlHandler {
+public class ControllableLamp extends StaticLamp implements ControlHandler {
     public ControllableLamp(ModelLoader modelLoader, Vector3f position, Vector3f colour, Vector3f attenuation) throws FileNotFoundException {
         super(modelLoader, position, colour, attenuation);
     }
