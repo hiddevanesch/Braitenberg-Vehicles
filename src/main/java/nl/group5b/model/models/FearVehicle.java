@@ -16,8 +16,8 @@ import java.io.FileNotFoundException;
  */
 public class FearVehicle extends BraitenbergVehicle implements DriveHandler{
 
-    // Purple body material
-    static private final Material bodyMaterial = new Material(0f, 0f, 0f, 10, 0.5f);
+    // Black body material
+    static private final Material bodyMaterial = new Material(new Vector3f(0f, 0f, 0f), 10, 0.5f);
 
     public FearVehicle(ModelLoader modelLoader, Vector3f position,
                        Vector3f rotation) throws FileNotFoundException {

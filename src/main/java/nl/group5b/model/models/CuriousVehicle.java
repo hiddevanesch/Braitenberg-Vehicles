@@ -17,7 +17,7 @@ import java.io.FileNotFoundException;
 public class CuriousVehicle extends BraitenbergVehicle implements DriveHandler {
 
     // Yellow body material
-    static private final Material bodyMaterial = new Material(1f, 1f, 0f, 10, 0.5f);
+    static private final Material bodyMaterial = new Material(new Vector3f(1f, 1f, 0f), 10, 0.5f);
 
     public CuriousVehicle(ModelLoader modelLoader, Vector3f position,
                        Vector3f rotation) throws FileNotFoundException {

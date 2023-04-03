@@ -9,7 +9,7 @@ public class Cloud extends Body {
     public Cloud(ModelLoader modelLoader, Vector3f position, Vector3f rotation) throws FileNotFoundException {
         Model cloud = OBJLoader.loadOBJ("cloud", modelLoader);
 
-        Material cloudMaterial = new Material(1, 1, 1, 2, 0.5f);
+        Material cloudMaterial = new Material(new Vector3f(1, 1, 1), 2, 0.5f);
 
         Model[] loadedModels = {cloud};
         Material[] materialSets = {cloudMaterial};

@@ -41,8 +41,8 @@ public abstract class BraitenbergVehicle extends Body implements PositionHandler
         Model sensorCamera = OBJLoader.loadOBJ("camera", modelLoader);
 
 
-        Material blackMaterial = new Material(0.02f, 0.02f, 0.02f, 10, 0.1f);
-        Material greyMaterial = new Material(0.2f, 0.2f, 0.2f, 10, 0.1f);
+        Material blackMaterial = new Material(new Vector3f(0.02f, 0.02f, 0.02f), 10, 0.1f);
+        Material greyMaterial = new Material(new Vector3f(0.2f, 0.2f, 0.2f), 10, 0.1f);
 
         Vector3f defaultRotation = new Vector3f(0, 0, 0);
 

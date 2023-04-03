@@ -21,6 +21,7 @@ public class Settings {
     public static final float VIEWPORT_FAR_PLANE = 1000;
     public static float VIEWPORT_GAMMA_CORRECTION = 2.2f;
     public static final float SENSOR_GAMMA_CORRECTION = 0.5f;
+    public static final Vector3f CAMERA_TOPDOWN_POSITION = new Vector3f(0, 55, 0);
 
     // Graphics
     public static float AMBIENT_LIGHT = 0.15f;

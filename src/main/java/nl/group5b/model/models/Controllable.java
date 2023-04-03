@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Controllable extends BraitenbergVehicle implements ControlHandler {
 
     // Brown body material
-    static private final Material bodyMaterial = new Material(0.45f, 0.30f, 0.2f, 10, 0.5f);
+    static private final Material bodyMaterial = new Material(new Vector3f(0.45f, 0.30f, 0.2f), 10, 0.5f);
 
     public Controllable(ModelLoader modelLoader, Vector3f position,
                         Vector3f rotation) throws FileNotFoundException {
