@@ -16,12 +16,12 @@ public class Settings {
 
     // Camera
     public static final float CAMERA_3P_HEIGHT_OFFSET = 0.8f;
-
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
-    public static float VIEWPORT_GAMMA_CORRECTION = 1.0f;
-    public static final float SENSOR_GAMMA_CORRECTION = 1.0f;
+    public static float VIEWPORT_GAMMA_CORRECTION = 2.2f;
+    public static final float SENSOR_GAMMA_CORRECTION = 0.5f;
+    public static final Vector3f CAMERA_TOPDOWN_POSITION = new Vector3f(0, 55, 0);
 
     // Graphics
     public static float AMBIENT_LIGHT = 0.15f;
@@ -33,8 +33,9 @@ public class Settings {
     public static Vector3f LAMP_DEFAULT_POSITION = new Vector3f(0, 1, 0);
     public static final Vector3f LAMP_DEFAULT_COLOUR = new Vector3f(1, 1, 0.5f);
     public static final Vector3f LAMP_DEFAULT_ATTENUATION = new Vector3f(1, 0.75f, 0.75f);
-    public static final float ARENA_RADIUS = 10;
+    public static final float ARENA_RADIUS = 25;
     public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
+    public static final float ARENA_WALL_OFFSET = 0.2f;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
@@ -42,13 +43,14 @@ public class Settings {
 
     // Vehicle
     public static final float VEHICLE_SPEED = 1.5f;
+    public static final float CONTROLLABLE_VEHICLE_SPEED = 1.5f * VEHICLE_SPEED;
     public static final float WHEEL_ROTATION_SPEED = VEHICLE_SPEED * 200;
-    public static final float VEHICLE_ACCELERATION = 0.5f;
+    public static final float VEHICLE_ACCELERATION = 0.01f;
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
-    public static final float VEHICLE_STEERING_FACTOR = 1.3f;
+    public static final float VEHICLE_STEERING_FACTOR = 2 * 1.3f;
     public static final int SENSOR_RESOLUTION = 480;
-    public static final float SENSOR_FOV = 25;
+    public static final float SENSOR_FOV = 90;
 
     // GUI
     public static final int GUI_GRAPH_HISTORY_SIZE = 500;

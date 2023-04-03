@@ -131,7 +131,7 @@ public class MasterRenderer {
     }
 
     public void move() {
-        // If body is "movable", move it
+        // If body is "movable", move it using 'updateWheelSpeeds'
         for (Body body : bodies) {
             if (body instanceof ControlHandler) {
                 ((ControlHandler) body).move(window, renderer);

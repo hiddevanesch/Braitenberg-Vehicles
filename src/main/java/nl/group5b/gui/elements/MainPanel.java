@@ -36,7 +36,7 @@ public class MainPanel extends Element {
 
     private Camera camera;
     private final BodyCamera thirdPersonCamera = new BodyCamera();
-    private final Camera topDownCamera = new Camera(new Vector3f(0, 20, 0), new Vector3f(90, 0, 0));
+    private final Camera topDownCamera = new Camera(new Vector3f(Settings.CAMERA_TOPDOWN_POSITION), new Vector3f(90, 0, 0));
 
     private BraitenbergVehicle selectedVehicle = null;
     private Class<? extends BraitenbergVehicle> selectedVehicleClass = null;
@@ -453,8 +453,7 @@ public class MainPanel extends Element {
                                 getConstructor(ModelLoader.class, Vector3f.class, Vector3f.class).
                                 newInstance(modelLoader, positionVector, rotationVector);
                         bodies.add(vehicle);
-                        vehicle.setBodies(bodies);
-                        selectedVehicle = vehicle;
+                        vehicle.setCollisionBodies(bodies);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

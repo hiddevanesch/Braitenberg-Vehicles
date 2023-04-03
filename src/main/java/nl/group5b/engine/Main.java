@@ -1,5 +1,7 @@
 package nl.group5b.engine;
 
+import nl.group5b.camera.BodyCamera;
+import nl.group5b.camera.Camera;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.MainPanel;
@@ -43,9 +45,21 @@ public class Main {
         // Create the Bodies
         Arena arena = new Arena(modelLoader);
 
+        Wall backWall = new Wall(modelLoader, new Vector3f(0, 0, 24.9f), new Vector3f(0, 0, 0) );
+        Wall leftWall = new Wall(modelLoader, new Vector3f(-24.9f, 0, 0), new Vector3f(0, -90, 0) );
+        Wall rightWall = new Wall(modelLoader, new Vector3f(24.9f, 0, 0), new Vector3f(0, 90, 0) );
+        Wall frontWall = new Wall(modelLoader, new Vector3f(0, 0, -24.9f), new Vector3f(0, 180, 0) );
+
+        Cloud cloud = new Cloud(modelLoader, new Vector3f(10, 10, 10), new Vector3f(0, 0, 0));
+
         // Load bodies (except Arena) into list
         List<Body> bodies = new ArrayList<>(List.of(
-                arena
+                arena,
+                backWall,
+                leftWall,
+                rightWall,
+                frontWall,
+                cloud
         ));
 
         // Load sun into list
