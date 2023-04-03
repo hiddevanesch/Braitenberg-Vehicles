@@ -13,8 +13,8 @@ import java.util.List;
 
 public class RealShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/real/vertex_shader.glsl";
-    private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/real/fragment_shader.glsl";
+    private static final String VERTEX_FILE = "real_vertex_shader.glsl";
+    private static final String FRAGMENT_FILE = "real_fragment_shader.glsl";
 
     private int transformationMatrixLocation;
     private int projectionMatrixLocation;

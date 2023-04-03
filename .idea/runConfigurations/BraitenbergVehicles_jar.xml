@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BraitenbergVehicles.jar" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/target/BraitenbergVehicles.jar" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <module name="BraitenbergVehicles" />
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package" />
+    </method>
+  </configuration>
+</component>

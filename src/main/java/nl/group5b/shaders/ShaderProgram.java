@@ -1,5 +1,6 @@
 package nl.group5b.shaders;
 
+import nl.group5b.model.OBJLoader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;
@@ -11,6 +12,7 @@ import org.lwjgl.opengl.GL46;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 
 public abstract class ShaderProgram {
@@ -116,7 +118,8 @@ public abstract class ShaderProgram {
     private int loadShader(String file, int type) {
         StringBuilder shaderSource = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            InputStreamReader inputStreamReader = new InputStreamReader(OBJLoader.class.getClassLoader().getResource(file).openStream());
+            BufferedReader reader = new BufferedReader(inputStreamReader);
             String line;
             while ((line = reader.readLine()) != null) {
                 // This allows us to compile the shader with a "dynamic" definitions

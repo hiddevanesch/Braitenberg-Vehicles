@@ -6,8 +6,8 @@ import org.joml.Matrix4f;
 
 public class DirectionalShadowShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/main/java/nl/group5b/shaders/shadow/vertex_shader.glsl";
-	private static final String FRAGMENT_FILE = "src/main/java/nl/group5b/shaders/shadow/fragment_shader.glsl";
+	private static final String VERTEX_FILE = "shadow_vertex_shader.glsl";
+	private static final String FRAGMENT_FILE = "shadow_fragment_shader.glsl";
 	
 	private int mvpMatrixLocation;
 

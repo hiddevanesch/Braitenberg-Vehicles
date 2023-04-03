@@ -2,25 +2,21 @@ package nl.group5b.model;
 
 import org.joml.Vector3f;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OBJLoader {
 
-    public static Model loadOBJ(String fileName, ModelLoader modelLoader) throws FileNotFoundException {
-        FileReader fileReader = null;
+    public static Model loadOBJ(String fileName, ModelLoader modelLoader) {
+        // Read resource with InputStreamReader (should be in root directory of build)
+        InputStreamReader inputStreamReader = null;
         try {
-             fileReader = new FileReader(new File("res/" + fileName + ".obj"));
+            inputStreamReader = new InputStreamReader(OBJLoader.class.getClassLoader().getResource(fileName + ".obj").openStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        catch (FileNotFoundException e) {
-            System.err.println("File not found: " + fileName + ".obj");
-            e.printStackTrace();
-        }
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
         // Initialize variables
         String line;

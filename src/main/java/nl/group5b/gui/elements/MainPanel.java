@@ -20,9 +20,13 @@ import org.joml.Vector3f;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Modifier;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class MainPanel extends Element {
 
@@ -78,39 +82,38 @@ public class MainPanel extends Element {
         // Get vehicle package
         String vehiclePackage = BraitenbergVehicle.class.getPackageName();
 
-        // Get the URL of the package directory
-        URL packageUrl = Thread.currentThread().getContextClassLoader().getResource(
-                vehiclePackage.replace(".", "/")
-        );
+        try {
+            // Get the resources in the package directory
+            Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources(
+                    vehiclePackage.replace(".", "/")
+            );
 
-        if (packageUrl != null && packageUrl.getProtocol().equals("file")) {
-            try {
-                // Convert the URL to a file path and get the package directory
-                File packageDir = new File(packageUrl.toURI());
+            // Iterate over all the resources
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
+                JarURLConnection jarConnection = (JarURLConnection) resource.openConnection();
+                JarFile jarFile = jarConnection.getJarFile();
+                Enumeration<JarEntry> entries = jarFile.entries();
 
-                // Get all the files in the package directory
-                File[] files = packageDir.listFiles();
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    String entryName = entry.getName();
 
-                // Iterate over all the files in the package directory
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.isFile() && file.getName().endsWith(".class")) {
-                            // Convert the file name to a class name and load the class
-                            String className = vehiclePackage + "." +
-                                    file.getName().substring(0, file.getName().length() - 6);
-                            Class<?> cls = Class.forName(className);
+                    if (entryName.startsWith(vehiclePackage.replace(".", "/")) && entryName.endsWith(".class")) {
+                        // Convert the file name to a class name and load the class
+                        String className = entryName.substring(0, entryName.length() - 6).replace("/", ".");
+                        Class<?> cls = Class.forName(className);
 
-                            // Check if the class is a subtype of BraitenbergVehicle
-                            if (BraitenbergVehicle.class.isAssignableFrom(cls) &&
-                                    !Modifier.isAbstract(cls.getModifiers())) {
-                                vehicleClasses.add(cls.asSubclass(BraitenbergVehicle.class));
-                            }
+                        // Check if the class is a subtype of BraitenbergVehicle
+                        if (BraitenbergVehicle.class.isAssignableFrom(cls) &&
+                                !Modifier.isAbstract(cls.getModifiers())) {
+                            vehicleClasses.add(cls.asSubclass(BraitenbergVehicle.class));
                         }
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -118,40 +121,39 @@ public class MainPanel extends Element {
         // Get lamp package
         String lampPackage = Lamp.class.getPackageName();
 
-        // Get the URL of the package directory
-        URL packageUrl = Thread.currentThread().getContextClassLoader().getResource(
-                lampPackage.replace(".", "/")
-        );
+        try {
+            // Get the resources in the package directory
+            Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources(
+                    lampPackage.replace(".", "/")
+            );
 
-        if (packageUrl != null && packageUrl.getProtocol().equals("file")) {
-            try {
-                // Convert the URL to a file path and get the package directory
-                File packageDir = new File(packageUrl.toURI());
+            // Iterate over all the resources
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
+                JarURLConnection jarConnection = (JarURLConnection) resource.openConnection();
+                JarFile jarFile = jarConnection.getJarFile();
+                Enumeration<JarEntry> entries = jarFile.entries();
 
-                // Get all the files in the package directory
-                File[] files = packageDir.listFiles();
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    String entryName = entry.getName();
 
-                // Iterate over all the files in the package directory
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.isFile() && file.getName().endsWith(".class")) {
-                            // Convert the file name to a class name and load the class
-                            String className = lampPackage + "." +
-                                    file.getName().substring(0, file.getName().length() - 6);
-                            Class<?> cls = Class.forName(className);
+                    if (entryName.startsWith(lampPackage.replace(".", "/")) && entryName.endsWith(".class")) {
+                        // Convert the file name to a class name and load the class
+                        String className = entryName.substring(0, entryName.length() - 6).replace("/", ".");
+                        Class<?> cls = Class.forName(className);
 
-                            // Check if the class is a subtype of Lamp (or Lamp itself), but not AttachableLamp
-                            // and not abstract
-                            if (Lamp.class.isAssignableFrom(cls) && !Attachable.class.isAssignableFrom(cls) &&
-                                    !Modifier.isAbstract(cls.getModifiers())) {
-                                lampClasses.add(cls.asSubclass(Lamp.class));
-                            }
+                        // Check if the class is a subtype of Lamp (or Lamp itself), but not AttachableLamp
+                        // and not abstract
+                        if (Lamp.class.isAssignableFrom(cls) && !Attachable.class.isAssignableFrom(cls) &&
+                                !Modifier.isAbstract(cls.getModifiers())) {
+                            lampClasses.add(cls.asSubclass(Lamp.class));
                         }
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
