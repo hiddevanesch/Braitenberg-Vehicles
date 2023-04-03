@@ -19,7 +19,7 @@ public class Settings {
     public static float VIEWPORT_FOV = 55;
     public static final float VIEWPORT_NEAR_PLANE = 0.1f;
     public static final float VIEWPORT_FAR_PLANE = 1000;
-    public static float VIEWPORT_GAMMA_CORRECTION = 2.2f;
+    public static float VIEWPORT_GAMMA_CORRECTION = 1f;
     public static final float SENSOR_GAMMA_CORRECTION = 0.5f;
     public static final Vector3f CAMERA_TOPDOWN_POSITION = new Vector3f(0, 55, 0);
 
@@ -48,7 +48,6 @@ public class Settings {
     public static final float VEHICLE_ACCELERATION = 0.01f;
     public static final float VEHICLE_DECELERATION = 3;
     public static final float VEHICLE_CLAMP_SPEED = 0.001f;
-    public static final float VEHICLE_STEERING_FACTOR = 2 * 1.3f;
     public static final int SENSOR_RESOLUTION = 480;
     public static final float SENSOR_FOV = 90;
 

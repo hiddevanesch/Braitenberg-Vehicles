@@ -1,4 +1,4 @@
-package nl.group5b.model.models;
+package nl.group5b.model.models.lamp;
 
 import nl.group5b.engine.Renderer;
 import nl.group5b.model.ModelLoader;
@@ -11,8 +11,8 @@ import java.io.FileNotFoundException;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class ControllableLamp extends StaticLamp implements ControlHandler {
-    public ControllableLamp(ModelLoader modelLoader, Vector3f position, Vector3f colour, Vector3f attenuation) throws FileNotFoundException {
+public class Controllable extends Lamp implements ControlHandler {
+    public Controllable(ModelLoader modelLoader, Vector3f position, Vector3f colour, Vector3f attenuation) throws FileNotFoundException {
         super(modelLoader, position, colour, attenuation);
     }
 
