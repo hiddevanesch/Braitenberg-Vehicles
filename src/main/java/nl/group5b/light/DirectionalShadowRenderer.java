@@ -3,7 +3,7 @@ package nl.group5b.light;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.shadow.DirectionalShadowShader;
+import nl.group5b.shaders.DirectionalShadowShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;

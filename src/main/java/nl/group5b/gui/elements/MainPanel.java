@@ -13,18 +13,15 @@ import nl.group5b.model.ModelLoader;
 import nl.group5b.model.models.lamp.Attachable;
 import nl.group5b.model.models.vehicle.BraitenbergVehicle;
 import nl.group5b.model.models.lamp.Lamp;
-import nl.group5b.shaders.real.RealShader;
+import nl.group5b.shaders.RealShader;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -49,6 +46,7 @@ public class MainPanel extends Element {
     private final float[] vehicleSpeedsLeft = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private final float[] vehicleSpeedsRight = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
     private final float[] speeds = new float[Settings.GUI_GRAPH_HISTORY_SIZE];
+    private float maxSpeed = 0;
     private int vehicleSpeedsIndex = 0;
     private final float[] currentSensorFov = {Settings.SENSOR_FOV};
     private float[] vehicleSpawnPosition = {0, 0};
@@ -208,6 +206,7 @@ public class MainPanel extends Element {
                     if (ImGui.selectable(braitenbergVehicle.getName(), selectedVehicle == braitenbergVehicle)) {
                         selectedVehicle = braitenbergVehicle;
                         clearVehicleSpeeds();
+                        maxSpeed = 0;
                         if (camera == thirdPersonCamera) {
                             thirdPersonCamera.resetView();
                             thirdPersonCamera.setBody(selectedVehicle);
@@ -302,12 +301,14 @@ public class MainPanel extends Element {
         ImGui.tableSetColumnIndex(0);
         ImGui.text("Wheel speed\nhistory");
         ImGui.tableSetColumnIndex(1);
-        ImGui.plotLines("##plot_left_wheel_speed", getVehicleSpeedsLeft(), getVehicleSpeedsLeft().length,
-                0, "", 0, Settings.VEHICLE_SPEED, columnWidth, graphHeight);
+        float[] vehicleSpeedsLeft = getVehicleSpeedsLeft();
+        float[] vehicleSpeedsRight = getVehicleSpeedsRight();
+        maxSpeed(vehicleSpeedsLeft, vehicleSpeedsRight);
+        ImGui.plotLines("##plot_left_wheel_speed", vehicleSpeedsLeft, vehicleSpeedsLeft.length,
+                0, "", 0, maxSpeed, columnWidth, graphHeight);
         ImGui.tableSetColumnIndex(2);
-        ImGui.plotLines("##plot_right_wheel_speed", getVehicleSpeedsRight(), getVehicleSpeedsRight().length,
-                0, "", 0, Settings.VEHICLE_SPEED, columnWidth, graphHeight);
-
+        ImGui.plotLines("##plot_right_wheel_speed", vehicleSpeedsRight, vehicleSpeedsRight.length,
+                0, "", 0, maxSpeed, columnWidth, graphHeight);
         ImGui.tableNextRow();
         ImGui.tableSetColumnIndex(0);
         ImGui.text("Current\nwheel speed\n\u00A0");
@@ -490,7 +491,6 @@ public class MainPanel extends Element {
                 if (body instanceof Lamp lamp) {
                     if (ImGui.selectable(lamp.getName(), selectedLamp == lamp)) {
                         setSelectedLamp(lamp);
-
                     }
                 }
             }
@@ -672,6 +672,15 @@ public class MainPanel extends Element {
             vehicleSpeedsRight[i] = 0;
         }
         vehicleSpeedsIndex = 0;
+    }
+
+    private void maxSpeed(float[] left, float[] right) {
+        float max = 0;
+        for (int i = 0; i < Settings.GUI_GRAPH_HISTORY_SIZE; i++) {
+            max = Math.max(max, left[i]);
+            max = Math.max(max, right[i]);
+        }
+        maxSpeed = Math.max(maxSpeed, max);
     }
 
     private void setSelectedLamp(Lamp lamp) {

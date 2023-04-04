@@ -52,7 +52,7 @@ public class Settings {
     public static final float SENSOR_FOV = 90;
 
     // GUI
-    public static final int GUI_GRAPH_HISTORY_SIZE = 500;
+    public static final int GUI_GRAPH_HISTORY_SIZE = 200;
     public static final float PANEL_WIDTH_MAIN = 300;
     public static final float PANEL_WIDTH_SETTINGS = 200;
     public static final float POPUP_WIDTH = 300;

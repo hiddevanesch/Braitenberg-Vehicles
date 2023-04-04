@@ -4,7 +4,7 @@ import nl.group5b.camera.Sensor;
 import nl.group5b.model.BodyElement;
 import nl.group5b.model.Entity;
 import nl.group5b.model.Model;
-import nl.group5b.shaders.real.RealShader;
+import nl.group5b.shaders.RealShader;
 import nl.group5b.util.Algebra;
 import nl.group5b.util.Settings;
 import org.joml.Matrix4f;

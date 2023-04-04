@@ -1,4 +1,4 @@
-package nl.group5b.shaders.shadow;
+package nl.group5b.shaders;
 
 
 import nl.group5b.shaders.ShaderProgram;
@@ -19,7 +19,6 @@ public class DirectionalShadowShader extends ShaderProgram {
 	@Override
 	protected void getAllUniformLocations() {
 		mvpMatrixLocation = super.getUniformLocation("mvpMatrix");
-		
 	}
 	
 	public void loadMvpMatrix(Matrix4f mvpMatrix){

@@ -1,4 +1,4 @@
-package nl.group5b.shaders.real;
+package nl.group5b.shaders;
 
 import nl.group5b.camera.Camera;
 import nl.group5b.light.Light;

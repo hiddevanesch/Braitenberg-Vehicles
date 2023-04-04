@@ -1,7 +1,5 @@
 package nl.group5b.engine;
 
-import nl.group5b.camera.BodyCamera;
-import nl.group5b.camera.Camera;
 import nl.group5b.gui.Element;
 import nl.group5b.gui.GUI;
 import nl.group5b.gui.elements.MainPanel;
@@ -10,7 +8,7 @@ import nl.group5b.light.Light;
 import nl.group5b.model.Body;
 import nl.group5b.model.ModelLoader;
 import nl.group5b.model.models.*;
-import nl.group5b.shaders.real.RealShader;
+import nl.group5b.shaders.RealShader;
 import nl.group5b.util.Settings;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
