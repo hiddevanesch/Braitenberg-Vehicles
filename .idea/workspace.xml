@@ -4,35 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97fdff41-70a1-46e0-ad51-6ca92997f699" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/engine/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/engine/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/engine/MasterRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/engine/MasterRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/engine/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/engine/Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/gui/elements/MainPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/gui/elements/MainPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/light/DirectionalShadowMR.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/light/DirectionalShadowMR.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/light/DirectionalShadowRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/light/DirectionalShadowRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/shaders/real/RealShader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/shaders/RealShader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/nl/group5b/shaders/shadow/DirectionalShadowShader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/nl/group5b/shaders/DirectionalShadowShader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/arena.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/arena.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/bars.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/bars.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/camera.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/camera.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/carbody.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/carbody.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/carwheel.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/carwheel.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/cloud.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/cloud.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/lamp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/lamp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/lampbase.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/lampbase.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/real_fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/res/real_fragment_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/real_vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/res/real_vertex_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/scene.blend" beforeDir="false" afterPath="$PROJECT_DIR$/res/scene.blend" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/scene.blend1" beforeDir="false" afterPath="$PROJECT_DIR$/res/scene.blend1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shadow_fragment_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/res/shadow_fragment_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/shadow_vertex_shader.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/res/shadow_vertex_shader.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/wall.obj" beforeDir="false" afterPath="$PROJECT_DIR$/res/wall.obj" afterDir="false" />
-    </list>
+    <list default="true" id="97fdff41-70a1-46e0-ad51-6ca92997f699" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -89,7 +61,7 @@
       <updated>1680558640189</updated>
       <workItem from="1680558642161" duration="6527000" />
       <workItem from="1680603593840" duration="55000" />
-      <workItem from="1680603679764" duration="1812000" />
+      <workItem from="1680603679764" duration="2165000" />
     </task>
     <servers />
   </component>
