@@ -377,6 +377,9 @@ public class MainPanel extends Element {
             if (selectedVehicleHasLamp) {
                 Lamp attachableLamp = selectedVehicle.getLamp();
                 selectedVehicle.removeLamp();
+                if (selectedLamp == attachableLamp) {
+                    selectedLamp = null;
+                }
                 bodies.remove(attachableLamp);
                 lights.remove(attachableLamp.getLight());
                 shader.recompile(lights.size());
