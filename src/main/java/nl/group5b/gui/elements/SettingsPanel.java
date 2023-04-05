@@ -14,11 +14,6 @@ public class SettingsPanel extends Element {
 
     private final float[] sunBrightness = {Settings.SUN_BRIGHTNESS};
     private final float[] ambientLight = {Settings.AMBIENT_LIGHT};
-    private final float[] sunPosition = {
-            Settings.SUN_DEFAULT_POSITION.x(),
-            Settings.SUN_DEFAULT_POSITION.y(),
-            Settings.SUN_DEFAULT_POSITION.z()
-    };
     private final float[] gamma = {Settings.VIEWPORT_GAMMA_CORRECTION};
     private final float[] fov = {Settings.VIEWPORT_FOV};
 
@@ -46,12 +41,6 @@ public class SettingsPanel extends Element {
             Settings.AMBIENT_LIGHT = ambientLight[0];
         }
 
-//        ImGui.text("Sun position");
-//        ImGui.setNextItemWidth(contentWidth);
-//        if (ImGui.sliderInt3("##slider_sun_position", sunPosition, -20, 20)) {
-//            sun.setPosition(new Vector4f(sunPosition[0], sunPosition[1], sunPosition[2], 0));
-//        }
-
         ImGui.text("Gamma");
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat("##slider_gamma", gamma, 0, 2.2f, "%.1f")) {
@@ -62,6 +51,20 @@ public class SettingsPanel extends Element {
         ImGui.setNextItemWidth(contentWidth);
         if (ImGui.sliderFloat("##slider_fov", fov, 30, 90, "%.0f")) {
             Settings.VIEWPORT_FOV = fov[0];
+        }
+
+        float buttonWidth = 50;
+
+        ImGui.text("Simulation");
+        ImGui.setCursorPosX((contentWidth - buttonWidth) / 2 + ImGui.getCursorPosX());
+        if (Settings.SIMULATE) {
+            if (ImGui.button("Pause", buttonWidth, 0)) {
+                Settings.SIMULATE = false;
+            }
+        } else {
+            if (ImGui.button("Start", buttonWidth, 0)) {
+                Settings.SIMULATE = true;
+            }
         }
 
         ImGui.end();

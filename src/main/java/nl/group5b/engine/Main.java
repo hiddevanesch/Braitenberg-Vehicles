@@ -89,8 +89,10 @@ public class Main {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!GLFW.glfwWindowShouldClose(window)) {
-            // Move all engine components that need to be moved (e.g. camera, bodies, etc.)
-            renderer.move();
+            if (Settings.SIMULATE) {
+                // Move all engine components that need to be moved (e.g. camera, bodies, etc.)
+                renderer.move();
+            }
 
             // Render scene
             renderer.render();

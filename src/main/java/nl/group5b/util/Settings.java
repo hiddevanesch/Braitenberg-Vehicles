@@ -36,6 +36,7 @@ public class Settings {
     public static final float ARENA_RADIUS = 25;
     public static final float ARENA_SPAWN_RADIUS = ARENA_RADIUS - 2;
     public static final float ARENA_WALL_OFFSET = 0.2f;
+    public static boolean SIMULATE = true;
 
     // Controls
     public static final float CAMERA_MOUSE_SENSITIVITY = 0.2f;
