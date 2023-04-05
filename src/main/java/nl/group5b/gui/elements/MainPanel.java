@@ -469,6 +469,7 @@ public class MainPanel extends Element {
                     selectedVehicleClass = null;
                     vehicleSpawnPosition = new float[]{0, 0};
                     vehicleSpawnRotation = new float[]{0};
+                    maxSpeed = 0;
 
             }
 
