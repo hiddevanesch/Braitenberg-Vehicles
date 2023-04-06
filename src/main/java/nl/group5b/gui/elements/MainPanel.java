@@ -470,6 +470,8 @@ public class MainPanel extends Element {
                     vehicleSpawnPosition = new float[]{0, 0};
                     vehicleSpawnRotation = new float[]{0};
                     maxSpeed = 0;
+                    thirdPersonCamera.setBody(selectedVehicle);
+                    thirdPersonCamera.resetView();
 
             }
 
