@@ -21,6 +21,9 @@ This Braitenberg vehicle simulation includes:
 * Different camera perspectives
   * Top down
   * Third person (movable using the mouse while holding middle mouse button)
+ 
+## Demo Video
+[![Watch on YouTube](https://img.youtube.com/vi/h5EYZifngp4/0.jpg)](https://www.youtube.com/watch?v=h5EYZifngp4)
 
 ## Acknowledgements
 Special thanks to:
